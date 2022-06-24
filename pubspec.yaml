@@ -29,19 +29,20 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_svg: ^0.17.4
-  google_fonts: ^1.0.0
+  flutter_svg: ^1.1.0
+  google_fonts: ^3.0.1
   flutter_swiper: ^1.1.6
   provider: ^6.0.0
-  http: ^0.12.2
+  http: ^0.13.4
+
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.3
-
+  awesome_dialog: ^2.2.1
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
+  flutter_launcher_icons: ^0.9.3
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
   # activated in the `analysis_options.yaml` file located at the root of your
@@ -93,4 +94,7 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
-
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/icon.png"
