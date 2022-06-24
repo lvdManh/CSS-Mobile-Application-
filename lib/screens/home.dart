@@ -1,4 +1,4 @@
-
+import 'package:computer_service_system/constants/color_constant.dart';
 import 'package:computer_service_system/screens/BookAppointmentScreen.dart';
 import 'package:flutter/material.dart';
 
@@ -8,7 +8,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int _selectedItemIndex = 1;
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +17,7 @@ class _HomePageState extends State<HomePage> {
         elevation: 0.0,
         backgroundColor: Colors.orangeAccent,
         title: Text(
-          "Computer Services",
+          "Computer Service",
           style: TextStyle(
             fontSize: 23,
           ),
@@ -30,17 +29,17 @@ class _HomePageState extends State<HomePage> {
             height: 800,
             width: double.infinity,
             decoration: BoxDecoration(
-                color: Colors.white,
+                color: mBackgroundColor,
                 borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(30),
-                  topRight: Radius.circular(30),
+                  topLeft: Radius.circular(20),
+                  topRight: Radius.circular(20),
                 )),
             child: ListView(
               children: [
                 Padding(
                   padding: const EdgeInsets.only(top: 30, left: 30),
                   child: Text(
-                      "Our Services",
+                      "Dịch vụ",
                       style: TextStyle(
                       fontSize: 19,
                       color: Colors.black87,
@@ -51,19 +50,23 @@ class _HomePageState extends State<HomePage> {
                   scrollDirection: Axis.horizontal,
                   child: Padding(
                     padding: EdgeInsets.only(
-                      left: 30,
-                      top: 30,
+                      left: 20,
+                      top: 20,
                     ),
                     child: Row(
                       children: [
                         _selectedService(
                             color: Colors.orangeAccent,
-                        subtitle: "Booking door to door computer repair service",
-                        title:"Repair computer" ),
+                        subtitle: "Sữa chữa phần cứng, phần mềm",
+                        title:"Sửa chữa" ),
                         _selectedService(
                             color: Colors.orangeAccent,
-                            subtitle: "Advise online",
-                            title:"Advise free" )
+                            subtitle: "Cung cấp dịch vụ vệ sinh máy tính",
+                            title:"Vệ sinh máy tính" ),
+                        _selectedService(
+                            color: Colors.orangeAccent,
+                            subtitle: "Cung cấp linh kiện máy tính giá ưu đãi",
+                            title:"Thay thế linh kiện" ),
                       ],
                     ),
                   ),
@@ -77,7 +80,7 @@ class _HomePageState extends State<HomePage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Appointment', style: TextStyle(
+                        'Danh sáchs', style: TextStyle(
                         fontSize: 20, color: Colors.black,
                       ),
                       ),
@@ -90,15 +93,23 @@ class _HomePageState extends State<HomePage> {
                                 crossAxisCount: 2,
                               crossAxisSpacing: 12,
                               mainAxisSpacing: 8,
-                              childAspectRatio: 1.30,
+                              childAspectRatio: 1.50,
                               children: [
                                 _selectedAppointment(
-                                  image: 'assets/icons/repair.jpg',
-                                  name: 'Repair'
+                                  image: 'assets/icons/repair.png',
+                                  name: 'Đặt lịch'
                                 ),
                                 _selectedAppointment(
-                                    image: 'assets/icons/appoint.jpg',
-                                    name: 'Schedule'
+                                    image: 'assets/icons/schedule.png',
+                                    name: 'Lịch hẹn'
+                                ),
+                                _selectedAppointment(
+                                    image: 'assets/icons/R.png',
+                                    name: 'Linh kiện'
+                                ),
+                                _selectedAppointment(
+                                    image: 'assets/icons/store.png',
+                                    name: 'Cửa hàng'
                                 ),
                               ],
                             ),
@@ -154,49 +165,8 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       // Bottom Navigation
-      bottomNavigationBar: Row(
-        children: <Widget>[
-          buildNavBarItem(Icons.home, 0),
-          buildNavBarItem(Icons.list_alt, 1),
-          buildNavBarItem(Icons.notifications, 2),
-          buildNavBarItem(Icons.person, 3)
-        ],
-      ),
       // This is Background Color
 
-    );
-  }
-
-  Widget buildNavBarItem(IconData icon, int index) {
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          _selectedItemIndex = index;
-        });
-      },
-      child: Container(
-        height: 60,
-        width: MediaQuery.of(context).size.width / 4,
-        decoration: index == _selectedItemIndex
-            ? BoxDecoration(
-                border: Border(
-                  bottom: BorderSide(width: 4, color: Colors.orangeAccent),
-                ),
-                gradient: LinearGradient(
-                  colors: [
-                    Colors.white.withOpacity(0.3),
-                    Colors.white.withOpacity(0.015),
-                  ],
-                  begin: Alignment.bottomCenter,
-                  end: Alignment.topCenter,
-                ))
-            : BoxDecoration(),
-        child: Icon(
-          icon,
-          color:
-              index == _selectedItemIndex ? Colors.redAccent : Colors.white,
-        ),
-      ),
     );
   }
   Widget _selectedService({

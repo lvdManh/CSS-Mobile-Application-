@@ -1,4 +1,4 @@
-import 'package:computer_service_system/screens/home.dart';
+import 'package:computer_service_system/screens/NavScreen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -17,7 +17,7 @@ class AppState extends State<MyApp> {
       theme: ThemeData(
         primaryColor: Color(0xff053F5E),
       ),
-      home: HomePage(),
+      home: NavScreen(),
     );
   }
 
