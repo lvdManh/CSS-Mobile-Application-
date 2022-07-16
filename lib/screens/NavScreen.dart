@@ -1,4 +1,5 @@
-import 'package:computer_service_system/screens/TrackingAppointment.dart';
+import 'package:computer_service_system/screens/ProductScreen.dart';
+import 'package:computer_service_system/screens/tracking_appointment.dart';
 import 'package:computer_service_system/screens/home.dart';
 import 'package:flutter/material.dart';
 class NavScreen extends StatefulWidget {
@@ -11,19 +12,10 @@ class NavScreen extends StatefulWidget {
 class _NavScreenState extends State<NavScreen>{
   int currentIndex = 0;
   final tabPages =[
-    HomePage(),
-    TrackingAppointment(),
-
-    Container(
-      child: Center(
-        child: Text('Notifications',style: TextStyle(fontSize: 30)),
-      ),
-    ),
-    Container(
-      child: Center(
-        child: Text('Profile',style: TextStyle(fontSize: 30)),
-      ),
-    )
+    const HomePage(),
+    const TrackingAppointment(),
+    const ProductScreen(),
+    const HomePage(),
   ];
 
   @override
@@ -54,7 +46,7 @@ class _NavScreenState extends State<NavScreen>{
         width: MediaQuery.of(context).size.width / 4,
         decoration: index == currentIndex
             ? BoxDecoration(
-            border: Border(
+            border: const Border(
               bottom: BorderSide(width: 4, color: Colors.orangeAccent),
             ),
             gradient: LinearGradient(
@@ -65,7 +57,7 @@ class _NavScreenState extends State<NavScreen>{
               begin: Alignment.bottomCenter,
               end: Alignment.topCenter,
             ))
-            : BoxDecoration(),
+            : const BoxDecoration(),
         child: Icon(
           icon,
           size:
