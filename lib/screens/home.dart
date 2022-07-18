@@ -1,11 +1,12 @@
 import 'package:computer_service_system/constants/color_constant.dart';
 import 'package:computer_service_system/screens/BookAppointmentScreen.dart';
-import 'package:computer_service_system/screens/ProductScreen.dart';
+import 'package:computer_service_system/screens/product_screen.dart';
 import 'package:computer_service_system/screens/tracking_appointment.dart';
 import 'package:flutter/material.dart';
 
 
 class HomePage extends StatefulWidget {
+  static const String routeName = '/home';
   const HomePage({Key? key}) : super(key: key);
 
   @override
