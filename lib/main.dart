@@ -1,9 +1,18 @@
 
-import 'package:computer_service_system/screens/sign_in.dart';
+import 'package:computer_service_system/constants/color_constant.dart';
+import 'package:computer_service_system/features/auth_services.dart';
+import 'package:computer_service_system/providers/data_class.dart';
+import 'package:computer_service_system/router.dart';
+import 'package:computer_service_system/screens/auth_screen.dart';
+import 'package:computer_service_system/screens/nav_screen.dart';
+import 'package:computer_service_system/screens/sign_up.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MultiProvider(providers: [
+    ChangeNotifierProvider(create: (context) => DataClass()),
+  ], child: const MyApp()));
 }
 
 class MyApp extends StatefulWidget {
@@ -14,14 +23,31 @@ class MyApp extends StatefulWidget {
 }
 
 class AppState extends State<MyApp> {
+  final AuthService authService = AuthService();
+
+  @override
+  void initState(){
+    super.initState();
+    authService.getUserData(context);
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Computer Services',
       theme: ThemeData(
-        primaryColor: const Color(0xff053F5E),
+        scaffoldBackgroundColor: mBackgroundColor,
+        colorScheme: const ColorScheme.light(
+          primary: mSecondaryColor,
+        ),
       ),
-      home: const SignIn(),
+      onGenerateRoute: (settings) => generateRoute(settings),
+      home: Provider.of<DataClass>(context).user.accessToken.isNotEmpty
+        ? Provider.of<DataClass>(context).user.role == 'customer'
+          ? const NavScreen()
+          : const SignUp() //Chỗ này thay bằng Trang home của staff
+          : const AuthScreen(),
     );
 
   }
