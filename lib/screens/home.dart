@@ -20,7 +20,6 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       backgroundColor: Colors.orangeAccent,
       body: Container(
-          height: 800,
           width: double.infinity,
           decoration: const BoxDecoration(
               color: mBackgroundColor,
