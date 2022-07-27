@@ -163,13 +163,20 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutx:
+    dependency: "direct main"
+    description:
+      path: "../flutx"
+      relative: true
+    source: path
+    version: "0.0.1"
   google_fonts:
     dependency: "direct main"
     description:
       name: google_fonts
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.1"
+    version: "2.3.3"
   http:
     dependency: "direct main"
     description:
@@ -351,7 +358,7 @@ packages:
       name: provider
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "6.0.3"
+    version: "5.0.0"
   shared_preferences:
     dependency: "direct main"
     description:

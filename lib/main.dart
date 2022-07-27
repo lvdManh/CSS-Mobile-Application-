@@ -1,4 +1,3 @@
-
 import 'package:computer_service_system/constants/color_constant.dart';
 import 'package:computer_service_system/features/auth_services.dart';
 import 'package:computer_service_system/providers/data_class.dart';
@@ -6,6 +5,8 @@ import 'package:computer_service_system/router.dart';
 import 'package:computer_service_system/screens/auth_screen.dart';
 import 'package:computer_service_system/screens/nav_screen.dart';
 import 'package:computer_service_system/screens/sign_up.dart';
+import 'package:computer_service_system/screens/staff_screens/staff_home_page.dart';
+import 'package:computer_service_system/screens/staff_screens/view_appointment_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -26,7 +27,7 @@ class AppState extends State<MyApp> {
   final AuthService authService = AuthService();
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
     authService.getUserData(context);
   }
@@ -43,13 +44,12 @@ class AppState extends State<MyApp> {
         ),
       ),
       onGenerateRoute: (settings) => generateRoute(settings),
-      home: Provider.of<DataClass>(context).user.accessToken.isNotEmpty
-        ? Provider.of<DataClass>(context).user.role == 'customer'
-          ? const NavScreen()
-          : const SignUp() //Chỗ này thay bằng Trang home của staff
-          : const AuthScreen(),
+      // home: Provider.of<DataClass>(context).user.accessToken.isNotEmpty
+      //     ? Provider.of<DataClass>(context).user.role == 'customer'
+      //         ? const NavScreen()
+      //         : const StaffHomePage() //Chỗ này thay bằng Trang home của staff
+      //     : const AuthScreen(),
+      home: StaffHomePage(),
     );
-
   }
-
 }
