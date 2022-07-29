@@ -5,7 +5,6 @@ import 'package:computer_service_system/providers/data_class.dart';
 import 'package:computer_service_system/router.dart';
 import 'package:computer_service_system/screens/auth_screen.dart';
 import 'package:computer_service_system/screens/nav_screen.dart';
-import 'package:computer_service_system/screens/sign_up.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -25,6 +24,14 @@ class MyApp extends StatefulWidget {
 class AppState extends State<MyApp> {
   final AuthService authService = AuthService();
 
+  bool checkRole(){
+    if(Provider.of<DataClass>(context).user.role=='customer'
+    ){
+      return true;
+    }else{
+      return false;
+    }
+  }
   @override
   void initState(){
     super.initState();
@@ -43,11 +50,11 @@ class AppState extends State<MyApp> {
         ),
       ),
       onGenerateRoute: (settings) => generateRoute(settings),
-      home: Provider.of<DataClass>(context).user.accessToken.isNotEmpty
-        ? Provider.of<DataClass>(context).user.role == 'customer'
-          ? const NavScreen()
-          : const SignUp() //Chỗ này thay bằng Trang home của staff
-          : const AuthScreen(),
+      home: Provider.of<DataClass>(context).user.accessToken.isNotEmpty ?
+            checkRole() ?
+            const NavScreen() : const AuthScreen()
+            : const AuthScreen()
+
     );
 
   }

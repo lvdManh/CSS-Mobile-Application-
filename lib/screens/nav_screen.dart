@@ -1,4 +1,5 @@
 import 'package:badges/badges.dart';
+import 'package:computer_service_system/features/auth_services.dart';
 import 'package:computer_service_system/providers/data_class.dart';
 import 'package:computer_service_system/screens/account_screen.dart';
 import 'package:computer_service_system/screens/product_screen.dart';
@@ -16,6 +17,7 @@ class NavScreen extends StatefulWidget {
 }
 
 class _NavScreenState extends State<NavScreen> {
+  final AuthService authService = AuthService();
   int currentIndex = 0;
   List<Widget> tabPages = [
     const HomePage(),
@@ -28,6 +30,11 @@ class _NavScreenState extends State<NavScreen> {
     setState(() {
       currentIndex = page;
     });
+  }
+  @override
+  void initState(){
+    super.initState();
+    authService.getUserData(context);
   }
 
   @override

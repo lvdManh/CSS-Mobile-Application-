@@ -18,7 +18,7 @@ class _ProductScreenState extends State<ProductScreen> {
       appBar: AppBar(
         elevation: 0.0,
         backgroundColor: Colors.orangeAccent,
-        title: Text(
+        title: const Text(
           "Linh kiện",
           style: TextStyle(
             fontSize: 23,
@@ -30,14 +30,14 @@ class _ProductScreenState extends State<ProductScreen> {
       body: Container(
         height: 800,
         width: double.infinity,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
             color: mBackgroundColor,
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(30),
               topRight: Radius.circular(30),
             )),
         child: Padding(
-          padding: EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(16.0),
           child:
           ListView.builder(
             itemCount: ProductModel.products.length,

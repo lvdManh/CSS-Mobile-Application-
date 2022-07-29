@@ -1,12 +1,10 @@
 import 'dart:convert';
-//import 'package:computer_service_system/models/object/booking_object.dart';
 import 'package:computer_service_system/providers/data_class.dart';
 import 'package:computer_service_system/screens/nav_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../constants/error_handling.dart';
 import '../constants/utils.dart';
 import '../screens/auth_screen.dart';
@@ -68,7 +66,8 @@ class AuthService {
           onSuccess: () async {
             SharedPreferences prefs = await SharedPreferences.getInstance();
             Provider.of<DataClass>(context,listen: false).setUser(res.body);
-            await prefs.setString('token', jsonDecode(res.body)['accessToken']);
+            await prefs.setString('accessToken', jsonDecode(res.body)['accessToken']);
+
             Navigator.pushNamedAndRemoveUntil(
               context,
               NavScreen.routeName, (route) => false,);
@@ -83,9 +82,9 @@ class AuthService {
       ) async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? accessToken = prefs.getString('token');
+      String? accessToken = prefs.getString('accessToken');
       if(accessToken==null){
-        prefs.setString('token', '');
+        prefs.setString('accessToken', '');
       }
       var tokenRes = await http.post(Uri.parse('https://computer-services-api.herokuapp.com/auth/refresh'),
       headers: <String,String>{
@@ -99,7 +98,6 @@ class AuthService {
           Uri.parse('https://computer-services-api.herokuapp.com/auth/login'),
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
-            'token': accessToken
           },
           body: jsonEncode({
             'username' : prefs.getString('username'),
@@ -134,36 +132,4 @@ class AuthService {
     }
   }
 
-  // Future<List<Booking>> fetchMyBooking({
-  //   required BuildContext context,
-  // }) async {
-  //   final userProvider = Provider.of<DataClass>(context, listen: false);
-  //   List<Booking> bo = [];
-  //   try {
-  //     http.Response res =
-  //     await http.get(Uri.parse('$uri/api/orders/me'), headers: {
-  //       'Content-Type': 'application/json; charset=UTF-8',
-  //       'x-auth-token': userProvider.user.token,
-  //     });
-  //
-  //     httpErrorHandle(
-  //       response: res,
-  //       context: context,
-  //       onSuccess: () {
-  //         for (int i = 0; i < jsonDecode(res.body).length; i++) {
-  //           orderList.add(
-  //             Order.fromJson(
-  //               jsonEncode(
-  //                 jsonDecode(res.body)[i],
-  //               ),
-  //             ),
-  //           );
-  //         }
-  //       },
-  //     );
-  //   } catch (e) {
-  //     showSnackBar(context, e.toString());
-  //   }
-  //   return orderList;
-  // }
 }

@@ -10,5 +10,5 @@ const mCardTitleColor = Color(0xFF2E4ECF);
 const mCardSubtitleColor = Color(0xFFC93956);
 const mBorderColor = Color(0xFFE8E8F3);
 const mSecondaryColor = Color(0xFFD96914);
-
+const mTextColorSecondary = Color(0xFF747474);
 

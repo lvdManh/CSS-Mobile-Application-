@@ -1,5 +1,5 @@
 import 'package:computer_service_system/constants/color_constant.dart';
-import 'package:computer_service_system/screens/SubmitAppointmentScreen.dart';
+import 'package:computer_service_system/screens/submit_booking_screen.dart';
 import 'package:flutter/material.dart';
 
 class BookAppointment extends StatefulWidget {
@@ -28,7 +28,7 @@ class _BookAppointmentState extends State<BookAppointment> {
         centerTitle: true,
       ),
       body: Container(
-        height: 800,
+        height: double.infinity,
         width: double.infinity,
         decoration: const BoxDecoration(
             color: mBackgroundColor,
