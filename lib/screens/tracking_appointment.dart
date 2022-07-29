@@ -11,6 +11,7 @@ import '../models/booking_data.dart';
 import '../providers/data_class.dart';
 
 class TrackingAppointment extends StatefulWidget {
+  static const String routeName = '/tracking-appointment';
   const TrackingAppointment({Key? key}) : super(key: key);
 
   @override
@@ -19,6 +20,8 @@ class TrackingAppointment extends StatefulWidget {
 
 class _TrackingAppointmentState extends State<TrackingAppointment> {
   List<Booking> bookingList = [];
+
+
    Bookings? bookings;
   Future<List<Booking>> getBookingListApi() async {
     final user = context.watch<DataClass>().user;
@@ -45,6 +48,7 @@ class _TrackingAppointmentState extends State<TrackingAppointment> {
         dialogType: DialogType.WARNING,
         title: 'Hết phiên đăng nhập',
         desc: 'Vui lòng đăng nhập lại',
+        dismissOnTouchOutside: false,
         btnOkOnPress: () { AuthService().logOut(context);},
       ).show();
       return bookingList;
@@ -54,21 +58,19 @@ class _TrackingAppointmentState extends State<TrackingAppointment> {
 
     final response = await http.get(
       Uri.parse(
-          "https://computer-services-api.herokuapp.com/booking/$id"),
+          "https://computer-services-api.herokuapp.com/booking/search/$id"),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
     );
     var data = jsonDecode(response.body.toString());
     if(response.statusCode==200){
-      print(bookings?.cusName.toString());
       bookings =  Bookings.fromJson(data);
       return bookings;
     }else{
       return bookings;
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -114,7 +116,8 @@ class _TrackingAppointmentState extends State<TrackingAppointment> {
                                   Text(bookingList[index].status.toString()),
                               onTap: () async {
                                 await getBookingById(bookingList[index].id);
-                                Navigator.push(
+                                if(!mounted) return;
+                                await Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) => AppointmentDetail(

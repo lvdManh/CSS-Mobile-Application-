@@ -28,7 +28,7 @@ class _BookAppointmentState extends State<BookAppointment> {
         centerTitle: true,
       ),
       body: Container(
-        height: 800,
+        height: double.infinity,
         width: double.infinity,
         decoration: const BoxDecoration(
             color: mBackgroundColor,

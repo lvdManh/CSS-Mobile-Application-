@@ -1,4 +1,6 @@
 
+import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:computer_service_system/features/booking_services.dart';
 import 'package:computer_service_system/screens/widgets/custom_button.dart';
 import 'package:computer_service_system/screens/widgets/edit_appointment.dart';
 import 'package:flutter/material.dart';
@@ -30,6 +32,7 @@ class AppointmentDetail extends StatelessWidget {
         body: Container(
           width: double.infinity,
           height: double.infinity,
+          padding: const EdgeInsets.all(16),
           decoration: const BoxDecoration(
               color: mBackgroundColor,
               borderRadius: BorderRadius.only(
@@ -54,7 +57,7 @@ class AppointmentDetail extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      const Text("Tên",
+                      const Text("Tên:",
                           style: TextStyle(fontSize: 18, fontFamily: 'Regular')),
                       Text(bookings.cusName.toString(),
                           style: const TextStyle(fontSize: 18, fontFamily: 'Regular')),
@@ -69,7 +72,7 @@ class AppointmentDetail extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      const Text("Số điện thoại",
+                      const Text("Số điện thoại:",
                           style: TextStyle(fontSize: 18, fontFamily: 'Regular')),
                       Text(bookings.phonenum.toString(),
                           style: const TextStyle(fontSize: 18, fontFamily: 'Regular')),
@@ -83,7 +86,7 @@ class AppointmentDetail extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                          const Text("Địa chỉ",
+                          const Text("Địa chỉ:",
                               style: TextStyle(fontSize: 18, fontFamily: 'Regular')),
                           Text('${bookings.cusAddress!.street.toString()}, ${bookings.cusAddress!.ward.toString()}, ${bookings.cusAddress!.district.toString()}',
                               style: const TextStyle(fontSize: 18, fontFamily: 'Regular')),
@@ -105,7 +108,7 @@ class AppointmentDetail extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                          const Text("Loại dịch vụ",
+                          const Text("Loại máy:",
                               style: TextStyle(fontSize: 18, fontFamily: 'Regular')),
                           Text(bookings.type.toString(),
                               style: const TextStyle(fontSize: 18, fontFamily: 'Regular')),
@@ -120,7 +123,7 @@ class AppointmentDetail extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                          const Text("Dịch vụ yêu cầu",
+                          const Text("Dịch vụ yêu cầu:",
                               style: TextStyle(fontSize: 18, fontFamily: 'Regular')),
                           Text(bookings.services.toString(),
                               style: const TextStyle(fontSize: 18, fontFamily: 'Regular')),
@@ -135,7 +138,7 @@ class AppointmentDetail extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                          const Text("Thời gian hẹn",
+                          const Text("Thời gian hẹn:",
                               style: TextStyle(fontSize: 18, fontFamily: 'Regular')),
                           Text('${dt1.hour}:${dt1.minute}, ${dt1.day}/${dt1.month}/${dt1.year}',
                               style: const TextStyle(fontSize: 18, fontFamily: 'Regular')),
@@ -171,7 +174,7 @@ class AppointmentDetail extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                          const Text("Trạng thái lịch hẹn",
+                          const Text("Trạng thái lịch hẹn:",
                               style: TextStyle(fontSize: 18, fontFamily: 'Regular')),
                           Text(bookings.status.toString(),
                               style: const TextStyle(fontSize: 18, fontFamily: 'Regular')),
@@ -181,7 +184,7 @@ class AppointmentDetail extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 20),
-                          Align(
+                  if (bookings.status=='pending') Align(
                             alignment: Alignment.bottomCenter,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -191,6 +194,33 @@ class AppointmentDetail extends StatelessWidget {
                                   child: CustomButton(
                                     text: 'Hủy lịch hẹn',
                                     onTap: (){
+                                      AwesomeDialog(
+                                        context: context,
+                                        dialogType: DialogType.WARNING,
+                                        headerAnimationLoop: false,
+                                        closeIcon: const Icon(Icons.close_fullscreen_outlined),
+                                        title: 'Xác nhận hủy?',
+                                        desc:
+                                        'Chắc chắn hủy lịch hẹn?',
+                                        btnCancelOnPress: () {
+                                        },
+                                        onDissmissCallback: (type) {
+                                        },
+                                        btnOkOnPress: () {
+                                          BookingServices().cancelBooking(bookings.id);
+                                          AwesomeDialog(
+                                            context: context,
+                                            dialogType: DialogType.SUCCES,
+                                            autoHide: const Duration(seconds: 2),
+                                            headerAnimationLoop: false,
+                                            closeIcon: const Icon(Icons.close_fullscreen_outlined),
+                                            title: "Hủy thành công",
+                                            btnOkOnPress: (){
+                                              Navigator.popAndPushNamed(context, '/tracking-appointment');
+                                            }
+                                          ).show();
+                                        },
+                                      ).show();
                                     },
                                   ),
                                 ),
@@ -210,7 +240,18 @@ class AppointmentDetail extends StatelessWidget {
                                 ),
                               ],
                             ),
+                          ) else Align(
+                    alignment: Alignment.bottomCenter,
+                        child: SizedBox(
+                          width: 150,
+                          child: CustomButton(
+                            text: 'Xem thêm',
+                            onTap: (){
+                            },
                           ),
+                        ),
+
+                  ),
 
 
 

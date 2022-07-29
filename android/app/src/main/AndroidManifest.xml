@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.computer_service_system">
     <application
-        android:label="computer_service_system"
+        android:label="CSS"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

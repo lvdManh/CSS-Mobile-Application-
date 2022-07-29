@@ -98,11 +98,15 @@ class _AuthScreenState extends State<AuthScreen> {
                         CustomTextField(
                           controller: phoneController,
                           hintText: 'số điện thoại',
+                          secure: false,
                         ),
                         const SizedBox(height: 10),
                         CustomTextField(
                             controller: passwordController,
-                            hintText: 'Mật khẩu'),
+                            hintText: 'Mật khẩu',
+                            secure: true,
+                        ),
+
                         const SizedBox(height: 10),
                         CustomButton(
                           text: 'Đăng ký tài khoản',
@@ -146,6 +150,7 @@ class _AuthScreenState extends State<AuthScreen> {
                         CustomTextField(
                           controller: phoneController,
                           hintText: 'Số điện thoại',
+                          secure: false,
                         ),
                         const SizedBox(
                           height: 10,
@@ -153,6 +158,7 @@ class _AuthScreenState extends State<AuthScreen> {
                         CustomTextField(
                           controller: passwordController,
                           hintText: 'Mật khẩu',
+                          secure: true,
                         ),
                         const SizedBox(
                           height: 10,
