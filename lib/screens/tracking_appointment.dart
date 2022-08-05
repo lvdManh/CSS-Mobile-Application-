@@ -71,21 +71,28 @@ class _TrackingAppointmentState extends State<TrackingAppointment> {
       return bookings;
     }
   }
+  String parseDate(time){
+    DateTime dt1 = DateTime.parse(time);
+    return '${dt1.hour}:${dt1.minute}, ${dt1.day}/${dt1.month}/${dt1.year}';
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.orangeAccent,
-      appBar: AppBar(
-        elevation: 0.0,
-        backgroundColor: Colors.orangeAccent,
-        title: const Text(
-          "Lịch hẹn",
-          style: TextStyle(
-            fontSize: 23,
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(50),
+        child: AppBar(
+          elevation: 0.0,
+          backgroundColor: Colors.orangeAccent,
+          title: const Text(
+            "Lịch hẹn",
+            style: TextStyle(
+              fontSize: 23,
+            ),
           ),
+          centerTitle: true,
         ),
-        centerTitle: true,
       ),
       body: Container(
         width: double.infinity,
@@ -103,30 +110,35 @@ class _TrackingAppointmentState extends State<TrackingAppointment> {
                   if (!snapshot.hasData) {
                     return const Center(child: CircularProgressIndicator());
                   } else {
-                    return bookingList.isNotEmpty ? ListView.builder(
-                        itemCount: bookingList.length,
-                        itemBuilder: (context, index) {
-                          return Card(
-                            child: ListTile(
-                              title: Text('Dịch vụ: ${bookingList[index]
-                                  .services?.first}'),
-                              subtitle:
-                                  Text('Thời gian: ${bookingList[index].time.toString()}'),
-                              trailing:
-                                  Text(bookingList[index].status.toString()),
-                              onTap: () async {
-                                await getBookingById(bookingList[index].id);
-                                if(!mounted) return;
-                                await Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => AppointmentDetail(
-                                              bookings: bookings!,
-                                            )));
-                              },
-                            ),
-                          );
-                        }) : const Center(child: Text('Chưa có lịch hẹn', style: TextStyle(fontSize: 18),),);
+                    return bookingList.isNotEmpty ? Align(
+                      alignment: Alignment.topCenter,
+                      child: ListView.builder(
+                        scrollDirection: Axis.vertical,
+                          shrinkWrap: true,
+                          itemCount: bookingList.length,
+                          itemBuilder: (context, index) {
+                            return Card(
+                              child: ListTile(
+                                title: Text('Dịch vụ: ${bookingList[(bookingList.length-1)-index]
+                                    .services!.join(', ').toString()}'),
+                                subtitle:
+                                    Text('Thời gian: ${parseDate(bookingList[(bookingList.length-1)-index].time)}'),
+                                trailing:
+                                    Text(bookingList[(bookingList.length-1)-index].status.toString()),
+                                onTap: () async {
+                                  await getBookingById(bookingList[(bookingList.length-1)-index].id);
+                                  if(!mounted) return;
+                                  await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => AppointmentDetail(
+                                                bookings: bookings!,
+                                              )));
+                                },
+                              ),
+                            );
+                          }),
+                    ) : const Center(child: Text('Chưa có lịch hẹn', style: TextStyle(fontSize: 18),),);
                   }
                 })),
       ),

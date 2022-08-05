@@ -1,9 +1,11 @@
 import 'package:computer_service_system/screens/account_screen.dart';
 import 'package:computer_service_system/screens/auth_screen.dart';
+import 'package:computer_service_system/screens/create_booking_first_stage.dart';
 import 'package:computer_service_system/screens/home.dart';
 import 'package:computer_service_system/screens/nav_screen.dart';
+import 'package:computer_service_system/screens/product_screen.dart';
 import 'package:computer_service_system/screens/services_screen.dart';
-import 'package:computer_service_system/screens/submit_booking_screen.dart';
+import 'package:computer_service_system/screens/create_booking_second_stage.dart';
 import 'package:computer_service_system/screens/tracking_appointment.dart';
 import 'package:flutter/material.dart';
 
@@ -32,7 +34,7 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
     case SubmitAppointment.routeName:
       return MaterialPageRoute(
         settings: routeSettings,
-        builder: (_) => const SubmitAppointment(),
+        builder: (_) => const BookAppointment(),
       );
     case AccountScreen.routeName:
       return MaterialPageRoute(
@@ -43,6 +45,11 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
       return MaterialPageRoute(
         settings: routeSettings,
         builder: (_) => const ServicesScreen(),
+      );
+    case ProductScreen.routeName:
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (_) => const ProductScreen(),
       );
     default:
       return MaterialPageRoute(

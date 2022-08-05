@@ -29,4 +29,5 @@ class DataClass extends ChangeNotifier {
     notifyListeners();
   }
 
+
 }

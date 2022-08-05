@@ -18,16 +18,19 @@ class AppointmentDetail extends StatelessWidget {
     // String weekday = DateFormat('EEEE').format(dt1);
     return Scaffold(
         backgroundColor: Colors.orangeAccent,
-        appBar: AppBar(
-          elevation: 0.0,
-          backgroundColor: Colors.orangeAccent,
-          title: const Text(
-            "Lịch hẹn",
-            style: TextStyle(
-              fontSize: 23,
+        appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(50),
+          child: AppBar(
+            elevation: 0.0,
+            backgroundColor: Colors.orangeAccent,
+            title: const Text(
+              "Lịch hẹn",
+              style: TextStyle(
+                fontSize: 23,
+              ),
             ),
+            centerTitle: true,
           ),
-          centerTitle: true,
         ),
         body: Container(
           width: double.infinity,
@@ -86,10 +89,14 @@ class AppointmentDetail extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                          const Text("Địa chỉ:",
+                          const Text("Địa chỉ:   ",
                               style: TextStyle(fontSize: 18, fontFamily: 'Regular')),
-                          Text('${bookings.cusAddress!.street.toString()}, ${bookings.cusAddress!.ward.toString()}, ${bookings.cusAddress!.district.toString()}',
-                              style: const TextStyle(fontSize: 18, fontFamily: 'Regular')),
+
+                          Flexible(
+
+                            child: Text('${bookings.cusAddress!.street.toString()}, ${bookings.cusAddress!.ward.toString()}, ${bookings.cusAddress!.district.toString()}',
+                                style: const TextStyle(fontSize: 18, fontFamily: 'Regular'), textAlign: TextAlign.right,),
+                          ),
                         ],
                       ),
                       const Divider()
@@ -125,8 +132,10 @@ class AppointmentDetail extends StatelessWidget {
                         children: <Widget>[
                           const Text("Dịch vụ yêu cầu:",
                               style: TextStyle(fontSize: 18, fontFamily: 'Regular')),
-                          Text(bookings.services.toString(),
-                              style: const TextStyle(fontSize: 18, fontFamily: 'Regular')),
+                          Flexible(
+                            child: Text(bookings.services!.join(', ').toString(),
+                                style: const TextStyle(fontSize: 18, fontFamily: 'Regular'),textAlign: TextAlign.right,),
+                          ),
                         ],
                       ),
                       //const Divider()
@@ -162,12 +171,16 @@ class AppointmentDetail extends StatelessWidget {
                       const SizedBox(height: 8),
                     ],
                   ),
-                  Text(
-                    bookings.description.toString(),
-                    textAlign: TextAlign.start,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(fontSize: 16.0),
-                    maxLines: 2,),
+
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8,horizontal: 20),
+                    child: Text(
+                      bookings.description.toString(),
+                      textAlign: TextAlign.left,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(fontSize: 18.0),
+                      maxLines: 2,),
+                  ),
                   const SizedBox(height: 20),
                   Column(
                     children: <Widget>[

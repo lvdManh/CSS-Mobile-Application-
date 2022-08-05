@@ -10,7 +10,7 @@ import 'package:provider/provider.dart';
 
 void main() {
   runApp(MultiProvider(providers: [
-    ChangeNotifierProvider(create: (context) => DataClass()),
+    ChangeNotifierProvider<DataClass>(create: (context) => DataClass()),
   ], child: const MyApp()));
 }
 
@@ -24,14 +24,6 @@ class MyApp extends StatefulWidget {
 class AppState extends State<MyApp> {
   final AuthService authService = AuthService();
 
-  bool checkRole(){
-    if(Provider.of<DataClass>(context).user.role=='customer'
-    ){
-      return true;
-    }else{
-      return false;
-    }
-  }
   @override
   void initState(){
     super.initState();
@@ -50,10 +42,11 @@ class AppState extends State<MyApp> {
         ),
       ),
       onGenerateRoute: (settings) => generateRoute(settings),
-      home: Provider.of<DataClass>(context).user.accessToken.isNotEmpty ?
-            checkRole() ?
-            const NavScreen() : const AuthScreen()
-            : const AuthScreen()
+      home: Provider.of<DataClass>(context).user.accessToken.isNotEmpty
+          ? Provider.of<DataClass>(context).user.role == 'customer'
+          ? const NavScreen()
+          : const AuthScreen() // Staff BottomBar
+          : const AuthScreen(),
 
     );
 

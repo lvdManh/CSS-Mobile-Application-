@@ -12,16 +12,19 @@ class ServiceDetail extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Colors.orangeAccent,
-        appBar: AppBar(
-          elevation: 0.0,
-          backgroundColor: Colors.orangeAccent,
-          title: const Text(
-            "Xem dịch vụ",
-            style: TextStyle(
-              fontSize: 23,
+        appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(50),
+          child: AppBar(
+            elevation: 0.0,
+            backgroundColor: Colors.orangeAccent,
+            title: const Text(
+              "Xem dịch vụ",
+              style: TextStyle(
+                fontSize: 23,
+              ),
             ),
+            centerTitle: true,
           ),
-          centerTitle: true,
         ),
         body: Container(
           width: double.infinity,
