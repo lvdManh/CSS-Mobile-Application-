@@ -1,5 +1,6 @@
+
 import 'package:computer_service_system/constants/color_constant.dart';
-import 'package:computer_service_system/screens/BookAppointmentScreen.dart';
+import 'package:computer_service_system/screens/create_booking_first_stage.dart';
 import 'package:computer_service_system/screens/product_screen.dart';
 import 'package:computer_service_system/screens/services_screen.dart';
 import 'package:computer_service_system/screens/tracking_appointment.dart';
@@ -18,6 +19,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       backgroundColor: Colors.orangeAccent,
       body: Container(
@@ -117,6 +119,7 @@ class _HomePageState extends State<HomePage> {
               builder: (context) => const ProductScreen()
           )
           );
+
         }
         if( destination == 3){
           Navigator.push(
@@ -130,8 +133,9 @@ class _HomePageState extends State<HomePage> {
     child: Container(
 
       decoration: BoxDecoration(
+        color: mFillColor,
         borderRadius: BorderRadius.circular(10.0),
-        border: Border.all(color: Colors.grey, width: 2)
+        border: Border.all(color: mSubtitleColor, width: 2)
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,

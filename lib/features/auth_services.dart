@@ -69,9 +69,14 @@ class AuthService {
             await prefs.setString('accessToken', jsonDecode(res.body)['accessToken']);
 
             Navigator.pushNamedAndRemoveUntil(
-              context,
-              NavScreen.routeName, (route) => false,);
+                context,
+                Provider.of<DataClass>(context, listen: false).user.role ==
+                    'customer'
+                    ? NavScreen.routeName
+                    : AuthScreen.routeName, //thay staff cho nay
+                    (route) => false);
           });
+
     }catch (e){
       showSnackBar(context, e.toString());
     }
@@ -92,17 +97,11 @@ class AuthService {
         'token': accessToken!
       }
       );
+
       var response = jsonDecode(tokenRes.body);
       if (response == true) {
-        http.Response userRes = await http.post(
-          Uri.parse('https://computer-services-api.herokuapp.com/auth/login'),
-          headers: <String, String>{
-            'Content-Type': 'application/json; charset=UTF-8',
-          },
-          body: jsonEncode({
-            'username' : prefs.getString('username'),
-            'password' : prefs.getString('password'),
-          }),
+        http.Response userRes = await http.get(
+          Uri.parse('https://computer-services-api.herokuapp.com/account/${prefs.getString('username')}'),
         );
 
         var userProvider = Provider.of<DataClass>(context, listen: false);

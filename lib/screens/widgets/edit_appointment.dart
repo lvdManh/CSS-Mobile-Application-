@@ -1,14 +1,15 @@
 
 import 'dart:convert';
-
 import 'package:awesome_dialog/awesome_dialog.dart';
-import 'package:computer_service_system/screens/widgets/appointment_details.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../../constants/color_constant.dart';
 import '../../features/booking_services.dart';
+import '../../features/service_services.dart';
 import '../../models/booking_data.dart';
+import '../../models/services_data.dart';
 import 'custom_button.dart';
+import 'multi_select_widget.dart';
 
 class EditAppointment extends StatefulWidget {
   final Bookings bookings;
@@ -34,26 +35,49 @@ class _EditAppointmentState extends State<EditAppointment> {
   final TextEditingController services = TextEditingController();
   final TextEditingController time = TextEditingController();
   Bookings? newDetail;
-
+  late List<Service> futureService;
+  late List<String> serviceName = [];
+  List<String> _selectedItems = [];
   Future<Bookings?> getBookingById(id) async{
-
     final response = await http.get(
       Uri.parse(
           'https://computer-services-api.herokuapp.com/booking/$id'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
-
     );
     if(response.statusCode==200) {
       final data = jsonDecode(response.body.toString());
       newDetail = Bookings.fromJson(data);
       return newDetail;
     }
-
     return newDetail;
-
   }
+
+  Future<void> getNameService() async {
+    futureService = await ServiceServices().fetchServices();
+
+    for(int i =0; i < futureService.length;i++){
+      serviceName.add(futureService[i].name.toString());
+    }
+  }
+
+  void _showMultiSelect() async {
+    final List<String>? results = await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return MultiSelect(items: serviceName, title: "dịch vụ",);
+      },
+    );
+
+    if (results != null) {
+      setState(() {
+        _selectedItems = results;
+      });
+    }
+  }
+
+
   @override
   void initState() {
     super.initState();
@@ -64,25 +88,30 @@ class _EditAppointmentState extends State<EditAppointment> {
     district.text = widget.bookings.cusAddress!.district!;
     city.text = widget.bookings.cusAddress!.city!;
     type.text = widget.bookings.type!;
-    services.text = widget.bookings.services.toString();
+    services.text = widget.bookings.services!.join(', ').toString();
     time.text = widget.bookings.time!;
     description.text = widget.bookings.description!;
+    getNameService();
   }
+
   @override
   Widget build(BuildContext context) {
 
     return Scaffold(
       backgroundColor: Colors.orangeAccent,
-      appBar: AppBar(
-        elevation: 0.0,
-        backgroundColor: Colors.orangeAccent,
-        title: const Text(
-          "Cập nhật lịch hẹn",
-          style: TextStyle(
-            fontSize: 23,
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(50),
+        child: AppBar(
+          elevation: 0.0,
+          backgroundColor: Colors.orangeAccent,
+          title: const Text(
+            "Cập nhật lịch hẹn",
+            style: TextStyle(
+              fontSize: 23,
+            ),
           ),
+          centerTitle: true,
         ),
-        centerTitle: true,
       ),
       body: Container(
         height: double.infinity,
@@ -140,12 +169,40 @@ class _EditAppointmentState extends State<EditAppointment> {
                           controller: street,
                         ),
                         const SizedBox(height: 8),
-                        TextFormField(
-                          decoration:
-                          const InputDecoration(labelText: 'Dịch vụ:'),
-                          controller: services,
+                        Column(
+                          children: <Widget>[
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                const Text("Dịch vụ:",
+                                    style: TextStyle(fontSize: 18, fontFamily: 'Regular')),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    ElevatedButton(
+                                      onPressed: _showMultiSelect,
+                                      child: const Text('Chọn dịch vụ'),
+                                    ),
+                                  ],
+                                ),
+                                // display selected items
+                              ],
+                            ),
+                            Column(
+
+                              children: [
+                                Wrap(
+                                  children: _selectedItems
+                                      .map((e) => Chip(
+                                    label: Text(e),
+                                  ))
+                                      .toList(),
+                                ),
+                              ],
+                            ),
+                            const Divider()
+                          ],
                         ),
-                        const SizedBox(height: 8),
                         TextFormField(
                           decoration:
                           const InputDecoration(labelText: 'Loại máy:'),
@@ -168,34 +225,29 @@ class _EditAppointmentState extends State<EditAppointment> {
                           text: 'Cập nhật',
                           onTap: () async {
                             if (_submitKey.currentState!.validate()) {
-                              bookingServices.editBooking(
-                                  widget.bookings.id,
-                                  street.text,
-                                  ward.text,
-                                  district.text,
-                                  city.text,
-                                  username.text,
-                                  phone.text,
-                                  services.text,
-                                  description.text,
-                                  type.text,
-                                  time.text);
 
                               await getBookingById(widget.bookings.id);
 
-                              await AwesomeDialog(
+                               AwesomeDialog(
                                 context: context,
                                 animType: AnimType.SCALE,
-                                dialogType: DialogType.SUCCES,
+                                dialogType: DialogType.QUESTION,
                                 dismissOnTouchOutside: false,
-                                title: 'Cập nhật lịch hẹn thành công',
-                                desc: 'Chờ cửa hàng xác nhận lịch hẹn',
+                                title: 'Lưu thay đổi?',
+                                btnCancelOnPress: (){},
                                 btnOkOnPress: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                          AppointmentDetail(bookings: newDetail!)));
+                                  bookingServices.editBooking(context,
+                                      widget.bookings.id,
+                                      street.text,
+                                      ward.text,
+                                      district.text,
+                                      city.text,
+                                      username.text,
+                                      phone.text,
+                                      _selectedItems,
+                                      description.text,
+                                      type.text,
+                                      time.text);
                                 },
                               ).show();
 

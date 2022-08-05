@@ -1,13 +1,16 @@
 import 'dart:convert';
 
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:computer_service_system/models/booking_object.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-import 'auth_services.dart';
+import '../screens/nav_screen.dart';
 
 class BookingServices{
+
   Future createBooking(
-      token, street, ward, district, city, name, phonenum, services, description, type, time
+      context, token, street, ward, district, city, name, phonenum, services, description, type, time
       ) async{
     final response = await http.post(
       Uri.parse(
@@ -33,9 +36,32 @@ class BookingServices{
       }),
     );
     if(response.statusCode==200){
-      print("Tạo thành công");
+      AwesomeDialog(
+          context: context,
+          animType: AnimType.SCALE,
+          dialogType: DialogType.SUCCES,
+          title: 'Đặt lịch hẹn thành công',
+          desc: 'Vui lòng chờ quản lí xác nhận lịch hẹn',
+          dismissOnTouchOutside: false,
+          btnOkOnPress: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                const NavScreen()));
+      },
+      ).show();
     }else{
-      print(response.body);
+      AwesomeDialog(
+          context: context,
+          animType: AnimType.SCALE,
+          dialogType: DialogType.ERROR,
+          title: 'Đặt lịch không thành công',
+          desc: 'Vui lòng điền đầy đủ thông tin',
+          dismissOnTouchOutside: false,
+          btnOkOnPress: () {
+      },
+      ).show();
     }
   }
 
@@ -68,7 +94,7 @@ class BookingServices{
 
   }
 
-  Future editBooking(id,
+  Future editBooking(context,id,
       street, ward, district, city, name, phonenum, services, description, type, time
       ) async{
     final response = await http.put(
@@ -93,9 +119,31 @@ class BookingServices{
       }),
     );
     if(response.statusCode==200){
-      print("Cập nhật thành công");
+      AwesomeDialog(
+        context: context,
+        animType: AnimType.SCALE,
+        dialogType: DialogType.SUCCES,
+        title: 'Cập nhật thành công',
+        dismissOnTouchOutside: false,
+        btnOkOnPress: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                  const NavScreen()));
+        },
+      ).show();
+
     }else{
-      print(response.body);
+      AwesomeDialog(
+        context: context,
+        animType: AnimType.SCALE,
+        dialogType: DialogType.SUCCES,
+        title: 'Thay đổi không thành công',
+        dismissOnTouchOutside: false,
+        btnOkOnPress: () {
+        },
+      ).show();
     }
   }
 
@@ -112,10 +160,10 @@ class BookingServices{
       }),
     );
     if(response.statusCode==200){
-        print("Hủy thành công");
+        throw("Hủy thành công");
 
     }else{
-      print("Lỗi");
+      throw("Lỗi");
     }
   }
 

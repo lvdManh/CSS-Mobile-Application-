@@ -19,8 +19,5 @@ class ServiceServices{
     }else{
       throw Exception('Lấy dữ liệu thất bại');
     }
-
   }
-
-
 }
