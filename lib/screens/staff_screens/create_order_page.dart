@@ -268,7 +268,7 @@ class _StaffCreateOrderPageState extends State<StaffCreateOrderPage> {
               ],
             ),
           ),
-          Padding(
+          Container(
             padding: EdgeInsets.all(10),
             child: Column(
               children: <Widget>[
@@ -289,7 +289,7 @@ class _StaffCreateOrderPageState extends State<StaffCreateOrderPage> {
                         color: Colors.orange.shade300,
                         onPressed: () {},
                         child: Text(
-                          "Cập nhật hóa đơn",
+                          "Cập nhật",
                           style: TextStyle(color: Colors.white, fontSize: 20),
                         ),
                       ),

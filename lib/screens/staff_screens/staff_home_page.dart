@@ -1,3 +1,4 @@
+import 'package:computer_service_system/screens/staff_screens/staff_regist_work.dart';
 import 'package:computer_service_system/screens/staff_screens/view_appointment_page.dart';
 import 'package:flutter/material.dart';
 
@@ -5,7 +6,7 @@ class StaffHomePage extends StatefulWidget {
   static const String routeName = '/staff_home_page';
   const StaffHomePage({Key? key}) : super(key: key);
   @override
-  _StaffHomePageState createState() => _StaffHomePageState();
+  State<StaffHomePage> createState() => _StaffHomePageState();
 }
 
 class _StaffHomePageState extends State<StaffHomePage> {
@@ -71,7 +72,12 @@ class _StaffHomePageState extends State<StaffHomePage> {
                     fontSize: 20,
                   ),
                 ),
-                onPressed: () {}),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => StaffRegistWork()),
+                  );
+                }),
           ),
           //Button xem lịch làm việc
           Container(
@@ -150,3 +156,65 @@ class _StaffHomePageState extends State<StaffHomePage> {
     );
   }
 }
+
+// import 'package:flutter/material.dart';
+
+// class StaffRegistWork extends StatefulWidget {
+//   static const String routeName = '/staff_regist_work';
+//   const StaffRegistWork({Key? key}) : super(key: key);
+//   @override
+//   _StaffRegistWorkState createState() => _StaffRegistWorkState();
+// }
+
+// class _StaffRegistWorkState extends State<StaffRegistWork> {
+//   int _selectedItemIndex = 1;
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       // Bottom Navigation----------------
+//       bottomNavigationBar: Row(
+//         children: <Widget>[
+//           buildNavBarItem(Icons.home, 0),
+//           buildNavBarItem(Icons.list_alt, 1),
+//           buildNavBarItem(Icons.notifications, 2),
+//           buildNavBarItem(Icons.person, 3)
+//         ],
+//       ),
+//       // This is Background Color
+//     );
+//   }
+
+//   Widget buildNavBarItem(IconData icon, int index) {
+//     return GestureDetector(
+//       onTap: () {
+//         setState(() {
+//           _selectedItemIndex = index;
+//         });
+//       },
+//       child: Container(
+//         height: 60,
+//         width: MediaQuery.of(context).size.width / 4,
+//         decoration: index == _selectedItemIndex
+//             ? BoxDecoration(
+//                 border: Border(
+//                   bottom: BorderSide(width: 4, color: Colors.orangeAccent),
+//                 ),
+//                 gradient: LinearGradient(
+//                   colors: [
+//                     Colors.white.withOpacity(0.3),
+//                     Colors.white.withOpacity(0.015),
+//                   ],
+//                   begin: Alignment.bottomCenter,
+//                   end: Alignment.topCenter,
+//                 ))
+//             : BoxDecoration(),
+//         child: Icon(
+//           icon,
+//           color: index == _selectedItemIndex ? Colors.redAccent : Colors.white,
+//         ),
+//       ),
+//     );
+//   }
+// }
+
