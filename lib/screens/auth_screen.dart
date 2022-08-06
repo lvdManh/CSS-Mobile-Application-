@@ -18,14 +18,14 @@ class AuthScreen extends StatefulWidget {
 }
 
 class _AuthScreenState extends State<AuthScreen> {
-  Auth _auth = Auth.signup;
+  Auth _auth = Auth.signin;
   final _signUpFormKey = GlobalKey<FormState>();
   final _signInFormKey = GlobalKey<FormState>();
   final AuthService authService = AuthService();
   String resultText = "";
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-
+  final TextEditingController confirmPassController = TextEditingController();
   @override
   void dispose() {
     super.dispose();
@@ -56,120 +56,129 @@ class _AuthScreenState extends State<AuthScreen> {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Center(
-                child: Text(
-                  'Computer services',
-                  style: TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.w700,
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Center(
+                  child: Text(
+                    'Computer services',
+                    style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                 ),
-              ),
-              ListTile(
-                tileColor: _auth == Auth.signup ? mBackgroundColor : mGreyColor,
-                title: const Text(
-                  'Tạo tài khoản',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
+
+                ListTile(
+                  tileColor: _auth == Auth.signin ? mBackgroundColor : mGreyColor,
+                  title: const Text(
+                    'Đăng nhập',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  leading: Radio(
+                    activeColor: mSecondaryColor,
+                    value: Auth.signin,
+                    groupValue: _auth,
+                    onChanged: (Auth? val) {
+                      setState(() {
+                        _auth = val!;
+                      });
+                    },
                   ),
                 ),
-                leading: Radio(
-                  activeColor: mSecondaryColor,
-                  value: Auth.signup,
-                  groupValue: _auth,
-                  onChanged: (Auth? val) {
-                    setState(() {
-                      _auth = val!;
-                    });
-                  },
-                ),
-              ),
-              if (_auth == Auth.signup)
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  color: mBackgroundColor,
-                  child: Form(
-                    key: _signUpFormKey,
-                    child: Column(
-                      children: [
-                        CustomTextField(
-                          controller: phoneController,
-                          hintText: 'số điện thoại',
-                        ),
-                        const SizedBox(height: 10),
-                        CustomTextField(
+                if (_auth == Auth.signin)
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                    color: mBackgroundColor,
+                    child: Form(
+                      key: _signInFormKey,
+                      child: Column(
+                        children: [
+                          CustomTextField(
+                            controller: phoneController,
+                            hintText: 'Số điện thoại',
+                            secure: false,
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          CustomTextField(
                             controller: passwordController,
-                            hintText: 'Mật khẩu'),
-                        const SizedBox(height: 10),
-                        CustomButton(
-                          text: 'Đăng ký tài khoản',
-                          onTap: () {
-                            if (_signUpFormKey.currentState!.validate()) {
-                              signUpUser();
-                            }
-                          },
-                        )
-                      ],
+                            hintText: 'Mật khẩu',
+                            secure: true,
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          CustomButton(
+                            text: 'Đăng nhập',
+                            onTap: () {
+                              if (_signInFormKey.currentState!.validate()) {
+                                signInUser();
+                              }
+                            },
+                          )
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ListTile(
-                tileColor: _auth == Auth.signin ? mBackgroundColor : mGreyColor,
-                title: const Text(
-                  'Đăng nhập',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                leading: Radio(
-                  activeColor: mSecondaryColor,
-                  value: Auth.signin,
-                  groupValue: _auth,
-                  onChanged: (Auth? val) {
-                    setState(() {
-                      _auth = val!;
-                    });
-                  },
-                ),
-              ),
-              if (_auth == Auth.signin)
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  color: mBackgroundColor,
-                  child: Form(
-                    key: _signInFormKey,
-                    child: Column(
-                      children: [
-                        CustomTextField(
-                          controller: phoneController,
-                          hintText: 'Số điện thoại',
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        CustomTextField(
-                          controller: passwordController,
-                          hintText: 'Mật khẩu',
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        CustomButton(
-                          text: 'Đăng nhập',
-                          onTap: () {
-                            if (_signInFormKey.currentState!.validate()) {
-                              signInUser();
-                            }
-                          },
-                        )
-                      ],
+                ListTile(
+                  tileColor: _auth == Auth.signup ? mBackgroundColor : mGreyColor,
+                  title: const Text(
+                    'Tạo tài khoản',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
+                  leading: Radio(
+                    activeColor: mSecondaryColor,
+                    value: Auth.signup,
+                    groupValue: _auth,
+                    onChanged: (Auth? val) {
+                      setState(() {
+                        _auth = val!;
+                      });
+                    },
+                  ),
                 ),
-            ],
+                if (_auth == Auth.signup)
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                    color: mBackgroundColor,
+                    child: Form(
+                      key: _signUpFormKey,
+                      child: Column(
+                        children: [
+                          CustomTextField(
+                            controller: phoneController,
+                            hintText: 'Số điện thoại',
+                            secure: false,
+                          ),
+                          const SizedBox(height: 10),
+                          CustomTextField(
+                            controller: passwordController,
+                            hintText: 'Mật khẩu',
+                            secure: true,
+                          ),
+
+                          const SizedBox(height: 10),
+                          CustomButton(
+                            text: 'Đăng ký tài khoản',
+                            onTap: () {
+                              if (_signUpFormKey.currentState!.validate()) {
+                                signUpUser();
+                              }
+                            },
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+              ],
+            ),
           ),
         ),
       ),

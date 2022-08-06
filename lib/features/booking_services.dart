@@ -1,77 +1,170 @@
 import 'dart:convert';
 
-import 'package:computer_service_system/models/object/staff_get_booking_object.dart';
-import 'package:flutter/foundation.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:computer_service_system/models/booking_object.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-class BookingRequest {
-  static const String url =
-      "http://computer-services-api.herokuapp.com/booking/all";
-  // static const String url =
-  // "http://computer-services-api.herokuapp.com/booking/all?sort=desc&status=accepted&page=1&limit=10";
-  // "http://computer-services-api.herokuapp.com/booking/all?$sort&$status&$page&$limit";
+import '../screens/nav_screen.dart';
 
-  static List<appointment> parsePost(String responseBody) {
-    var list = json.decode(responseBody) as List<dynamic>;
-    List<appointment> bookings =
-        list.map((model) => appointment.fromJson(model)).toList();
-    return bookings;
-  }
+class BookingServices{
 
-//sort, status, page, limit
-  static Future<List<appointment>> fetchBooking() async {
-    final response = await http.get(
-        // Uri.parse('$url?sort=$sort&status=$status&page=$page&limit=$limit'));
-        Uri.parse(url));
-    print(response);
-    if (response.statusCode == 200) {
-      return compute(parsePost, response.body);
-    } else if (response.statusCode == 404) {
-      throw Exception('Not Found');
-    } else {
-      throw Exception('Can\'t get booking list');
+  Future createBooking(
+      context, token, street, ward, district, city, name, phonenum, services, description, type, time
+      ) async{
+    final response = await http.post(
+      Uri.parse(
+          'https://computer-services-api.herokuapp.com/booking/create'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'token': 'bearer $token',
+      },
+      body: jsonEncode({
+        'cus_address': {
+          'city': city,
+          'district': district,
+          'ward': ward,
+          'street': street
+        },
+        'cus_name': name,
+        'phonenum': phonenum,
+        'services': services,
+        'description': description,
+        'time': time,
+        'type': type,
+        'status': 'pending'
+      }),
+    );
+    if(response.statusCode==200){
+      AwesomeDialog(
+          context: context,
+          animType: AnimType.SCALE,
+          dialogType: DialogType.SUCCES,
+          title: 'Đặt lịch hẹn thành công',
+          desc: 'Vui lòng chờ quản lí xác nhận lịch hẹn',
+          dismissOnTouchOutside: false,
+          btnOkOnPress: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                const NavScreen()));
+      },
+      ).show();
+    }else{
+      AwesomeDialog(
+          context: context,
+          animType: AnimType.SCALE,
+          dialogType: DialogType.ERROR,
+          title: 'Đặt lịch không thành công',
+          desc: 'Vui lòng điền đầy đủ thông tin',
+          dismissOnTouchOutside: false,
+          btnOkOnPress: () {
+      },
+      ).show();
     }
   }
+
+  Future<List<Booking>> fetchBooking(token
+      ) async{
+    final response = await http.get(
+      Uri.parse(
+          "https://computer-services-api.herokuapp.com/booking/all/bookings-account"),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'token': 'bearer $token',
+      },
+    );
+
+    if(response.statusCode == 200){
+      final parsed = json.decode(response.body).cast<Map<String, dynamic>>();
+      return  parsed.map<Booking>((json) => Booking.fromJson(json)).toList();
+    }else{
+      // AwesomeDialog(
+      //   context: context,
+      //   animType: AnimType.SCALE,
+      //   dialogType: DialogType.WARNING,
+      //   title: 'Hết phiên đăng nhập',
+      //   desc: 'Vui lòng đăng nhập lại',
+      //   dismissOnTouchOutside: false,
+      //   btnOkOnPress: () { AuthService().logOut(context);},
+      // ).show();
+      throw Exception('Lấy dữ liệu thất bại');
+    }
+
+  }
+
+  Future editBooking(context,id,
+      street, ward, district, city, name, phonenum, services, description, type, time
+      ) async{
+    final response = await http.put(
+      Uri.parse(
+          'https://computer-services-api.herokuapp.com/booking/$id'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode({
+        'cus_address': {
+          'city': city,
+          'district': district,
+          'ward': ward,
+          'street': street
+        },
+        'cus_name': name,
+        'phonenum': phonenum,
+        'services': services,
+        'description': description,
+        'time': time,
+        'type': type,
+      }),
+    );
+    if(response.statusCode==200){
+      AwesomeDialog(
+        context: context,
+        animType: AnimType.SCALE,
+        dialogType: DialogType.SUCCES,
+        title: 'Cập nhật thành công',
+        dismissOnTouchOutside: false,
+        btnOkOnPress: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                  const NavScreen()));
+        },
+      ).show();
+
+    }else{
+      AwesomeDialog(
+        context: context,
+        animType: AnimType.SCALE,
+        dialogType: DialogType.SUCCES,
+        title: 'Thay đổi không thành công',
+        dismissOnTouchOutside: false,
+        btnOkOnPress: () {
+        },
+      ).show();
+    }
+  }
+
+  Future cancelBooking(id
+      ) async{
+    final response = await http.patch(
+      Uri.parse(
+          'https://computer-services-api.herokuapp.com/booking/cancel-booking'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode({
+        'id' : id
+      }),
+    );
+    if(response.statusCode==200){
+        throw("Hủy thành công");
+
+    }else{
+      throw("Lỗi");
+    }
+  }
+
 }
-
-// class API_Manager {
-//   Future<appointment> getAppointments() async {
-//     var client = http.Client();
-//     var appointmentModel;
-//     String appointment_url =
-//         'http://computer-services-api.herokuapp.com/booking/all';
-//     String basicAuth = 'Basic exampleauthkey';
-//     try {
-//       var response = await client.get(Uri.parse(appointment_url));
-//       //print(response.statusCode);
-//       //developer.log(response.body);
-//       if (response.statusCode == 200) {
-//         var jsonString = response.body;
-//         var jsonMap = json.decode(jsonString);
-//         appointmentModel = appointment.fromJson(jsonMap);
-//       }
-//     } catch (Exception) {
-//       return appointmentModel;
-//     }
-//     return appointmentModel;
-//   }
-
-//   Future<appointment> getSingleContact(String id) async {
-//     var client = http.Client();
-//     var singleBookingModel;
-//     String singleBookingUrl = 'https://example.com/api/contacts/id';
-//     try {
-//       var response = await client.get(Uri.parse(singleBookingUrl));
-//       print(response.statusCode);
-//       //developer.log(response.body);
-//       if (response.statusCode == 200) {
-//         var jsonString = response.body;
-//         var jsonMap = json.decode(jsonString);
-//         singleBookingModel = appointment.fromJson(jsonMap);
-//       }
-//     } catch (Exception) {
-//       return singleBookingModel;
-//     }
-//     return singleBookingModel;
-//   }
-// }

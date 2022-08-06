@@ -1,7 +1,12 @@
+import 'package:computer_service_system/screens/account_screen.dart';
 import 'package:computer_service_system/screens/auth_screen.dart';
+import 'package:computer_service_system/screens/create_booking_first_stage.dart';
 import 'package:computer_service_system/screens/home.dart';
 import 'package:computer_service_system/screens/nav_screen.dart';
-import 'package:computer_service_system/screens/staff_screens/staff_home_page.dart';
+import 'package:computer_service_system/screens/product_screen.dart';
+import 'package:computer_service_system/screens/services_screen.dart';
+import 'package:computer_service_system/screens/create_booking_second_stage.dart';
+import 'package:computer_service_system/screens/tracking_appointment.dart';
 import 'package:flutter/material.dart';
 
 Route<dynamic> generateRoute(RouteSettings routeSettings) {
@@ -21,18 +26,39 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
         settings: routeSettings,
         builder: (_) => const NavScreen(),
       );
-    case StaffHomePage.routeName:
+    case TrackingAppointment.routeName:
       return MaterialPageRoute(
         settings: routeSettings,
-        builder: (_) => const StaffHomePage(),
+        builder: (_) => const TrackingAppointment(),
+      );
+    case SubmitAppointment.routeName:
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (_) => const BookAppointment(),
+      );
+    case AccountScreen.routeName:
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (_) => const AccountScreen(),
+      );
+    case ServicesScreen.routeName:
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (_) => const ServicesScreen(),
+      );
+    case ProductScreen.routeName:
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (_) => const ProductScreen(),
       );
     default:
       return MaterialPageRoute(
-          settings: routeSettings,
-          builder: (_) => const Scaffold(
-                body: Center(
-                  child: Text('Trang không tồn tại'),
-                ),
-              ));
+        settings: routeSettings,
+        builder: (_) => const Scaffold(
+          body: Center(
+            child: Text('Trang không tồn tại'),
+          ),
+        )
+      );
   }
 }

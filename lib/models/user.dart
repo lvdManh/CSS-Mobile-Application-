@@ -25,7 +25,8 @@ class User {
     required this.updatedAt,
     required this.v,
     required this.refreshToken,
-    required this.accessToken});
+    required this.accessToken,
+    });
 
   Map<String, dynamic> toMap(){
     return {
@@ -75,6 +76,7 @@ class User {
      int? v,
      String? refreshToken,
      String? accessToken,
+     UserId? userId,
   }) {
     return User(
       id: id ?? this.id,
@@ -88,6 +90,91 @@ class User {
       v: v ?? this.v,
       refreshToken: refreshToken ?? this.refreshToken,
       accessToken: accessToken ?? this.accessToken,
+
     );
   }
 }
+
+class Address {
+  String? city;
+  String? district;
+  String? ward;
+  String? street;
+
+  Address({this.city, this.district, this.ward, this.street});
+
+  Address.fromJson(Map<String, dynamic> json) {
+    city = json["city"];
+    district = json["district"];
+    ward = json["ward"];
+    street = json["street"];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data["city"] = city;
+    data["district"] = district;
+    data["ward"] = ward;
+    data["street"] = street;
+    return data;
+  }
+}
+class Account{
+  UserId? userId;
+  Account({this.userId});
+  Account.fromJson(Map<String, dynamic> json) {
+    userId = json["user_id"] == null ? null : UserId.fromJson(Map<String,dynamic>.from(json["user_id"]));
+
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if(userId != null) {
+      data["user_id"] = userId?.toJson();
+    }
+
+    return data;
+  }
+}
+class UserId {
+  Address? address;
+  String? img;
+  String? id;
+  String? name;
+  String? email;
+  String? phonenum;
+  String? birth;
+  String? accId;
+
+
+  UserId({this.address, this.img, this.id, this.name, this.email, this.phonenum,
+      this.birth, this.accId});
+  UserId.fromJson(Map<String, dynamic> json) {
+    address = json["address"] == null ? null : Address.fromJson(Map<String,dynamic>.from(json["address"]));
+    img = json["img"];
+    id = json["_id"];
+    name = json["name"];
+    email = json["email"];
+    phonenum = json["phonenum"];
+    birth = json["birth"];
+    accId = json["acc_id"];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if(address != null) {
+      data["address"] = address?.toJson();
+    }
+    data["img"] = img;
+    data["_id"] = id;
+    data["name"] = name;
+    data["email"] = email;
+    data["phonenum"] = phonenum;
+    data["birth"] = birth;
+    data["acc_id"] = accId;
+
+    return data;
+  }
+
+}
+

@@ -1,11 +1,10 @@
-import 'package:badges/badges.dart';
-import 'package:computer_service_system/providers/data_class.dart';
+
 import 'package:computer_service_system/screens/account_screen.dart';
 import 'package:computer_service_system/screens/product_screen.dart';
 import 'package:computer_service_system/screens/tracking_appointment.dart';
 import 'package:computer_service_system/screens/home.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+
 
 class NavScreen extends StatefulWidget {
   static const String routeName = '/actual-home';
@@ -29,6 +28,10 @@ class _NavScreenState extends State<NavScreen> {
       currentIndex = page;
     });
   }
+  @override
+  void initState(){
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +50,6 @@ class _NavScreenState extends State<NavScreen> {
   }
 
   Widget buildNavBarItem(IconData icon, int index) {
-    final userBookingLen = context.watch<DataClass>().user.booking.length;
     return GestureDetector(
       onTap: () {
         setState(() {
@@ -71,19 +73,7 @@ class _NavScreenState extends State<NavScreen> {
                   end: Alignment.topCenter,
                 ))
             : const BoxDecoration(),
-        child: index == 1
-            ? Badge(
-                elevation: 0,
-                badgeContent: Text(userBookingLen.toString()),
-                badgeColor: Colors.white,
-                child: Icon(
-                  icon,
-                  size: index == currentIndex ? 36 : 26,
-                  color:
-                      index == currentIndex ? Colors.redAccent : Colors.white,
-                ),
-              )
-            : Icon(
+        child: Icon(
                 icon,
                 size: index == currentIndex ? 36 : 26,
                 color: index == currentIndex ? Colors.redAccent : Colors.white,
