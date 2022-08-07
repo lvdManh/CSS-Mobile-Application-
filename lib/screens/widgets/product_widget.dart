@@ -7,6 +7,7 @@ class ProductWidget extends StatelessWidget {
 
   const ProductWidget({Key? key, required this.product}) : super(key: key);
 
+
   String convertMoney(int? price) {
     // final value = "XPTOXXSFXBAC"
     //     .replaceAllMapped(RegExp(r".{4}"), (match) => "${match.group(0)} ");
@@ -16,11 +17,13 @@ class ProductWidget extends StatelessWidget {
     return converted;
   }
 
+
   @override
   Widget build(BuildContext context) {
     return Card(
       child: ListTile(
         onTap: () {
+
           print("${product?.name} pressed");
         },
         leading: Image(
@@ -31,8 +34,19 @@ class ProductWidget extends StatelessWidget {
         subtitle: Text('${product?.description}'),
         trailing: Text(
           convertMoney(product?.price),
+
+          print("${product.name} pressed");
+        },
+        leading: Image.network(product.imgUrl),
+        title: Text(
+          product.name,
+        ),
+        subtitle: Text(product.description),
+        trailing: Text(
+          product.price.toString(),
+
           textScaleFactor: 1.1,
-          style: TextStyle(
+          style: const TextStyle(
             color: Colors.black54,
             fontWeight: FontWeight.bold,
           ),
@@ -52,4 +66,5 @@ class ProductWidget extends StatelessWidget {
       return 'assets/images/white.png';
     }
   }
+
 }

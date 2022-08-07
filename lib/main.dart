@@ -5,6 +5,7 @@ import 'package:computer_service_system/providers/data_class.dart';
 import 'package:computer_service_system/router.dart';
 import 'package:computer_service_system/screens/auth_screen.dart';
 import 'package:computer_service_system/screens/nav_screen.dart';
+import 'package:computer_service_system/screens/staff_screens/staff_home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -45,7 +46,7 @@ class AppState extends State<MyApp> {
       home: Provider.of<DataClass>(context).user.accessToken.isNotEmpty
           ? Provider.of<DataClass>(context).user.role == 'customer'
           ? const NavScreen()
-          : const AuthScreen() // Staff BottomBar
+          : const StaffHomePage() // Staff BottomBar
           : const AuthScreen(),
 
     );

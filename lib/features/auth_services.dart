@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:computer_service_system/providers/data_class.dart';
 import 'package:computer_service_system/screens/nav_screen.dart';
+import 'package:computer_service_system/screens/staff_screens/staff_home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
@@ -73,7 +74,7 @@ class AuthService {
                 Provider.of<DataClass>(context, listen: false).user.role ==
                     'customer'
                     ? NavScreen.routeName
-                    : AuthScreen.routeName, //thay staff cho nay
+                    : StaffHomePage.routeName, //thay staff cho nay
                     (route) => false);
           });
 
