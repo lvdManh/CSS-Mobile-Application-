@@ -6,6 +6,7 @@ import 'package:computer_service_system/screens/nav_screen.dart';
 import 'package:computer_service_system/screens/product_screen.dart';
 import 'package:computer_service_system/screens/services_screen.dart';
 import 'package:computer_service_system/screens/create_booking_second_stage.dart';
+import 'package:computer_service_system/screens/staff_screens/staff_home_page.dart';
 import 'package:computer_service_system/screens/tracking_appointment.dart';
 import 'package:flutter/material.dart';
 
@@ -50,6 +51,11 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
       return MaterialPageRoute(
         settings: routeSettings,
         builder: (_) => const ProductScreen(),
+      );
+    case StaffHomePage.routeName:
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (_) => const StaffHomePage(),
       );
     default:
       return MaterialPageRoute(
