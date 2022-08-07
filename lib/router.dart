@@ -59,12 +59,11 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
       );
     default:
       return MaterialPageRoute(
-        settings: routeSettings,
-        builder: (_) => const Scaffold(
-          body: Center(
-            child: Text('Trang không tồn tại'),
-          ),
-        )
-      );
+          settings: routeSettings,
+          builder: (_) => const Scaffold(
+                body: Center(
+                  child: Text('Trang không tồn tại'),
+                ),
+              ));
   }
 }

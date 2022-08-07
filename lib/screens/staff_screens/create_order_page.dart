@@ -1,7 +1,9 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:computer_service_system/models/staff_get_booking_object.dart';
+import 'package:computer_service_system/screens/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
 
 class StaffCreateOrderPage extends StatefulWidget {
   static const String routeName = '/create_order_page';
@@ -278,22 +280,8 @@ class _StaffCreateOrderPageState extends State<StaffCreateOrderPage> {
                   child: ButtonBar(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      FlatButton(
-                        color: Colors.orange.shade300,
-                        onPressed: () {},
-                        child: const Text(
-                          "Thêm dịch vụ",
-                          style: TextStyle(color: Colors.white, fontSize: 20),
-                        ),
-                      ),
-                      FlatButton(
-                        color: Colors.orange.shade300,
-                        onPressed: () {},
-                        child: const Text(
-                          "Cập nhật",
-                          style: TextStyle(color: Colors.white, fontSize: 20),
-                        ),
-                      ),
+                      CustomButton(text: 'Thêm dịch vụ', onTap: () {}),
+                      CustomButton(text: 'Cập nhật', onTap: () {}),
                     ],
                   ),
                 ),

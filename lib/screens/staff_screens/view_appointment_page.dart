@@ -1,8 +1,10 @@
-library flutx;
+// ignore_for_file: deprecated_member_use
 
+library flutx;
 
 import 'package:computer_service_system/models/staff_get_booking_object.dart';
 import 'package:computer_service_system/screens/staff_screens/view_appointment_details.dart';
+import 'package:computer_service_system/screens/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -89,16 +91,10 @@ class _StaffViewAppointmentPageState extends State<StaffViewAppointmentPage> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      RaisedButton(
-                          color: Colors.white,
-                          child: Text(
-                            'Tên khách hàng: ${listBooking?[index].cusName}\nSố điện thoại: ${listBooking?[index].phonenum} \nĐịa chỉ: đường ${listBooking?[index].cusAddress?.ward},  ${listBooking?[index].cusAddress?.street}, ${listBooking?[index].cusAddress?.district}, ${listBooking?[index].cusAddress?.city}',
-                            style: const TextStyle(
-                              fontSize: 16,
-                              color: Colors.grey,
-                            ),
-                          ),
-                          onPressed: () {
+                      CustomButton(
+                          text:
+                              'Tên khách hàng: ${listBooking?[index].cusName}\nSố điện thoại: ${listBooking?[index].phonenum} \nĐịa chỉ: đường ${listBooking?[index].cusAddress?.ward},  ${listBooking?[index].cusAddress?.street}, ${listBooking?[index].cusAddress?.district}, ${listBooking?[index].cusAddress?.city}',
+                          onTap: () {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
