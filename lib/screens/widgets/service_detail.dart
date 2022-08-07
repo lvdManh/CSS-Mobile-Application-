@@ -1,4 +1,5 @@
 import 'package:computer_service_system/models/services_data.dart';
+import 'package:computer_service_system/screens/widgets/accessory_widget.dart';
 import 'package:flutter/material.dart';
 import '../../constants/color_constant.dart';
 
@@ -114,25 +115,28 @@ class ServiceDetail extends StatelessWidget {
                         fontSize: 16,
                         fontFamily: 'Regular')),
                 const SizedBox(height: 8),
-                Text(service.accessoriesId!.length.toString()),
+                if (service.accessoriesId!.isNotEmpty)
+                  ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: service.accessoriesId!.length,
+                    itemBuilder: (context, index) {
+                      return AccessoriesWidget(
+                          product: service.accessoriesId![index]);
+                    },
+                  ),
+
+                // const Text(" Linh kiện:",
+                //     style: TextStyle(
+                //         // color: mTextColorSecondary,
+                //         fontSize: 16,
+                //         fontFamily: 'Regular')),
+                // const SizedBox(height: 8),
                 // ListView.builder(
+                //   shrinkWrap: true,
                 //   itemCount: service.accessoriesId!.length,
                 //   itemBuilder: (context, index) {
-                //     return Card(
-                //       child: ListTile(
-                //         title: Text(
-                //             service.accessoriesId![index].name.toString()),
-                //         trailing: Text(
-                //           service.accessoriesId![index].description
-                //               .toString(),
-                //           textScaleFactor: 1.1,
-                //           style: const TextStyle(
-                //             color: Colors.black54,
-                //             fontWeight: FontWeight.bold,
-                //           ),
-                //         ),
-                //       ),
-                //     );
+                //     return AccessoriesWidget(
+                //         product: service.accessoriesId![index]);
                 //   },
                 // ),
               ],

@@ -22,7 +22,6 @@ class _ServicesScreenState extends State<ServicesScreen> {
     futureService = ServiceServices().fetchServices();
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,22 +57,25 @@ class _ServicesScreenState extends State<ServicesScreen> {
                     return const Center(child: CircularProgressIndicator());
                   } else {
                     return ListView.builder(
-                        itemCount: snapshot.data!.length,
+                        scrollDirection: Axis.vertical,
+                        shrinkWrap: true,
+                        itemCount: snapshot.data?.length,
                         itemBuilder: (context, index) {
                           return Card(
                             child: ListTile(
-                              title: Text('Dịch vụ: ${snapshot.data![index].name}'),
-                              subtitle:
-                              Text('Mô tả: ${snapshot.data![index].description.toString()}'),
-                              trailing:
-                              Text(snapshot.data![index].type.toString()),
+                              title: Text(
+                                  'Dịch vụ: ${snapshot.data![index].name}'),
+                              subtitle: Text(
+                                  'Mô tả: ${snapshot.data![index].description.toString()}'),
+                              trailing: Text(
+                                  '${snapshot.data?[index].type.toString()}'),
                               onTap: () async {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) => ServiceDetail(
-                                          service: snapshot.data![index],
-                                        )));
+                                              service: snapshot.data![index],
+                                            )));
                               },
                             ),
                           );
