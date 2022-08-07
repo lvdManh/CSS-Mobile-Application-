@@ -87,6 +87,7 @@ class _ProductScreenState extends State<ProductScreen> {
         child: Column(children: [
           Expanded(
             child: ListView.builder(
+                shrinkWrap: true,
                 padding: const EdgeInsets.all(16.0),
                 itemCount: listProduct?.length,
                 itemBuilder: (context, index) {
