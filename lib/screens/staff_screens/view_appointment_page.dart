@@ -1,17 +1,18 @@
 library flutx;
 
-import 'package:computer_service_system/features/booking_services.dart';
-import 'package:computer_service_system/models/object/staff_get_booking_object.dart';
+
+import 'package:computer_service_system/models/staff_get_booking_object.dart';
 import 'package:computer_service_system/screens/staff_screens/view_appointment_details.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutx/flutx.dart';
+
+import '../../constants/color_constant.dart';
 
 class StaffViewAppointmentPage extends StatefulWidget {
   static const String routeName = '/view_appointment_page';
   const StaffViewAppointmentPage({Key? key}) : super(key: key);
   @override
-  _StaffViewAppointmentPageState createState() =>
+  State<StaffViewAppointmentPage> createState() =>
       _StaffViewAppointmentPageState();
 }
 
@@ -52,11 +53,11 @@ class _StaffViewAppointmentPageState extends State<StaffViewAppointmentPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.orangeAccent,
       appBar: AppBar(
         elevation: 0.0,
         backgroundColor: Colors.orangeAccent,
-        title: Text(
+        title: const Text(
           "Computer Services",
           style: TextStyle(
             fontSize: 23,
@@ -64,54 +65,57 @@ class _StaffViewAppointmentPageState extends State<StaffViewAppointmentPage> {
         ),
         centerTitle: true,
       ),
-      body: Column(children: [
-        Padding(
-            padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
-            child: Text('Xem lịch hẹn',
-                style: TextStyle(
-                  color: Colors.orange,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 25,
-                ))),
-        ListView.builder(
-          padding: EdgeInsets.all(10),
-          scrollDirection: Axis.vertical,
-          shrinkWrap: true,
-          itemCount: listBooking?.length,
-          itemBuilder: (context, index) {
-            return Card(
-              child: Padding(
-                padding: EdgeInsets.all(10),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    RaisedButton(
-                        color: Colors.white,
-                        child: Text(
-                          'Tên khách hàng: ${listBooking?[index].cusName}\nSố điện thoại: ${listBooking?[index].phonenum} \nĐịa chỉ: đường ${listBooking?[index].cusAddress?.ward},  ${listBooking?[index].cusAddress?.street}, ${listBooking?[index].cusAddress?.district}, ${listBooking?[index].cusAddress?.city}',
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.grey,
-                          ),
-                        ),
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  StaffViewAppointmentDetailsPage(
-                                      booking: listBooking?[index]),
+      body: Container(
+        decoration: const BoxDecoration(color: mBackgroundColor),
+        child: Column(children: [
+          const Padding(
+              padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
+              child: Text('Xem lịch hẹn',
+                  style: TextStyle(
+                    color: Colors.orange,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 25,
+                  ))),
+          ListView.builder(
+            padding: const EdgeInsets.all(10),
+            scrollDirection: Axis.vertical,
+            shrinkWrap: true,
+            itemCount: listBooking?.length,
+            itemBuilder: (context, index) {
+              return Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      RaisedButton(
+                          color: Colors.white,
+                          child: Text(
+                            'Tên khách hàng: ${listBooking?[index].cusName}\nSố điện thoại: ${listBooking?[index].phonenum} \nĐịa chỉ: đường ${listBooking?[index].cusAddress?.ward},  ${listBooking?[index].cusAddress?.street}, ${listBooking?[index].cusAddress?.district}, ${listBooking?[index].cusAddress?.city}',
+                            style: const TextStyle(
+                              fontSize: 16,
+                              color: Colors.grey,
                             ),
-                          );
-                        }),
-                  ],
+                          ),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    StaffViewAppointmentDetailsPage(
+                                        booking: listBooking?[index]),
+                              ),
+                            );
+                          }),
+                    ],
+                  ),
                 ),
-              ),
-            );
-          },
-        )
-      ]),
+              );
+            },
+          )
+        ]),
+      ),
       // Bottom Navigation
       bottomNavigationBar: Row(
         children: <Widget>[
@@ -176,7 +180,7 @@ class _StaffViewAppointmentPageState extends State<StaffViewAppointmentPage> {
         width: MediaQuery.of(context).size.width / 4,
         decoration: index == _selectedItemIndex
             ? BoxDecoration(
-                border: Border(
+                border: const Border(
                   bottom: BorderSide(width: 4, color: Colors.orangeAccent),
                 ),
                 gradient: LinearGradient(
@@ -187,7 +191,7 @@ class _StaffViewAppointmentPageState extends State<StaffViewAppointmentPage> {
                   begin: Alignment.bottomCenter,
                   end: Alignment.topCenter,
                 ))
-            : BoxDecoration(),
+            : const BoxDecoration(),
         child: Icon(
           icon,
           color: index == _selectedItemIndex ? Colors.redAccent : Colors.white,

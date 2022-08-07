@@ -1,6 +1,9 @@
+import 'package:computer_service_system/constants/color_constant.dart';
 import 'package:computer_service_system/screens/staff_screens/staff_regist_work.dart';
 import 'package:computer_service_system/screens/staff_screens/view_appointment_page.dart';
 import 'package:flutter/material.dart';
+
+import '../account_screen.dart';
 
 class StaffHomePage extends StatefulWidget {
   static const String routeName = '/staff_home_page';
@@ -11,16 +14,15 @@ class StaffHomePage extends StatefulWidget {
 
 class _StaffHomePageState extends State<StaffHomePage> {
   int _selectedItemIndex = 1;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       //App Bar
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.orangeAccent,
       appBar: AppBar(
         elevation: 0.0,
         backgroundColor: Colors.orangeAccent,
-        title: Text(
+        title: const Text(
           "Computer Services",
           style: TextStyle(
             fontSize: 23,
@@ -29,87 +31,109 @@ class _StaffHomePageState extends State<StaffHomePage> {
         centerTitle: true,
       ),
       //--------------------Body------
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Text(
-            "Xin chào!",
-            style: TextStyle(
-                color: Colors.black, fontWeight: FontWeight.bold, fontSize: 25),
-          ),
-          //Button Xem lịch hẹn
-          Container(
-            width: 120,
-            padding: EdgeInsets.all(15.0),
-            child: RaisedButton(
-                color: Colors.white,
-                child: Text(
-                  "Xem lịch hẹn",
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 20,
+      body: Container(
+        decoration: const BoxDecoration(color: mBackgroundColor),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const Text(
+              "Xin chào!",
+              style: TextStyle(
+                  color: Colors.black, fontWeight: FontWeight.bold, fontSize: 25),
+            ),
+            //Button Xem lịch hẹn
+            Container(
+              width: 120,
+              padding: const EdgeInsets.all(15.0),
+              child: RaisedButton(
+                  color: Colors.white,
+                  child: const Text(
+                    "Xem lịch hẹn",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 20,
+                    ),
                   ),
-                ),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => StaffViewAppointmentPage()),
-                  );
-                }),
-          ),
-          //Button Đăng ký lịch làm việc
-          Container(
-            width: 120,
-            padding: EdgeInsets.all(15.0),
-            child: RaisedButton(
-                color: Colors.white,
-                child: Text(
-                  "Đăng ký lịch làm việc",
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 20,
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const StaffViewAppointmentPage()),
+                    );
+                  }),
+            ),
+            //Button Đăng ký lịch làm việc
+            Container(
+              width: 120,
+              padding: const EdgeInsets.all(15.0),
+              child: RaisedButton(
+                  color: Colors.white,
+                  child: const Text(
+                    "Đăng ký lịch làm việc",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 20,
+                    ),
                   ),
-                ),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => StaffRegistWork()),
-                  );
-                }),
-          ),
-          //Button xem lịch làm việc
-          Container(
-            width: 120,
-            padding: EdgeInsets.all(15.0),
-            child: RaisedButton(
-                color: Colors.white,
-                child: Text(
-                  "Xem lịch làm việc",
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 20,
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const StaffRegistWork()),
+                    );
+                  }),
+            ),
+            //Button xem lịch làm việc
+            Container(
+              width: 120,
+              padding: const EdgeInsets.all(15.0),
+              child: RaisedButton(
+                  color: Colors.white,
+                  child: const Text(
+                    "Xem lịch làm việc",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 20,
+                    ),
                   ),
-                ),
-                onPressed: () {}),
-          ),
-          //Button lịch sử cuộc hẹn
-          Container(
-            width: 120,
-            padding: EdgeInsets.all(15.0),
-            child: RaisedButton(
-                color: Colors.white,
-                child: Text(
-                  "Lịch sử cuộc hẹn",
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 20,
+                  onPressed: () {}),
+            ),
+            //Button lịch sử cuộc hẹn
+            Container(
+              width: 120,
+              padding: const EdgeInsets.all(15.0),
+              child: RaisedButton(
+                  color: Colors.white,
+                  child: const Text(
+                    "Lịch sử cuộc hẹn",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 20,
+                    ),
                   ),
-                ),
-                onPressed: () {}),
-          ),
-        ],
+                  onPressed: () {}),
+            ),
+            Container(
+              width: 120,
+              padding: const EdgeInsets.all(15.0),
+              child: RaisedButton(
+                  color: Colors.white,
+                  child: const Text(
+                    "Thông tin người dùng",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 20,
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const AccountScreen()),
+                    );
+                  }),
+            ),
+          ],
+        ),
       ),
       // Bottom Navigation----------------
       bottomNavigationBar: Row(
@@ -136,7 +160,7 @@ class _StaffHomePageState extends State<StaffHomePage> {
         width: MediaQuery.of(context).size.width / 4,
         decoration: index == _selectedItemIndex
             ? BoxDecoration(
-                border: Border(
+                border: const Border(
                   bottom: BorderSide(width: 4, color: Colors.orangeAccent),
                 ),
                 gradient: LinearGradient(
@@ -147,7 +171,7 @@ class _StaffHomePageState extends State<StaffHomePage> {
                   begin: Alignment.bottomCenter,
                   end: Alignment.topCenter,
                 ))
-            : BoxDecoration(),
+            : const BoxDecoration(),
         child: Icon(
           icon,
           color: index == _selectedItemIndex ? Colors.redAccent : Colors.white,

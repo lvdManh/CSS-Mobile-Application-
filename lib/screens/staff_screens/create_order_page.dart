@@ -1,12 +1,13 @@
-import 'package:computer_service_system/models/object/staff_get_booking_object.dart';
+import 'package:computer_service_system/models/staff_get_booking_object.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
 
 class StaffCreateOrderPage extends StatefulWidget {
   static const String routeName = '/create_order_page';
 
   @override
-  _StaffCreateOrderPageState createState() => _StaffCreateOrderPageState();
+  State<StaffCreateOrderPage> createState() => _StaffCreateOrderPageState();
 
   final Booking? booked;
   const StaffCreateOrderPage({super.key, required this.booked});
@@ -25,7 +26,7 @@ class _StaffCreateOrderPageState extends State<StaffCreateOrderPage> {
       appBar: AppBar(
         elevation: 0.0,
         backgroundColor: Colors.orangeAccent,
-        title: Text(
+        title: const Text(
           "Computer Services",
           style: TextStyle(
             fontSize: 23,
@@ -38,7 +39,7 @@ class _StaffCreateOrderPageState extends State<StaffCreateOrderPage> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Padding(
+          const Padding(
               padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
               //mã hóa đơn
               child: Text('Hóa đơn dịch vụ',
@@ -49,7 +50,7 @@ class _StaffCreateOrderPageState extends State<StaffCreateOrderPage> {
                   ))),
           //thông tin khách hàng - nhân viên
           Container(
-            padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+            padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
             decoration: BoxDecoration(border: Border.all(color: Colors.orange)),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -59,7 +60,7 @@ class _StaffCreateOrderPageState extends State<StaffCreateOrderPage> {
                   children: [
                     Text(
                       'Khách hàng: ${widget.booked?.cusName}',
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.black,
                         fontSize: 15,
                       ),
@@ -71,7 +72,7 @@ class _StaffCreateOrderPageState extends State<StaffCreateOrderPage> {
                   children: [
                     Text(
                       'Nhân viên: ${widget.booked?.accId}',
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.black,
                         fontSize: 15,
                       ),
@@ -83,12 +84,12 @@ class _StaffCreateOrderPageState extends State<StaffCreateOrderPage> {
           ),
           //thông tin dịch vụ
           Container(
-            padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+            padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
             decoration: BoxDecoration(border: Border.all(color: Colors.orange)),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text(
+                const Text(
                   'Thông tin dịch vụ',
                   style: TextStyle(
                     color: Colors.orange,
@@ -98,7 +99,7 @@ class _StaffCreateOrderPageState extends State<StaffCreateOrderPage> {
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
+                  children: const [
                     Text(
                       'Loại dịch vụ',
                       style: TextStyle(
@@ -119,7 +120,7 @@ class _StaffCreateOrderPageState extends State<StaffCreateOrderPage> {
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
+                  children: const [
                     Text(
                       'Cài lại win',
                       style: TextStyle(
@@ -138,7 +139,7 @@ class _StaffCreateOrderPageState extends State<StaffCreateOrderPage> {
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
+                  children: const [
                     Text(
                       'Vệ sinh máy',
                       style: TextStyle(
@@ -156,7 +157,7 @@ class _StaffCreateOrderPageState extends State<StaffCreateOrderPage> {
                   ],
                 ),
                 Row(
-                  children: [
+                  children: const [
                     Text(
                       'Thay quạt',
                       style: TextStyle(
@@ -175,7 +176,7 @@ class _StaffCreateOrderPageState extends State<StaffCreateOrderPage> {
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
+                  children: const [
                     Text(
                       'Tổng',
                       style: TextStyle(
@@ -198,9 +199,9 @@ class _StaffCreateOrderPageState extends State<StaffCreateOrderPage> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Text(
-                      'Ngày tạo: ${formattedDate}',
+                      'Ngày tạo: $formattedDate',
                       textAlign: TextAlign.center,
-                      style: new TextStyle(
+                      style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 12.0,
                           color: Colors.grey),
@@ -219,12 +220,12 @@ class _StaffCreateOrderPageState extends State<StaffCreateOrderPage> {
           ),
           //button tạo hóa đơn
           Container(
-            padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+            padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
             decoration: BoxDecoration(border: Border.all(color: Colors.orange)),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text(
+                const Text(
                   'Hình thức thanh toán',
                   style: TextStyle(
                     color: Colors.orange,
@@ -233,7 +234,7 @@ class _StaffCreateOrderPageState extends State<StaffCreateOrderPage> {
                   ),
                 ),
                 Row(
-                  children: [
+                  children: const [
                     Text(
                       ' Thanh toán trực tiếp',
                       style: TextStyle(
@@ -244,7 +245,7 @@ class _StaffCreateOrderPageState extends State<StaffCreateOrderPage> {
                   ],
                 ),
                 Row(
-                  children: [
+                  children: const [
                     Text(
                       ' Chuyển khoản VCB: 0021541235487',
                       style: TextStyle(
@@ -255,7 +256,7 @@ class _StaffCreateOrderPageState extends State<StaffCreateOrderPage> {
                   ],
                 ),
                 Row(
-                  children: [
+                  children: const [
                     Text(
                       ' Chuyển khoản Momo: 0123456789',
                       style: TextStyle(
@@ -269,18 +270,18 @@ class _StaffCreateOrderPageState extends State<StaffCreateOrderPage> {
             ),
           ),
           Container(
-            padding: EdgeInsets.all(10),
+            padding: const EdgeInsets.all(10),
             child: Column(
               children: <Widget>[
                 Padding(
-                  padding: EdgeInsets.all(15),
+                  padding: const EdgeInsets.all(15),
                   child: ButtonBar(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                       FlatButton(
                         color: Colors.orange.shade300,
                         onPressed: () {},
-                        child: Text(
+                        child: const Text(
                           "Thêm dịch vụ",
                           style: TextStyle(color: Colors.white, fontSize: 20),
                         ),
@@ -288,7 +289,7 @@ class _StaffCreateOrderPageState extends State<StaffCreateOrderPage> {
                       FlatButton(
                         color: Colors.orange.shade300,
                         onPressed: () {},
-                        child: Text(
+                        child: const Text(
                           "Cập nhật",
                           style: TextStyle(color: Colors.white, fontSize: 20),
                         ),
@@ -300,8 +301,8 @@ class _StaffCreateOrderPageState extends State<StaffCreateOrderPage> {
             ),
           ),
           Container(
-            padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-            child: Text(
+            padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+            child: const Text(
               "Hóa đơn đã tạo, đang chờ duyệt...",
               style: TextStyle(color: Colors.white, fontSize: 20),
             ),
@@ -333,7 +334,7 @@ class _StaffCreateOrderPageState extends State<StaffCreateOrderPage> {
         width: MediaQuery.of(context).size.width / 4,
         decoration: index == _selectedItemIndex
             ? BoxDecoration(
-                border: Border(
+                border: const Border(
                   bottom: BorderSide(width: 4, color: Colors.orangeAccent),
                 ),
                 gradient: LinearGradient(
@@ -344,7 +345,7 @@ class _StaffCreateOrderPageState extends State<StaffCreateOrderPage> {
                   begin: Alignment.bottomCenter,
                   end: Alignment.topCenter,
                 ))
-            : BoxDecoration(),
+            : const BoxDecoration(),
         child: Icon(
           icon,
           color: index == _selectedItemIndex ? Colors.redAccent : Colors.white,
@@ -354,113 +355,111 @@ class _StaffCreateOrderPageState extends State<StaffCreateOrderPage> {
   }
 
   Widget _billingWidget() {
-    return Container(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Text(
-            'Thông tin dịch vụ',
-            style: TextStyle(
-              color: Colors.orange,
-              fontSize: 15,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        const Text(
+          'Thông tin dịch vụ',
+          style: TextStyle(
+            color: Colors.orange,
+            fontSize: 15,
+          ),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: const [
+            Text(
+              'Loại dịch vụ',
+              style: TextStyle(
+                color: Colors.orange,
+                fontSize: 15,
+              ),
             ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Loại dịch vụ',
-                style: TextStyle(
-                  color: Colors.orange,
-                  fontSize: 15,
-                ),
+            Text(
+              'Thành tiền',
+              style: TextStyle(
+                color: Colors.orange,
+                fontSize: 15,
               ),
-              Text(
-                'Thành tiền',
-                style: TextStyle(
-                  color: Colors.orange,
-                  fontSize: 15,
-                ),
+            ),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: const [
+            Text(
+              'Cài lại win',
+              style: TextStyle(
+                color: Colors.orange,
+                fontSize: 15,
               ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Cài lại win',
-                style: TextStyle(
-                  color: Colors.orange,
-                  fontSize: 15,
-                ),
+            ),
+            Text(
+              '50.000đ',
+              style: TextStyle(
+                color: Colors.orange,
+                fontSize: 15,
               ),
-              Text(
-                '50.000đ',
-                style: TextStyle(
-                  color: Colors.orange,
-                  fontSize: 15,
-                ),
+            ),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: const [
+            Text(
+              'Vệ sinh máy',
+              style: TextStyle(
+                color: Colors.orange,
+                fontSize: 15,
               ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Vệ sinh máy',
-                style: TextStyle(
-                  color: Colors.orange,
-                  fontSize: 15,
-                ),
+            ),
+            Text(
+              '100.000đ',
+              style: TextStyle(
+                color: Colors.orange,
+                fontSize: 15,
               ),
-              Text(
-                '100.000đ',
-                style: TextStyle(
-                  color: Colors.orange,
-                  fontSize: 15,
-                ),
+            ),
+          ],
+        ),
+        Row(
+          children: const [
+            Text(
+              'Thay quạt',
+              style: TextStyle(
+                color: Colors.orange,
+                fontSize: 15,
               ),
-            ],
-          ),
-          Row(
-            children: [
-              Text(
-                'Thay quạt',
-                style: TextStyle(
-                  color: Colors.orange,
-                  fontSize: 15,
-                ),
+            ),
+            Text(
+              '1.000.000đ',
+              style: TextStyle(
+                color: Colors.orange,
+                fontSize: 15,
               ),
-              Text(
-                '1.000.000đ',
-                style: TextStyle(
-                  color: Colors.orange,
-                  fontSize: 15,
-                ),
+            ),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: const [
+            Text(
+              'Tổng',
+              style: TextStyle(
+                color: Colors.orange,
+                fontSize: 15,
               ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Tổng',
-                style: TextStyle(
-                  color: Colors.orange,
-                  fontSize: 15,
-                ),
+            ),
+            Text(
+              '1.150.000đ',
+              style: TextStyle(
+                color: Colors.orange,
+                fontSize: 15,
               ),
-              Text(
-                '1.150.000đ',
-                style: TextStyle(
-                  color: Colors.orange,
-                  fontSize: 15,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 }

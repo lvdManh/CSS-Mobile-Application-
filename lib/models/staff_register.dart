@@ -4,7 +4,7 @@ class StaffRegister {
   int? start;
   int? end;
 
-  StaffRegister(String time, int slot, int start, int end);
+  StaffRegister({this.date, this.slot, this.start, this.end});
 
   StaffRegister.fromJson(Map<String, dynamic> json) {
     date = json['date'];
@@ -14,11 +14,11 @@ class StaffRegister {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['date'] = this.date;
-    data['slot'] = this.slot;
-    data['start'] = this.start;
-    data['end'] = this.end;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['date'] = date;
+    data['slot'] = slot;
+    data['start'] = start;
+    data['end'] = end;
     return data;
   }
 }
