@@ -1,5 +1,6 @@
 import 'package:computer_service_system/models/staff_get_booking_object.dart';
 import 'package:computer_service_system/screens/staff_screens/create_order_page.dart';
+import 'package:computer_service_system/screens/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 
 import '../../constants/color_constant.dart';
@@ -54,7 +55,8 @@ class _StaffViewAppointmentDetailsState
               width: 120,
               margin: const EdgeInsets.all(15.0),
               padding: const EdgeInsets.all(3.0),
-              decoration: BoxDecoration(border: Border.all(color: Colors.orange)),
+              decoration:
+                  BoxDecoration(border: Border.all(color: Colors.orange)),
               child: Text(
                 'Thời gian: ${widget.booking?.time} \n Địa chỉ: ${widget.booking?.cusAddress} \n SDT: ${widget.booking?.phonenum}',
               ),
@@ -71,30 +73,23 @@ class _StaffViewAppointmentDetailsState
               height: 200,
               margin: const EdgeInsets.all(15.0),
               padding: const EdgeInsets.all(3.0),
-              decoration: BoxDecoration(border: Border.all(color: Colors.orange)),
+              decoration:
+                  BoxDecoration(border: Border.all(color: Colors.orange)),
               child: Text(
                 'Khách hàng: ${widget.booking?.cusName} \nTình trạng máy: ${widget.booking?.description}',
               ),
             ),
-            RaisedButton(
-              color: Colors.white,
-              child: const Text(
-                "Tạo hóa đơn",
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 15,
-                ),
-              ),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        StaffCreateOrderPage(booked: widget.booking),
-                  ),
-                );
-              },
-            ),
+            CustomButton(
+                text: 'Tạo hóa đơn',
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          StaffCreateOrderPage(booked: widget.booking),
+                    ),
+                  );
+                }),
           ],
         ),
       ),
@@ -124,8 +119,7 @@ class _StaffViewAppointmentDetailsState
         decoration: index == _selectedItemIndex
             ? BoxDecoration(
                 border: const Border(
-                  bottom:
-                      BorderSide(width: 4, color: Colors.orangeAccent),
+                  bottom: BorderSide(width: 4, color: Colors.orangeAccent),
                 ),
                 gradient: LinearGradient(
                   colors: [

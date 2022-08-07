@@ -1,6 +1,9 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:computer_service_system/constants/color_constant.dart';
 import 'package:computer_service_system/screens/staff_screens/staff_regist_work.dart';
 import 'package:computer_service_system/screens/staff_screens/view_appointment_page.dart';
+import 'package:computer_service_system/screens/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 
 import '../account_screen.dart';
@@ -40,26 +43,22 @@ class _StaffHomePageState extends State<StaffHomePage> {
             const Text(
               "Xin chào!",
               style: TextStyle(
-                  color: Colors.black, fontWeight: FontWeight.bold, fontSize: 25),
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 25),
             ),
             //Button Xem lịch hẹn
             Container(
               width: 120,
               padding: const EdgeInsets.all(15.0),
-              child: RaisedButton(
-                  color: Colors.white,
-                  child: const Text(
-                    "Xem lịch hẹn",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 20,
-                    ),
-                  ),
-                  onPressed: () {
+              child: CustomButton(
+                  text: 'Xem lịch hẹn',
+                  onTap: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const StaffViewAppointmentPage()),
+                          builder: (context) =>
+                              const StaffViewAppointmentPage()),
                     );
                   }),
             ),
@@ -67,19 +66,13 @@ class _StaffHomePageState extends State<StaffHomePage> {
             Container(
               width: 120,
               padding: const EdgeInsets.all(15.0),
-              child: RaisedButton(
-                  color: Colors.white,
-                  child: const Text(
-                    "Đăng ký lịch làm việc",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 20,
-                    ),
-                  ),
-                  onPressed: () {
+              child: CustomButton(
+                  text: 'Đăng ký lịch làm việc',
+                  onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const StaffRegistWork()),
+                      MaterialPageRoute(
+                          builder: (context) => const StaffRegistWork()),
                     );
                   }),
             ),
@@ -87,48 +80,24 @@ class _StaffHomePageState extends State<StaffHomePage> {
             Container(
               width: 120,
               padding: const EdgeInsets.all(15.0),
-              child: RaisedButton(
-                  color: Colors.white,
-                  child: const Text(
-                    "Xem lịch làm việc",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 20,
-                    ),
-                  ),
-                  onPressed: () {}),
+              child: CustomButton(text: 'Xem lịch làm việc', onTap: () {}),
             ),
             //Button lịch sử cuộc hẹn
             Container(
               width: 120,
               padding: const EdgeInsets.all(15.0),
-              child: RaisedButton(
-                  color: Colors.white,
-                  child: const Text(
-                    "Lịch sử cuộc hẹn",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 20,
-                    ),
-                  ),
-                  onPressed: () {}),
+              child: CustomButton(text: 'Lịch sử cuộc hẹn', onTap: () {}),
             ),
             Container(
               width: 120,
               padding: const EdgeInsets.all(15.0),
-              child: RaisedButton(
-                  color: Colors.white,
-                  child: const Text(
-                    "Thông tin người dùng",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 20,
-                    ),
-                  ),
-                  onPressed: () {
+              child: CustomButton(
+                  text: 'Thông tin người dùng',
+                  onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const AccountScreen()),
+                      MaterialPageRoute(
+                          builder: (context) => const AccountScreen()),
                     );
                   }),
             ),
