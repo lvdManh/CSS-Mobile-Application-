@@ -1,6 +1,7 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:computer_service_system/features/registing_work.dart';
 import 'package:computer_service_system/models/staff_register.dart';
+import 'package:computer_service_system/models/work_schedule_data.dart';
 import 'package:computer_service_system/providers/data_class.dart';
 import 'package:computer_service_system/screens/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +9,7 @@ import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 import '../../constants/color_constant.dart';
+import '../../features/schedule_services.dart';
 
 class StaffRegistWork extends StatefulWidget {
   static const String routeName = '/staff_regist_work';
@@ -19,34 +21,47 @@ class StaffRegistWork extends StatefulWidget {
 class _StaffRegistWorkState extends State<StaffRegistWork> {
   int _selectedItemIndex = 1;
   bool isChecked = false;
-
   late ScheduleDataSource scheduleDataSource;
-  List<Schedule> schedules = [];
+  List<Slot> schedules = [];
   List<StaffRegister> list = [];
-  List<String> nextTwoWeek = [];
 
-
-   List<String> weekday(){
-    var nextWeekDay = DateTime.now().add(const Duration(days: 14));
-    var startFrom = nextWeekDay.subtract(Duration(days: nextWeekDay.weekday));
-    nextTwoWeek = List.generate(7, (i) => '${startFrom.add(Duration(days: i))}');
-
-    return nextTwoWeek;
+  List<WorkSchedule> futureWorkSchedule = [];
+  Future<List<WorkSchedule>> getFutureWorkSchedule() async {
+    futureWorkSchedule = await ScheduleServices().fetchWorkSlotList();
+    return futureWorkSchedule;
   }
 
+  List<WorkSchedule> listOpenDay = [];
+  List<WorkSchedule> getListOpenDay(){
+    listOpenDay.clear();
+    for (var dayCompare in nextTwoWeek) {
+      for(var dayInList in futureWorkSchedule){
+        if(requestDate(dayInList.date).compareTo(requestDate(dayCompare))==0 ){
+          listOpenDay.add(dayInList);
+        }
+      }
+    }
+    return listOpenDay;
+  }
+  List<String> nextTwoWeek = [];
+  List<String> weekday() {
+    var nextWeekDay = DateTime.now().add(const Duration(days: 14));
+    var startFrom = nextWeekDay.subtract(Duration(days: nextWeekDay.weekday));
+    nextTwoWeek =
+        List.generate(7, (i) => '${startFrom.add(Duration(days: i))}');
+    return nextTwoWeek;
+  }
 
   @override
   void initState() {
     weekday();
     super.initState();
-
-    schedules = getScheduleData(nextTwoWeek);
-    scheduleDataSource = ScheduleDataSource(scheduleData: schedules);
   }
 
   @override
   Widget build(BuildContext context) {
-      String token = Provider.of<DataClass>(context).user.accessToken;
+    String token = Provider.of<DataClass>(context).user.accessToken;
+    String userId = Provider.of<DataClass>(context).user.id;
     return Scaffold(
       //App Bar
       backgroundColor: Colors.orangeAccent,
@@ -78,64 +93,79 @@ class _StaffRegistWorkState extends State<StaffRegistWork> {
                         fontSize: 24,
                       ))),
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 140),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 0, horizontal: 140),
                 child: Column(
                   children: <Widget>[
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Text(parseDay(nextTwoWeek.first),
-                            style: const TextStyle(fontSize: 24, fontFamily: 'Regular')),
+                            style: const TextStyle(
+                                fontSize: 24, fontFamily: 'Regular')),
                         Text(parseDay(nextTwoWeek.last),
-                            style: const TextStyle(fontSize: 24, fontFamily: 'Regular')),
+                            style: const TextStyle(
+                                fontSize: 24, fontFamily: 'Regular')),
                       ],
                     ),
                   ],
                 ),
               ),
-              const SizedBox(height: 20,),
-              Expanded(
-                child: SfDataGrid(
-                  source: scheduleDataSource,
-                  columns: <GridColumn>[
-                    GridColumn(
-                        columnName: 'date',
-                        width: 60,
-                        label: Container(
-                            alignment: Alignment.center,
-                            child: const Text(
-                              'Ngày',
-                            ))),
-                    GridColumn(
-                        columnName: 'slot1',
-                        width: 90,
-                        label: Container(
-                            alignment: Alignment.center,
-                            child: const Text('8:00-11:00'))),
-                    GridColumn(
-                        columnName: 'slot2',
-                        width: 90,
-                        label: Container(
-                            alignment: Alignment.center,
-                            child: const Text('11:00-14:00'))),
-                    GridColumn(
-                        columnName: 'slot3',
-                        width: 90,
-                        label: Container(
-                          alignment: Alignment.center,
-                          child: const Text('14:00-17:00'),
-                        )),
-                    GridColumn(
-                        columnName: 'slot4',
-                        width: 90,
-                        label: Container(
-                          alignment: Alignment.center,
-                          child: const Text('17:00-20:00'),
-                        )),
-                  ],
-                ),
-
+              const SizedBox(
+                height: 20,
               ),
+              FutureBuilder(
+                  future: getFutureWorkSchedule(),
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else {
+                      getListOpenDay();
+                      schedules = getScheduleData(nextTwoWeek,listOpenDay,userId);
+                      scheduleDataSource = ScheduleDataSource(scheduleData: schedules);
+                      return Expanded(
+                        child: SfDataGrid(
+                          source: scheduleDataSource,
+                          columns: <GridColumn>[
+                            GridColumn(
+                                columnName: 'date',
+                                width: 60,
+                                label: Container(
+                                    alignment: Alignment.center,
+                                    child: const Text(
+                                      'Ngày',
+                                    ))),
+                            GridColumn(
+                                columnName: 'slot1',
+                                width: 90,
+                                label: Container(
+                                    alignment: Alignment.center,
+                                    child: const Text('8:00-11:00'))),
+                            GridColumn(
+                                columnName: 'slot2',
+                                width: 90,
+                                label: Container(
+                                    alignment: Alignment.center,
+                                    child: const Text('11:00-14:00'))),
+                            GridColumn(
+                                columnName: 'slot3',
+                                width: 90,
+                                label: Container(
+                                  alignment: Alignment.center,
+                                  child: const Text('14:00-17:00'),
+                                )),
+                            GridColumn(
+                                columnName: 'slot4',
+                                width: 90,
+                                label: Container(
+                                  alignment: Alignment.center,
+                                  child: const Text('17:00-20:00'),
+                                )),
+                          ],
+                        ),
+                      );
+                    }
+                  }),
               Container(
                 width: 150,
                 padding: const EdgeInsets.all(15.0),
@@ -156,7 +186,9 @@ class _StaffRegistWorkState extends State<StaffRegistWork> {
                       ).show();
                     }),
               ),
-              const SizedBox(height: 20,),
+              const SizedBox(
+                height: 20,
+              ),
             ],
           ),
         ),
@@ -207,78 +239,197 @@ class _StaffRegistWorkState extends State<StaffRegistWork> {
   }
 }
 
-String parseDay(time){
+String parseDay(time) {
   DateTime dt1 = DateTime.parse(time);
   return '${dt1.day}/${dt1.month}';
 }
-String requestDate(time){
+
+String requestDate(time) {
   DateTime dt1 = DateTime.parse(time);
-  return '${dt1.year}-${dt1.month}-${dt1.day}';
+  String mon = dt1.month.toString();
+  if(mon.length==1){
+    mon = '0$mon';
+  }
+  return '${dt1.year}-$mon-${dt1.day}';
 }
 
-List<Schedule> getScheduleData(List listDay) {
-  return [
-    for(int i=0;i<listDay.length; i++)
-      Schedule(
-          listDay[i],
-          false,
-          false,
-          false,
-          false)
+List<Slot> getScheduleData(List listDay,List<WorkSchedule> listOpenDay, userId) {
+    List<Slot> list = [];
+    for (int i = 0; i < listDay.length; i++) {
+      list.add(
+          Slot(
+              listDay[i],
+              checkSlotAvailable(listDay[i], 1,2,listOpenDay),
+              checkSlotAvailable(listDay[i], 3,4,listOpenDay),
+              checkSlotAvailable(listDay[i], 5,6,listOpenDay),
+              checkSlotAvailable(listDay[i], 7,8,listOpenDay),
+              checkSlotAvailable(listDay[i], 1,2,listOpenDay),
+              checkSlotAvailable(listDay[i], 3,4,listOpenDay),
+              checkSlotAvailable(listDay[i], 5,6,listOpenDay),
+              checkSlotAvailable(listDay[i], 7,8,listOpenDay),
+              checkSlotAssigned(listDay[i], 1,2,listOpenDay,userId),
+              checkSlotAssigned(listDay[i], 3,4,listOpenDay,userId),
+              checkSlotAssigned(listDay[i], 5,6,listOpenDay,userId),
+              checkSlotAssigned(listDay[i], 7,8,listOpenDay,userId),
+          ));
+    }
 
-  ];
+    return list;
+}
+bool checkSlotAssigned(String day,int slotFirst,int slotLast,List<WorkSchedule> listOpenDay, userId){
+  bool assigned = false;
+  for(var item in listOpenDay){
+    if(parseDay(day) == parseDay(item.date)){
+      for(var ele in item.slots!) {
+        if (slotFirst == ele.slot || slotLast == ele.slot) {
+          for (var e in ele.workSlot!) {
+            if (e.staffId?.id == userId) {
+              assigned = true;
+            }
+          }
+        }
+      }
+      }
+    }
+
+  return assigned;
 }
 
-List<StaffRegister> getScheduleDataOfEachDay(List<Schedule> schedule) {
+int checkMaxSlot(List<Slot> slot){
+  int count =0;
+  for(var element in slot){
+    if(element.isAssigned1 == true){
+      count++;
+    }
+    if(element.isAssigned2 == true){
+      count++;
+    }
+    if(element.isAssigned3 == true){
+      count++;
+    }
+    if(element.isAssigned4 == true){
+      count++;
+    }
+  }
+  return count;
+}
+
+bool checkSlotAvailable(String day,int slotFirst,int slotLast,List<WorkSchedule> listOpenDay){
+  bool open = false;
+  for(var item in listOpenDay){
+    if(parseDay(day) == parseDay(item.date)){
+      if(item.slots!.length==3){
+        open = true;
+      }
+      if(item.status !='open'){
+        open = true;
+      }
+      for(var ele in item.slots!){
+        if(slotFirst == ele.slot || slotLast == ele.slot){
+          if(ele.status != 'Available'){
+            open = true;
+          }
+          if(ele.workSlot!.length >= ele.maxPer!){
+            open = true;
+          }
+        }
+      }
+    }
+  }
+  return open;
+}
+
+List<StaffRegister> getScheduleDataOfEachDay(List<Slot> schedule) {
   List<StaffRegister> list = [];
-  for (int i = 0; i < schedule.length; i++) {
+  int slotCount = checkMaxSlot(schedule);
+  for (int i = 0; i < schedule.length-slotCount; i++) {
     String time = schedule[i].time;
-    if (schedule[i].check1) {
-      final eachSchedule1 = StaffRegister(date: requestDate(time), slot: 1, start: 800, end:930);
+    if (schedule[i].check1 == true && schedule[i].valid1==false && schedule[i].isAssigned1 ==false) {
+      final eachSchedule1 =
+          StaffRegister(date: requestDate(time), slot: 1, start: 800, end: 930);
       list.add(eachSchedule1);
-      final eachSchedule2 = StaffRegister(date: requestDate(time), slot: 2, start: 930, end:1100);
-      list.add(eachSchedule2);
-
-    }
-
-    if (schedule[i].check2) {
-      final eachSchedule1 = StaffRegister(date: requestDate(time), slot: 3, start: 1100, end:1230);
-      list.add(eachSchedule1);
-      final eachSchedule2 = StaffRegister(date: requestDate(time), slot: 4, start: 1230, end:1400);
+      final eachSchedule2 = StaffRegister(
+          date: requestDate(time), slot: 2, start: 930, end: 1100);
       list.add(eachSchedule2);
     }
 
-    if (schedule[i].check3) {
-      final eachSchedule1 = StaffRegister(date: requestDate(time), slot: 5, start: 1400, end:1530);
+    if (schedule[i].check2 == true && schedule[i].valid2==false && schedule[i].isAssigned2 ==false) {
+      final eachSchedule1 = StaffRegister(
+          date: requestDate(time), slot: 3, start: 1100, end: 1230);
       list.add(eachSchedule1);
-      final eachSchedule2 = StaffRegister(date: requestDate(time), slot: 6, start: 1530, end:1700);
+      final eachSchedule2 = StaffRegister(
+          date: requestDate(time), slot: 4, start: 1230, end: 1400);
       list.add(eachSchedule2);
     }
 
-    if (schedule[i].check4) {
-      final eachSchedule1 = StaffRegister(date: requestDate(time), slot: 7, start: 1700, end:1830);
+    if (schedule[i].check3 == true && schedule[i].valid3==false && schedule[i].isAssigned3 ==false) {
+      final eachSchedule1 = StaffRegister(
+          date: requestDate(time), slot: 5, start: 1400, end: 1530);
       list.add(eachSchedule1);
-      final eachSchedule2 = StaffRegister(date: requestDate(time), slot: 8, start: 1830, end:2000);
+      final eachSchedule2 = StaffRegister(
+          date: requestDate(time), slot: 6, start: 1530, end: 1700);
+      list.add(eachSchedule2);
+    }
+
+    if (schedule[i].check4 == true && schedule[i].valid4==false && schedule[i].isAssigned4 ==false) {
+      final eachSchedule1 = StaffRegister(
+          date: requestDate(time), slot: 7, start: 1700, end: 1830);
+      list.add(eachSchedule1);
+      final eachSchedule2 = StaffRegister(
+          date: requestDate(time), slot: 8, start: 1830, end: 2000);
       list.add(eachSchedule2);
     }
   }
   return list;
 }
 
- checkAndPostSchedule(List<StaffRegister> list, token, context) async{
-      StaffAssignWorkSchedule().addSchedule(
-          context, token, list);
-
+checkAndPostSchedule(List<StaffRegister> list, token, context) async {
+  if(list.isEmpty){
+    AwesomeDialog(
+      context: context,
+      animType: AnimType.SCALE,
+      dialogType: DialogType.WARNING,
+      title: 'Chưa chọn lịch làm việc',
+      dismissOnTouchOutside: false,
+      btnOkOnPress: () {
+      },
+    ).show();
+  }else if(list.length>28){
+    AwesomeDialog(
+      context: context,
+      animType: AnimType.SCALE,
+      dialogType: DialogType.WARNING,
+      title: 'Đăng kí tối đa 14 slot/tuần',
+      dismissOnTouchOutside: false,
+      btnOkOnPress: () {
+        list.clear();
+      },
+    ).show();
+  }
+  else{
+    const CircularProgressIndicator();
+    StaffAssignWorkSchedule().addSchedule(context, token, list);
+  }
 }
 
-class Schedule {
-  Schedule(this.time, this.check1, this.check2, this.check3, this.check4);
+class Slot {
+  Slot(this.time,
+      this.check1,  this.check2, this.check3, this.check4,
+      this.valid1, this.valid2, this.valid3, this.valid4,
+      this.isAssigned1, this.isAssigned2, this.isAssigned3, this.isAssigned4);
   final String time;
   bool check1;
   bool check2;
   bool check3;
   bool check4;
-
+  bool valid1;
+  bool valid2;
+  bool valid3;
+  bool valid4;
+  bool isAssigned1;
+  bool isAssigned2;
+  bool isAssigned3;
+  bool isAssigned4;
 }
 
 class ScheduleDataSource extends DataGridSource {
@@ -287,8 +438,7 @@ class ScheduleDataSource extends DataGridSource {
   }
 
   List<DataGridRow> _dataGridRow = [];
-  List<Schedule> scheduleData = [];
-
+  List<Slot> scheduleData = [];
   void updateDataGridRow() {
     _dataGridRow = scheduleData
         .map<DataGridRow>((e) => DataGridRow(cells: [
@@ -299,6 +449,7 @@ class ScheduleDataSource extends DataGridSource {
               DataGridCell(columnName: 'slot4', value: e.check4),
             ]))
         .toList();
+
   }
 
   @override
@@ -315,7 +466,10 @@ class ScheduleDataSource extends DataGridSource {
       Container(
           alignment: Alignment.center,
           // padding: EdgeInsets.symmetric(horizontal: 16),
-          child: Checkbox(
+          child: !scheduleData[_dataGridRow.indexOf(row)].valid1
+              && !scheduleData[_dataGridRow.indexOf(row)].isAssigned1
+              && checkMaxSlot(scheduleData) < 14
+              ?  Checkbox(
             value: row.getCells()[1].value,
             onChanged: (value) {
               final index = _dataGridRow.indexOf(row);
@@ -325,25 +479,34 @@ class ScheduleDataSource extends DataGridSource {
               notifyDataSourceListeners(
                   rowColumnIndex: RowColumnIndex(index, 1));
             },
-          )),
+          ) : scheduleData[_dataGridRow.indexOf(row)].isAssigned1
+              ? const Checkbox(value: true, onChanged: null)
+              : const Checkbox(value: false, onChanged: null)),
+        Container(
+            alignment: Alignment.center,
+            // padding: EdgeInsets.symmetric(horizontal: 16),
+            child: !scheduleData[_dataGridRow.indexOf(row)].valid2
+                && !scheduleData[_dataGridRow.indexOf(row)].isAssigned2
+                && checkMaxSlot(scheduleData)< 14 ? Checkbox(
+              value: row.getCells()[2].value,
+              onChanged: (value) {
+                final index = _dataGridRow.indexOf(row);
+                scheduleData[index].check2 = value!;
+                row.getCells()[2] =
+                    DataGridCell(value: value, columnName: 'slot2');
+                notifyDataSourceListeners(
+                    rowColumnIndex: RowColumnIndex(index, 2));
+              },
+            ): scheduleData[_dataGridRow.indexOf(row)].isAssigned2
+                ? const Checkbox(value: true, onChanged: null)
+                : const Checkbox(value: false, onChanged: null)),
       Container(
           alignment: Alignment.center,
           // padding: EdgeInsets.symmetric(horizontal: 16),
-          child: Checkbox(
-            value: row.getCells()[2].value,
-            onChanged: (value) {
-              final index = _dataGridRow.indexOf(row);
-              scheduleData[index].check2 = value!;
-              row.getCells()[2] =
-                  DataGridCell(value: value, columnName: 'slot2');
-              notifyDataSourceListeners(
-                  rowColumnIndex: RowColumnIndex(index, 2));
-            },
-          )),
-      Container(
-          alignment: Alignment.center,
-          // padding: EdgeInsets.symmetric(horizontal: 16),
-          child: Checkbox(
+          child: !scheduleData[_dataGridRow.indexOf(row)].valid3
+              && !scheduleData[_dataGridRow.indexOf(row)].isAssigned3
+              && checkMaxSlot(scheduleData) < 14
+              ? Checkbox(
             value: row.getCells()[3].value,
             onChanged: (value) {
               final index = _dataGridRow.indexOf(row);
@@ -353,11 +516,16 @@ class ScheduleDataSource extends DataGridSource {
               notifyDataSourceListeners(
                   rowColumnIndex: RowColumnIndex(index, 3));
             },
-          )),
+          ): scheduleData[_dataGridRow.indexOf(row)].isAssigned3
+              ? const Checkbox(value: true, onChanged: null)
+              : const Checkbox(value: false, onChanged: null)),
       Container(
           alignment: Alignment.center,
           // padding: EdgeInsets.symmetric(horizontal: 16),
-          child: Checkbox(
+          child: ! scheduleData[_dataGridRow.indexOf(row)].valid4
+              && !scheduleData[_dataGridRow.indexOf(row)].isAssigned4
+              && checkMaxSlot(scheduleData) < 14
+              ? Checkbox(
             value: row.getCells()[4].value,
             onChanged: (value) {
               final index = _dataGridRow.indexOf(row);
@@ -367,8 +535,9 @@ class ScheduleDataSource extends DataGridSource {
               notifyDataSourceListeners(
                   rowColumnIndex: RowColumnIndex(index, 4));
             },
-          )),
-
+          ): scheduleData[_dataGridRow.indexOf(row)].isAssigned4
+              ? const Checkbox(value: true, onChanged: null)
+              : const Checkbox(value: false, onChanged: null)),
     ]);
   }
 }

@@ -1,7 +1,7 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:computer_service_system/constants/color_constant.dart';
 import 'package:computer_service_system/features/schedule_services.dart';
-import 'package:computer_service_system/models/schedule_data.dart';
+import 'package:computer_service_system/models/slot_data.dart';
 import 'package:computer_service_system/screens/create_booking_second_stage.dart';
 import 'package:computer_service_system/screens/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
@@ -14,10 +14,10 @@ class BookAppointment extends StatefulWidget {
 }
 
 class _BookAppointmentState extends State<BookAppointment> {
-   List<Schedule> futureSchedule =[];
+   List<Slot> futureSchedule =[];
    bool isSelected = false;
    late String time;
-  Future<List<Schedule>> getFutureSchedule() async {
+  Future<List<Slot>> getFutureSchedule() async {
     futureSchedule = await ScheduleServices().fetchSevenDaySlot();
     return futureSchedule;
   }

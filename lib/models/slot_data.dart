@@ -1,5 +1,5 @@
-class Schedule {
-  Schedule({
+class Slot {
+  Slot({
     required this.id,
     required this.date,
     required this.slots,
@@ -10,7 +10,7 @@ class Schedule {
   late final List<Slots> slots;
   late final String status;
 
-  Schedule.fromJson(Map<String, dynamic> json){
+  Slot.fromJson(Map<String, dynamic> json){
     id = json['_id'];
     date = json['date'];
     slots = List.from(json['slots']).map((e)=>Slots.fromJson(e)).toList();
