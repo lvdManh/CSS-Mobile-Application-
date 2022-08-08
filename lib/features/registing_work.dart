@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 
 import 'auth_services.dart';
@@ -24,24 +25,26 @@ class StaffAssignWorkSchedule {
         }),
       );
       if (response.statusCode == 200) {
-
       } else if (response.statusCode == 500) {
         count++;
-        error += '${element.date} slot ${element.slot}: ${response.body}\n';
+        error += 'Slot ${element.slot} ngày ${element.date}: ${response.body}\n';
       } else {
-        AwesomeDialog(
-          context: context,
-          animType: AnimType.SCALE,
-          dialogType: DialogType.WARNING,
-          title: 'Hết phiên đăng nhập',
-          desc: 'Vui lòng đăng nhập lại',
-          dismissOnTouchOutside: false,
-          btnOkOnPress: () {
-            AuthService().logOut(context);
-          },
-        ).show();
+        count = -1;
       }
     }
+    if(count == -1){
+      AwesomeDialog(
+        context: context,
+        animType: AnimType.SCALE,
+        dialogType: DialogType.WARNING,
+        title: 'Hết phiên đăng nhập',
+        desc: 'Vui lòng đăng nhập lại',
+        dismissOnTouchOutside: false,
+        btnOkOnPress: () {
+          AuthService().logOut(context);
+        },
+      ).show();
+    }else
     if (count == 0) {
       AwesomeDialog(
         context: context,
@@ -57,7 +60,9 @@ class StaffAssignWorkSchedule {
         animType: AnimType.SCALE,
         dialogType: DialogType.INFO,
         title: 'Đăng kí lịch gặp vấn đề',
-        desc: error,
+        body: Center(child: SingleChildScrollView(
+          child: Text(error),
+        ),),
         dismissOnTouchOutside: false,
         btnOkOnPress: () {},
       ).show();
