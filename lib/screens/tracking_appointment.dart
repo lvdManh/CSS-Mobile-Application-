@@ -54,23 +54,6 @@ class _TrackingAppointmentState extends State<TrackingAppointment> {
       return bookingList;
     }
   }
-  Future<Bookings?> getBookingById(id) async {
-
-    final response = await http.get(
-      Uri.parse(
-          "https://computer-services-api.herokuapp.com/booking/search/$id"),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-    );
-    var data = jsonDecode(response.body.toString());
-    if(response.statusCode==200){
-      bookings =  Bookings.fromJson(data);
-      return bookings;
-    }else{
-      return bookings;
-    }
-  }
   String parseDate(time){
     DateTime dt1 = DateTime.parse(time);
     return '${dt1.hour}:${dt1.minute}, ${dt1.day}/${dt1.month}/${dt1.year}';
@@ -126,13 +109,12 @@ class _TrackingAppointmentState extends State<TrackingAppointment> {
                                 trailing:
                                     Text(bookingList[(bookingList.length-1)-index].status.toString()),
                                 onTap: () async {
-                                  await getBookingById(bookingList[(bookingList.length-1)-index].id);
                                   if(!mounted) return;
                                   await Navigator.push(
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) => AppointmentDetail(
-                                                bookings: bookings!,
+                                                bookings: bookingList[(bookingList.length-1)-index],
                                               )));
                                 },
                               ),

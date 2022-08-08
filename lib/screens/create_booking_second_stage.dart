@@ -43,8 +43,8 @@ class _SubmitAppointmentState extends State<SubmitAppointment> {
   late String selectedDistrict;
   late String selectedWard;
 
-  Future<void> getListDropdownData() async {
-    futureService = await ServiceServices().fetchServices();
+  Future<void> getListDropdownData(token) async {
+    futureService = await ServiceServices().fetchServices(token);
     for(int i =0; i < futureService.length;i++){
       serviceName.add(futureService[i].name.toString());
     }
@@ -120,7 +120,7 @@ class _SubmitAppointmentState extends State<SubmitAppointment> {
     username.text = userProvider.user.username;
     selectedDistrict = '';
     selectedWard = '';
-    getListDropdownData();
+    getListDropdownData(userProvider.user.accessToken);
     // time.text = '22/7/2022';
   }
 

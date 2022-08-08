@@ -3,13 +3,14 @@ import 'package:computer_service_system/models/services_data.dart';
 import 'package:http/http.dart' as http;
 
 class ServiceServices{
-  Future<List<Service>> fetchServices(
+  Future<List<Service>> fetchServices(token
       ) async{
     final response = await http.get(
       Uri.parse(
           'https://computer-services-api.herokuapp.com/service/all-service'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
+        'token': 'bearer $token',
       },
     );
 
