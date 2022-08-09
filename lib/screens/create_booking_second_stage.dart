@@ -35,7 +35,6 @@ class _SubmitAppointmentState extends State<SubmitAppointment> {
   final TextEditingController status = TextEditingController();
   late List<Service> futureService;
   late List<String> serviceName = [];
-//  List<Address> wards = [];
   late List<Address> address;
   late List<String> districts =[];
   late List<String> wards =[];

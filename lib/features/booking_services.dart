@@ -32,7 +32,6 @@ class BookingServices{
         'description': description,
         'time': time,
         'type': type,
-        'status': 'pending'
       }),
     );
     if(response.statusCode==200){
@@ -94,18 +93,19 @@ class BookingServices{
 
   }
 
-  Future editBooking(context,id,
-      street, ward, district, city, name, phonenum, services, description, type, time
+  Future editBooking(context,token,id,
+      street, ward, district, name, phonenum, services, description, type
       ) async{
+    print(id);
     final response = await http.put(
       Uri.parse(
-          'https://computer-services-api.herokuapp.com/booking/$id'),
+          'https://computer-services-api.herokuapp.com/booking/update/$id'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
+        'token': 'bearer $token',
       },
       body: jsonEncode({
         'cus_address': {
-          'city': city,
           'district': district,
           'ward': ward,
           'street': street
@@ -114,7 +114,6 @@ class BookingServices{
         'phonenum': phonenum,
         'services': services,
         'description': description,
-        'time': time,
         'type': type,
       }),
     );
@@ -135,10 +134,11 @@ class BookingServices{
       ).show();
 
     }else{
+      print(response.body);
       AwesomeDialog(
         context: context,
         animType: AnimType.SCALE,
-        dialogType: DialogType.SUCCES,
+        dialogType: DialogType.ERROR,
         title: 'Thay đổi không thành công',
         dismissOnTouchOutside: false,
         btnOkOnPress: () {
@@ -147,20 +147,34 @@ class BookingServices{
     }
   }
 
-  Future cancelBooking(id
+  Future cancelBooking(context,id,token
       ) async{
     final response = await http.patch(
       Uri.parse(
           'https://computer-services-api.herokuapp.com/booking/cancel-booking'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
+        'token': 'bearer $token',
       },
       body: jsonEncode({
         'id' : id
       }),
     );
     if(response.statusCode==200){
-        throw("Hủy thành công");
+      AwesomeDialog(
+        context: context,
+        animType: AnimType.SCALE,
+        dialogType: DialogType.SUCCES,
+        title: 'Hủy lịch hèn thành công',
+        dismissOnTouchOutside: false,
+        btnOkOnPress: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                  const NavScreen()));
+        },
+      ).show();
 
     }else{
       throw("Lỗi");

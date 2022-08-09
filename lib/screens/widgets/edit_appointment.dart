@@ -1,12 +1,15 @@
 
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:computer_service_system/providers/data_class.dart';
+import 'package:computer_service_system/screens/widgets/pick_address_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../constants/color_constant.dart';
+import '../../features/address_services.dart';
 import '../../features/booking_services.dart';
 import '../../features/service_services.dart';
 import '../../models/booking_object.dart';
+import '../../models/hcm_address_data.dart';
 import '../../models/services_data.dart';
 import 'custom_button.dart';
 import 'multi_select_widget.dart';
@@ -21,31 +24,75 @@ class EditAppointment extends StatefulWidget {
 }
 
 class _EditAppointmentState extends State<EditAppointment> {
-
   final _submitKey = GlobalKey<FormState>();
   final BookingServices bookingServices = BookingServices();
   final TextEditingController username = TextEditingController();
   final TextEditingController phone = TextEditingController();
-  final TextEditingController city = TextEditingController();
   final TextEditingController district = TextEditingController();
   final TextEditingController ward = TextEditingController();
   final TextEditingController street = TextEditingController();
   final TextEditingController type = TextEditingController();
   final TextEditingController description = TextEditingController();
-  final TextEditingController services = TextEditingController();
-  final TextEditingController time = TextEditingController();
   late List<Service> futureService;
   late List<String> serviceName = [];
   List<String> _selectedItems = [];
-
-
+  late List<Address> address;
+  late List<String> districts =[];
+  late List<String> wards =[];
+  late String selectedDistrict;
+  late String selectedWard;
+  late String token;
   Future<void> getNameService(token) async {
     futureService = await ServiceServices().fetchServices(token);
     for(int i =0; i < futureService.length;i++){
       serviceName.add(futureService[i].name.toString());
     }
+    address = await fetchHCMAddress();
+    for(int i =0; i< address.length;i++){
+      districts.add(address[i].name.toString());
+    }
+  }
+  void getWardsData() async{
+    for(int i =0; i< address.length;i++){
+      if(address[i].name==selectedDistrict){
+        for (var element in address[i].wards) {wards.add(element.name); }
+      }
+    }
   }
 
+//  late Address? selectedWard;
+  void _showDistrictSelected() async {
+    final String results = await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return PickAddress(items: districts, title: "Chọn quận",);
+      },
+    );
+    if (results != '') {
+      setState(() {
+        wards.clear();
+        selectedWard ='';
+        selectedDistrict = results;
+        getWardsData();
+      });
+    }
+  }
+
+  void _showWardSelected() async {
+    if(wards.isNotEmpty) {
+      final String results = await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return PickAddress(items: wards, title: "Chọn phường/khu vực",);
+        },
+      );
+      if (results != '') {
+        setState(() {
+          selectedWard = results;
+        });
+      }
+    }
+  }
   void _showMultiSelect() async {
     final List<String>? results = await showDialog(
       context: context,
@@ -60,28 +107,40 @@ class _EditAppointmentState extends State<EditAppointment> {
       });
     }
   }
-
+ bool checkFieldEmpty(){
+    if(username.text.isEmpty
+        || phone.text.isEmpty
+        || street.text.isEmpty
+        || ward.text.isEmpty
+        || district.text.isEmpty
+        || type.text.isEmpty
+        || _selectedItems.isEmpty
+        || description.text.isEmpty){
+      return false;
+    }
+    return true;
+ }
 
   @override
   void initState() {
+    final userProvider = Provider.of<DataClass>(context, listen: false).user;
     super.initState();
     username.text = widget.bookings.cusName!;
     phone.text = widget.bookings.phonenum!;
     street.text = widget.bookings.cusAddress!.street!;
     ward.text = widget.bookings.cusAddress!.ward!;
     district.text = widget.bookings.cusAddress!.district!;
-    city.text = widget.bookings.cusAddress!.city!;
     type.text = widget.bookings.type!;
-    services.text = widget.bookings.services!.join(', ').toString();
-    time.text = widget.bookings.time!;
+    _selectedItems.addAll(widget.bookings.services!.toList());
     description.text = widget.bookings.description!;
-    String userToken = Provider.of<DataClass>(context).user.accessToken;
-    getNameService(userToken);
+    selectedDistrict = widget.bookings.cusAddress!.district!;
+    selectedWard =  widget.bookings.cusAddress!.ward!;
+    getNameService(userProvider.accessToken);
   }
 
   @override
   Widget build(BuildContext context) {
-
+    token = Provider.of<DataClass>(context,listen: false).user.accessToken;
     return Scaffold(
       backgroundColor: Colors.orangeAccent,
       appBar: PreferredSize(
@@ -133,21 +192,46 @@ class _EditAppointmentState extends State<EditAppointment> {
                           controller: phone,
                         ),
                         const SizedBox(height: 8),
-                        TextFormField(
-                          decoration:
-                          const InputDecoration(labelText: 'Thành phố:'),
-                          controller: city,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Text("Quận:",
+                                style: TextStyle(fontSize: 16, color: Colors.black.withOpacity(0.6), fontFamily: 'Regular')),
+                            ElevatedButton(
+                              onPressed: _showDistrictSelected,
+                              child: const Text('Chọn quận', style: TextStyle(fontSize: 12),),
+                            ),
+                          ],
                         ),
-                        const SizedBox(height: 8),
-                        TextFormField(
-                          decoration: const InputDecoration(labelText: 'Quận:'),
-                          controller: district,
+
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text(selectedDistrict, style: const TextStyle(fontSize: 16, fontFamily: 'Regular',),),
+                          ],
                         ),
-                        const SizedBox(height: 8),
-                        TextFormField(
-                          decoration: const InputDecoration(labelText: 'Phường:'),
-                          controller: ward,
+
+                        Divider(thickness: 1,color: Colors.black.withOpacity(0.5),),
+
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Text("Phường/khu vực:",
+                                style: TextStyle(fontSize: 16, color: Colors.black.withOpacity(0.6), fontFamily: 'Regular')),
+                            ElevatedButton(
+                              onPressed: _showWardSelected,
+                              child: const Text('Chọn phường/khu vực', style: TextStyle(fontSize: 12),),
+                            ),
+
+                          ],
                         ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text(selectedWard, style: const TextStyle(fontSize: 16, fontFamily: 'Regular',),),
+                          ],
+                        ),
+                        Divider(thickness: 1,color: Colors.black.withOpacity(0.5),),
                         const SizedBox(height: 8),
                         TextFormField(
                           decoration: const InputDecoration(labelText: 'Số nhà:'),
@@ -185,7 +269,7 @@ class _EditAppointmentState extends State<EditAppointment> {
                                 ),
                               ],
                             ),
-                            const Divider()
+                            Divider(thickness: 1,color: Colors.black.withOpacity(0.5),),
                           ],
                         ),
                         TextFormField(
@@ -196,20 +280,14 @@ class _EditAppointmentState extends State<EditAppointment> {
                         const SizedBox(height: 8),
                         TextFormField(
                           decoration:
-                          const InputDecoration(labelText: 'Thời gian hẹn:'),
-                          controller: time,
-                        ),
-                        const SizedBox(height: 8),
-                        TextFormField(
-                          decoration:
                           const InputDecoration(labelText: 'Mô tả vấn đề:'),
                           controller: description,
                         ),
-                        const SizedBox(height: 10),
+                        const SizedBox(height: 20),
                         CustomButton(
                           text: 'Cập nhật',
                           onTap: ()  {
-                            if (_submitKey.currentState!.validate()) {
+                            if (_submitKey.currentState!.validate() && checkFieldEmpty()) {
                                AwesomeDialog(
                                 context: context,
                                 animType: AnimType.SCALE,
@@ -218,21 +296,32 @@ class _EditAppointmentState extends State<EditAppointment> {
                                 title: 'Lưu thay đổi?',
                                 btnCancelOnPress: (){},
                                 btnOkOnPress: () {
-                                  bookingServices.editBooking(context,
+                                  bookingServices.editBooking(
+                                      context,
+                                      token,
                                       widget.bookings.id,
                                       street.text,
                                       ward.text,
                                       district.text,
-                                      city.text,
                                       username.text,
                                       phone.text,
                                       _selectedItems,
                                       description.text,
-                                      type.text,
-                                      time.text);
+                                      type.text);
                                 },
                               ).show();
 
+                            }else{
+                              AwesomeDialog(
+                                context: context,
+                                animType: AnimType.SCALE,
+                                dialogType: DialogType.WARNING,
+                                dismissOnTouchOutside: false,
+                                title: 'Thông tin trống',
+                                desc: 'Vui lòng nhập đủ thông tin',
+                                btnOkOnPress: () {
+                                },
+                              ).show();
                             }
                           },
                         )
