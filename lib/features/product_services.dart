@@ -13,8 +13,13 @@ class ProductRequest {
     return products;
   }
 
-  static Future<List<Accessory>> fetchPosts() async {
-    final response = await http.get(Uri.parse(url));
+  static Future<List<Accessory>> fetchPosts(token) async {
+    final response = await http.get(Uri.parse(url),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'token': 'bearer $token',
+      },
+    );
     if (response.statusCode == 200) {
       return compute(parsePost, response.body);
     } else if (response.statusCode == 404) {

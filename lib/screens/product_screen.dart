@@ -1,8 +1,10 @@
 import 'package:computer_service_system/constants/color_constant.dart';
 import 'package:computer_service_system/features/product_services.dart';
 import 'package:computer_service_system/models/product.dart';
+import 'package:computer_service_system/providers/data_class.dart';
 import 'package:computer_service_system/screens/widgets/product_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ProductScreen extends StatefulWidget {
   static const String routeName = '/product-screen';
@@ -13,31 +15,17 @@ class ProductScreen extends StatefulWidget {
 }
 
 class _ProductScreenState extends State<ProductScreen> {
-  List<Accessory>? listProduct;
-
-  // Future<List<Accessory>?> getAccessoryListApi() async {
-  //   ProductRequest.fetchPosts().then((dataFromSever) {
-  //     setState(() {
-  //       listProduct = dataFromSever;
-  //     });
-  //   });
-  //   return listProduct;
-  // }
 
   // final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
-    ProductRequest.fetchPosts().then((dataFromSever) {
-      setState(() {
-        listProduct = dataFromSever;
-      });
-    });
   }
 
   @override
   Widget build(BuildContext context) {
+    String token = Provider.of<DataClass>(context).user.accessToken;
     return Scaffold(
       // key: _scaffoldKey,
       backgroundColor: Colors.orangeAccent,
@@ -57,7 +45,7 @@ class _ProductScreenState extends State<ProductScreen> {
       ),
 
       body: Container(
-        height: 800,
+        height: double.infinity,
         width: double.infinity,
         decoration: const BoxDecoration(
             color: mBackgroundColor,
@@ -65,36 +53,27 @@ class _ProductScreenState extends State<ProductScreen> {
               topLeft: Radius.circular(30),
               topRight: Radius.circular(30),
             )),
-        // child: Padding(
-        //     padding: const EdgeInsets.all(10.0),
-        //     child: FutureBuilder(
-        //         future: getAccessoryListApi(),
-        //         builder: (context, snapshot) {
-        //           if (!snapshot.hasData) {
-        //             return const Center(child: CircularProgressIndicator());
-        //           } else {
-        // Expanded(
-        //   child: ListView.builder(
-        //       padding: const EdgeInsets.all(16.0),
-        //       itemCount: listProduct?.length,
-        //       itemBuilder: (context, index) {
-        //         return ProductWidget(product: listProduct?[index]);
-        //       }),
-        // );
-        //           }
-        //           throw "";
-        //         })),
-        child: Column(children: [
-          Expanded(
-            child: ListView.builder(
-                shrinkWrap: true,
-                padding: const EdgeInsets.all(16.0),
-                itemCount: listProduct?.length,
-                itemBuilder: (context, index) {
-                  return ProductWidget(product: listProduct?[index]);
-                }),
-          )
-        ]),
+        child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: FutureBuilder<List<Accessory>>(
+                future: ProductRequest.fetchPosts(token),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else {
+        return Expanded(
+          child: ListView.builder(
+              scrollDirection: Axis.vertical,
+              shrinkWrap: true,
+              padding: const EdgeInsets.all(16.0),
+              itemCount: snapshot.data?.length,
+              itemBuilder: (context, index) {
+                return ProductWidget(product: snapshot.data![index]);
+              }),
+        );
+                  }
+                })),
+
       ),
     );
   }

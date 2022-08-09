@@ -1,18 +1,18 @@
 
-import 'dart:convert';
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:computer_service_system/providers/data_class.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 import '../../constants/color_constant.dart';
 import '../../features/booking_services.dart';
 import '../../features/service_services.dart';
-import '../../models/booking_data.dart';
+import '../../models/booking_object.dart';
 import '../../models/services_data.dart';
 import 'custom_button.dart';
 import 'multi_select_widget.dart';
 
 class EditAppointment extends StatefulWidget {
-  final Bookings bookings;
+  final Booking bookings;
 
   const EditAppointment({Key? key,required this.bookings}) : super(key: key);
 
@@ -34,29 +34,13 @@ class _EditAppointmentState extends State<EditAppointment> {
   final TextEditingController description = TextEditingController();
   final TextEditingController services = TextEditingController();
   final TextEditingController time = TextEditingController();
-  Bookings? newDetail;
   late List<Service> futureService;
   late List<String> serviceName = [];
   List<String> _selectedItems = [];
-  Future<Bookings?> getBookingById(id) async{
-    final response = await http.get(
-      Uri.parse(
-          'https://computer-services-api.herokuapp.com/booking/$id'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-    );
-    if(response.statusCode==200) {
-      final data = jsonDecode(response.body.toString());
-      newDetail = Bookings.fromJson(data);
-      return newDetail;
-    }
-    return newDetail;
-  }
 
-  Future<void> getNameService() async {
-    futureService = await ServiceServices().fetchServices();
 
+  Future<void> getNameService(token) async {
+    futureService = await ServiceServices().fetchServices(token);
     for(int i =0; i < futureService.length;i++){
       serviceName.add(futureService[i].name.toString());
     }
@@ -91,7 +75,8 @@ class _EditAppointmentState extends State<EditAppointment> {
     services.text = widget.bookings.services!.join(', ').toString();
     time.text = widget.bookings.time!;
     description.text = widget.bookings.description!;
-    getNameService();
+    String userToken = Provider.of<DataClass>(context).user.accessToken;
+    getNameService(userToken);
   }
 
   @override
@@ -223,11 +208,8 @@ class _EditAppointmentState extends State<EditAppointment> {
                         const SizedBox(height: 10),
                         CustomButton(
                           text: 'Cập nhật',
-                          onTap: () async {
+                          onTap: ()  {
                             if (_submitKey.currentState!.validate()) {
-
-                              await getBookingById(widget.bookings.id);
-
                                AwesomeDialog(
                                 context: context,
                                 animType: AnimType.SCALE,

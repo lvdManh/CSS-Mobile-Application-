@@ -5,10 +5,11 @@ import 'package:computer_service_system/screens/widgets/custom_button.dart';
 import 'package:computer_service_system/screens/widgets/edit_appointment.dart';
 import 'package:flutter/material.dart';
 import '../../constants/color_constant.dart';
-import '../../models/booking_data.dart';
+import '../../models/booking_object.dart';
+
 
 class AppointmentDetail extends StatelessWidget {
-  final Bookings bookings;
+  final Booking bookings;
   const AppointmentDetail({Key? key, required this.bookings}) : super(key: key);
 
 
