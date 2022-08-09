@@ -21,7 +21,6 @@ class TrackingAppointment extends StatefulWidget {
 class _TrackingAppointmentState extends State<TrackingAppointment> {
   List<Booking> bookingList = [];
 
-
    Bookings? bookings;
   Future<List<Booking>> getBookingListApi() async {
     final user = context.watch<DataClass>().user;

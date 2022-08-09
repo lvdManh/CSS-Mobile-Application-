@@ -14,8 +14,9 @@ class Booking {
   String? createdAt;
   int? v;
   String? accId;
+  String? orderId;
 
-  Booking({this.cusAddress, this.id, this.cusName, this.services, this.description, this.type, this.time, this.status, this.phonenum, this.updatedAt, this.cusId, this.createdAt, this.v, this.accId});
+  Booking({this.cusAddress, this.id, this.cusName, this.services, this.description, this.type, this.time, this.status, this.phonenum, this.updatedAt, this.cusId, this.createdAt, this.v, this.accId, this.orderId});
 
   Booking.fromJson(Map<dynamic, dynamic> json) {
     cusAddress = json["cus_address"] == null ? null : CusAddress.fromJson(Map<String,dynamic>.from(json["cus_address"]));
@@ -32,6 +33,7 @@ class Booking {
     createdAt = json["createdAt"];
     v = json["__v"];
     accId = json["acc_id"];
+    orderId = json["order_id"];
         // == null ? null : AccId.fromJson(Map<String,dynamic>.from(json["acc_id"]));
 
   }
@@ -56,6 +58,7 @@ class Booking {
     data["createdAt"] = createdAt;
     data["__v"] = v;
     data["acc_id"] = accId;
+    data["order_id"] = orderId;
     // if(accId != null) {
     //   data["acc_id"] = accId?.toJson();
     // }

@@ -22,9 +22,8 @@ class AccountScreen extends StatefulWidget {
 
 class _AccountScreenState extends State<AccountScreen> {
   final UserServices userService = UserServices();
-  Future<Account> getUser(username) async{
-
-    return UserServices().getUserData(username);
+  Future<Account> getUser(accessToken) async{
+    return userService.getUserData(accessToken);
   }
   String parseDate(time){
     DateTime dt1 = DateTime.parse(time);
@@ -81,7 +80,7 @@ class _AccountScreenState extends State<AccountScreen> {
               topRight: Radius.circular(30),
             )),
         child: FutureBuilder<Account>(
-          future: getUser(user.username),
+          future: getUser(user.accessToken),
           builder: (context,snapshot) {
             if(!snapshot.hasData){
               return const Center(
@@ -114,7 +113,7 @@ class _AccountScreenState extends State<AccountScreen> {
                     children: <Widget>[
                       const Text("Tên người dùng:",
                           style: TextStyle(fontSize: 18, fontFamily: 'Regular')),
-                      Text(snapshot.data?.userId?.name ?? "",
+                      Text(snapshot.data?.name ?? "",
                           style: const TextStyle(fontSize: 18, fontFamily: 'Regular')),
 
                     ],
@@ -130,7 +129,7 @@ class _AccountScreenState extends State<AccountScreen> {
                     children: <Widget>[
                       const Text("Email:",
                           style: TextStyle(fontSize: 18, fontFamily: 'Regular')),
-                      Text(snapshot.data?.userId?.email ?? "",
+                      Text(snapshot.data?.email ?? "",
                           style: const TextStyle(fontSize: 18, fontFamily: 'Regular')),
 
                     ],
@@ -147,7 +146,7 @@ class _AccountScreenState extends State<AccountScreen> {
                     children: <Widget>[
                       const Text("Số điện thoại liên lạc:",
                           style: TextStyle(fontSize: 18, fontFamily: 'Regular')),
-                      Text(snapshot.data?.userId?.phonenum ?? "",
+                      Text(snapshot.data?.phonenum ?? "",
                           style: const TextStyle(fontSize: 18, fontFamily: 'Regular')),
 
                     ],
@@ -164,7 +163,7 @@ class _AccountScreenState extends State<AccountScreen> {
                     children: <Widget>[
                       const Text("Ngày sinh:",
                           style: TextStyle(fontSize: 18, fontFamily: 'Regular')),
-                      Text(parseDate(snapshot.data?.userId?.birth),
+                      Text(parseDate(snapshot.data?.birth),
                           style: const TextStyle(fontSize: 18, fontFamily: 'Regular')),
 
                     ],
@@ -181,10 +180,10 @@ class _AccountScreenState extends State<AccountScreen> {
                       const Text("Địa chỉ:",
                           style: TextStyle(fontSize: 18, fontFamily: 'Regular')),
                         Flexible(
-                          child: Text(parseAddress(snapshot.data?.userId?.address?.street,
-                              snapshot.data?.userId?.address?.ward,
-                              snapshot.data?.userId?.address?.district,
-                              snapshot.data?.userId?.address?.city),
+                          child: Text(parseAddress(snapshot.data?.address?.street,
+                              snapshot.data?.address?.ward,
+                              snapshot.data?.address?.district,
+                              snapshot.data?.address?.city),
                             style: const TextStyle(fontSize: 18, fontFamily: 'Regular'),
                             maxLines: 3,
                             overflow: TextOverflow.ellipsis,

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:computer_service_system/models/booking_object.dart';
+import 'package:computer_service_system/screens/tracking_appointment.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -10,7 +11,7 @@ import '../screens/nav_screen.dart';
 class BookingServices{
 
   Future createBooking(
-      context, token, street, ward, district, city, name, phonenum, services, description, type, time
+      context, token, street, ward, district, city, name, phonenum, services, description, time
       ) async{
     final response = await http.post(
       Uri.parse(
@@ -31,7 +32,6 @@ class BookingServices{
         'services': services,
         'description': description,
         'time': time,
-        'type': type,
       }),
     );
     if(response.statusCode==200){
@@ -94,7 +94,7 @@ class BookingServices{
   }
 
   Future editBooking(context,token,id,
-      street, ward, district, name, phonenum, services, description, type
+      street, ward, district, name, phonenum, services, description
       ) async{
     print(id);
     final response = await http.put(
@@ -113,8 +113,7 @@ class BookingServices{
         'cus_name': name,
         'phonenum': phonenum,
         'services': services,
-        'description': description,
-        'type': type,
+        'description': description
       }),
     );
     if(response.statusCode==200){
@@ -129,12 +128,11 @@ class BookingServices{
               context,
               MaterialPageRoute(
                   builder: (context) =>
-                  const NavScreen()));
+                  const TrackingAppointment()));
         },
       ).show();
 
     }else{
-      print(response.body);
       AwesomeDialog(
         context: context,
         animType: AnimType.SCALE,

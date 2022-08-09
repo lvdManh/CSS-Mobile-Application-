@@ -1,17 +1,21 @@
 import 'dart:convert';
 import 'package:awesome_dialog/awesome_dialog.dart';
-import 'package:computer_service_system/screens/nav_screen.dart';
+import 'package:computer_service_system/screens/account_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import '../constants/utils.dart';
 import '../models/user.dart';
 class UserServices{
-  Future<Account> getUserData( username
+  Future<Account> getUserData( accessToken
       ) async {
     try {
         http.Response userRes = await http.get(
-          Uri.parse('https://computer-services-api.herokuapp.com/account/$username'),
+          Uri.parse('https://computer-services-api.herokuapp.com/account/view-profile'),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+            'token': 'bearer $accessToken',
+          },
         );
           if(userRes.statusCode ==200){
             final parsed = Account.fromJson(jsonDecode(userRes.body.toString()));
@@ -107,7 +111,11 @@ class UserServices{
             dismissOnTouchOutside: false,
             title: 'Cập nhật thàng công',
             btnOkOnPress: () {
-              Navigator.popAndPushNamed(context, NavScreen.routeName);
+              Navigator.push(
+                  context, MaterialPageRoute(
+                  builder: (context) => const AccountScreen()
+              )
+              );
             }
         ).show();
       }else{

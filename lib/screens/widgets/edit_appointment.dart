@@ -31,7 +31,6 @@ class _EditAppointmentState extends State<EditAppointment> {
   final TextEditingController district = TextEditingController();
   final TextEditingController ward = TextEditingController();
   final TextEditingController street = TextEditingController();
-  final TextEditingController type = TextEditingController();
   final TextEditingController description = TextEditingController();
   late List<Service> futureService;
   late List<String> serviceName = [];
@@ -113,7 +112,6 @@ class _EditAppointmentState extends State<EditAppointment> {
         || street.text.isEmpty
         || ward.text.isEmpty
         || district.text.isEmpty
-        || type.text.isEmpty
         || _selectedItems.isEmpty
         || description.text.isEmpty){
       return false;
@@ -130,7 +128,6 @@ class _EditAppointmentState extends State<EditAppointment> {
     street.text = widget.bookings.cusAddress!.street!;
     ward.text = widget.bookings.cusAddress!.ward!;
     district.text = widget.bookings.cusAddress!.district!;
-    type.text = widget.bookings.type!;
     _selectedItems.addAll(widget.bookings.services!.toList());
     description.text = widget.bookings.description!;
     selectedDistrict = widget.bookings.cusAddress!.district!;
@@ -272,11 +269,6 @@ class _EditAppointmentState extends State<EditAppointment> {
                             Divider(thickness: 1,color: Colors.black.withOpacity(0.5),),
                           ],
                         ),
-                        TextFormField(
-                          decoration:
-                          const InputDecoration(labelText: 'Loại máy:'),
-                          controller: type,
-                        ),
                         const SizedBox(height: 8),
                         TextFormField(
                           decoration:
@@ -306,8 +298,8 @@ class _EditAppointmentState extends State<EditAppointment> {
                                       username.text,
                                       phone.text,
                                       _selectedItems,
-                                      description.text,
-                                      type.text);
+                                      description.text
+                                  );
                                 },
                               ).show();
 

@@ -16,7 +16,6 @@ class ServiceServices{
 
     if(response.statusCode == 200){
       final parsed = json.decode(response.body).cast<Map<String, dynamic>>();
-      print(parsed);
       return  parsed.map<Service>((json) => Service.fromJson(json)).toList();
     }else{
       throw Exception('Lấy dữ liệu thất bại');

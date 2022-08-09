@@ -1,6 +1,7 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:computer_service_system/features/user_services.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../../constants/color_constant.dart';
 import '../../models/user.dart';
@@ -31,17 +32,22 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     DateTime dt1 = DateTime.parse(time);
     return '${dt1.day}/${dt1.month}/${dt1.year}';
   }
+  String revertDate(date){
+    var inputFormat = DateFormat('dd/MM/yyyy');
+    var inputDate = inputFormat.parse(date);
+    return inputDate.toString();
+  }
   @override
   void initState() {
     super.initState();
-    name.text = widget.account.userId!.name!;
-    email.text = widget.account.userId!.email!;
-    street.text = widget.account.userId!.address!.street!;
-    ward.text = widget.account.userId!.address!.ward!;
-    district.text = widget.account.userId!.address!.district!;
-    city.text = widget.account.userId!.address!.city!;
-    phonenum.text = widget.account.userId!.phonenum!;
-    birth.text = parseDate(widget.account.userId!.birth!);
+    name.text = widget.account.name!;
+    email.text = widget.account.email!;
+    street.text = widget.account.address!.street!;
+    ward.text = widget.account.address!.ward!;
+    district.text = widget.account.address!.district!;
+    city.text = widget.account.address!.city!;
+    phonenum.text = widget.account.phonenum!;
+    birth.text = parseDate(widget.account.birth!);
   }
   @override
   Widget build(BuildContext context) {
@@ -152,7 +158,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                                       ward: ward.text,
                                       street: street.text,
                                       phone: phonenum.text,
-                                      birth: birth.text);
+                                      birth: revertDate(birth.text));
                                 },
                               ).show();
 

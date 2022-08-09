@@ -76,7 +76,6 @@ class User {
      int? v,
      String? refreshToken,
      String? accessToken,
-     UserId? userId,
   }) {
     return User(
       id: id ?? this.id,
@@ -90,53 +89,12 @@ class User {
       v: v ?? this.v,
       refreshToken: refreshToken ?? this.refreshToken,
       accessToken: accessToken ?? this.accessToken,
-
     );
   }
 }
 
-class Address {
-  String? city;
-  String? district;
-  String? ward;
-  String? street;
 
-  Address({this.city, this.district, this.ward, this.street});
-
-  Address.fromJson(Map<String, dynamic> json) {
-    city = json["city"];
-    district = json["district"];
-    ward = json["ward"];
-    street = json["street"];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data["city"] = city;
-    data["district"] = district;
-    data["ward"] = ward;
-    data["street"] = street;
-    return data;
-  }
-}
-class Account{
-  UserId? userId;
-  Account({this.userId});
-  Account.fromJson(Map<String, dynamic> json) {
-    userId = json["user_id"] == null ? null : UserId.fromJson(Map<String,dynamic>.from(json["user_id"]));
-
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    if(userId != null) {
-      data["user_id"] = userId?.toJson();
-    }
-
-    return data;
-  }
-}
-class UserId {
+class Account {
   Address? address;
   String? img;
   String? id;
@@ -144,20 +102,47 @@ class UserId {
   String? email;
   String? phonenum;
   String? birth;
+  String? createdAt;
+  String? updatedAt;
+  int? v;
   String? accId;
 
+  Account({this.address, this.img, this.id, this.name, this.email, this.phonenum, this.birth, this.createdAt, this.updatedAt, this.v, this.accId});
 
-  UserId({this.address, this.img, this.id, this.name, this.email, this.phonenum,
-      this.birth, this.accId});
-  UserId.fromJson(Map<String, dynamic> json) {
-    address = json["address"] == null ? null : Address.fromJson(Map<String,dynamic>.from(json["address"]));
-    img = json["img"];
-    id = json["_id"];
-    name = json["name"];
-    email = json["email"];
-    phonenum = json["phonenum"];
-    birth = json["birth"];
-    accId = json["acc_id"];
+  Account.fromJson(Map<String, dynamic> json) {
+    if(json["address"] is Map) {
+      address = json["address"] == null ? null : Address.fromJson(json["address"]);
+    }
+    if(json["img"] is String) {
+      img = json["img"];
+    }
+    if(json["_id"] is String) {
+      id = json["_id"];
+    }
+    if(json["name"] is String) {
+      name = json["name"];
+    }
+    if(json["email"] is String) {
+      email = json["email"];
+    }
+    if(json["phonenum"] is String) {
+      phonenum = json["phonenum"];
+    }
+    if(json["birth"] is String) {
+      birth = json["birth"];
+    }
+    if(json["createdAt"] is String) {
+      createdAt = json["createdAt"];
+    }
+    if(json["updatedAt"] is String) {
+      updatedAt = json["updatedAt"];
+    }
+    if(json["__v"] is int) {
+      v = json["__v"];
+    }
+    if(json["acc_id"] is String) {
+      accId = json["acc_id"];
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -171,10 +156,44 @@ class UserId {
     data["email"] = email;
     data["phonenum"] = phonenum;
     data["birth"] = birth;
+    data["createdAt"] = createdAt;
+    data["updatedAt"] = updatedAt;
+    data["__v"] = v;
     data["acc_id"] = accId;
-
     return data;
   }
+}
 
+class Address {
+  String? city;
+  String? district;
+  String? ward;
+  String? street;
+
+  Address({this.city, this.district, this.ward, this.street});
+
+  Address.fromJson(Map<String, dynamic> json) {
+    if(json["city"] is String) {
+      city = json["city"];
+    }
+    if(json["district"] is String) {
+      district = json["district"];
+    }
+    if(json["ward"] is String) {
+      ward = json["ward"];
+    }
+    if(json["street"] is String) {
+      street = json["street"];
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data["city"] = city;
+    data["district"] = district;
+    data["ward"] = ward;
+    data["street"] = street;
+    return data;
+  }
 }
 

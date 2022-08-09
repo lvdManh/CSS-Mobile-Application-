@@ -29,7 +29,6 @@ class _SubmitAppointmentState extends State<SubmitAppointment> {
   final TextEditingController phone = TextEditingController();
   final TextEditingController ward = TextEditingController();
   final TextEditingController street = TextEditingController();
-  final TextEditingController type = TextEditingController();
   final TextEditingController description = TextEditingController();
   final TextEditingController services = TextEditingController();
   final TextEditingController status = TextEditingController();
@@ -261,12 +260,6 @@ class _SubmitAppointmentState extends State<SubmitAppointment> {
                         const SizedBox(height: 8),
                         TextFormField(
                           decoration:
-                              const InputDecoration(labelText: 'Loại máy:'),
-                          controller: type,
-                        ),
-                        const SizedBox(height: 8),
-                        TextFormField(
-                          decoration:
                               const InputDecoration(labelText: 'Mô tả vấn đề:'),
                           controller: description,
                         ),
@@ -294,7 +287,6 @@ class _SubmitAppointmentState extends State<SubmitAppointment> {
                                         phone.text,
                                         _selectedItems,
                                         description.text,
-                                        type.text,
                                         widget.time);
                                   },
                               ).show();
