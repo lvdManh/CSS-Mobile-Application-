@@ -1,8 +1,7 @@
 // ignore_for_file: deprecated_member_use
 
-import 'package:computer_service_system/constants/color_constant.dart';
 import 'package:computer_service_system/screens/staff_screens/staff_regist_work.dart';
-import 'package:computer_service_system/screens/staff_screens/view_appointment_page.dart';
+import 'package:computer_service_system/screens/staff_screens/staff_view_order_page.dart';
 import 'package:computer_service_system/screens/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 
@@ -34,8 +33,7 @@ class _StaffHomePageState extends State<StaffHomePage> {
         centerTitle: true,
       ),
       //--------------------Body------
-      body: Container(
-        decoration: const BoxDecoration(color: mBackgroundColor),
+      body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -49,7 +47,6 @@ class _StaffHomePageState extends State<StaffHomePage> {
             ),
             //Button Xem lịch hẹn
             Container(
-              width: 120,
               padding: const EdgeInsets.all(15.0),
               child: CustomButton(
                   text: 'Xem lịch hẹn',
@@ -57,14 +54,12 @@ class _StaffHomePageState extends State<StaffHomePage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) =>
-                              const StaffViewAppointmentPage()),
+                          builder: (context) => const StaffViewOrderPage()),
                     );
                   }),
             ),
             //Button Đăng ký lịch làm việc
             Container(
-              width: 120,
               padding: const EdgeInsets.all(15.0),
               child: CustomButton(
                   text: 'Đăng ký lịch làm việc',
@@ -78,18 +73,15 @@ class _StaffHomePageState extends State<StaffHomePage> {
             ),
             //Button xem lịch làm việc
             Container(
-              width: 120,
               padding: const EdgeInsets.all(15.0),
               child: CustomButton(text: 'Xem lịch làm việc', onTap: () {}),
             ),
             //Button lịch sử cuộc hẹn
             Container(
-              width: 120,
               padding: const EdgeInsets.all(15.0),
               child: CustomButton(text: 'Lịch sử cuộc hẹn', onTap: () {}),
             ),
             Container(
-              width: 120,
               padding: const EdgeInsets.all(15.0),
               child: CustomButton(
                   text: 'Thông tin người dùng',

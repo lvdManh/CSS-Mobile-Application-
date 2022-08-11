@@ -25,15 +25,14 @@ class _StaffRegistWorkState extends State<StaffRegistWork> {
   List<StaffRegister> list = [];
   List<String> nextTwoWeek = [];
 
-
-   List<String> weekday(){
+  List<String> weekday() {
     var nextWeekDay = DateTime.now().add(const Duration(days: 14));
     var startFrom = nextWeekDay.subtract(Duration(days: nextWeekDay.weekday));
-    nextTwoWeek = List.generate(7, (i) => '${startFrom.add(Duration(days: i))}');
+    nextTwoWeek =
+        List.generate(7, (i) => '${startFrom.add(Duration(days: i))}');
 
     return nextTwoWeek;
   }
-
 
   @override
   void initState() {
@@ -46,7 +45,7 @@ class _StaffRegistWorkState extends State<StaffRegistWork> {
 
   @override
   Widget build(BuildContext context) {
-      String token = Provider.of<DataClass>(context).user.accessToken;
+    String token = Provider.of<DataClass>(context).user.accessToken;
     return Scaffold(
       //App Bar
       backgroundColor: Colors.orangeAccent,
@@ -78,22 +77,27 @@ class _StaffRegistWorkState extends State<StaffRegistWork> {
                         fontSize: 24,
                       ))),
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 140),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 0, horizontal: 140),
                 child: Column(
                   children: <Widget>[
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Text(parseDay(nextTwoWeek.first),
-                            style: const TextStyle(fontSize: 24, fontFamily: 'Regular')),
+                            style: const TextStyle(
+                                fontSize: 24, fontFamily: 'Regular')),
                         Text(parseDay(nextTwoWeek.last),
-                            style: const TextStyle(fontSize: 24, fontFamily: 'Regular')),
+                            style: const TextStyle(
+                                fontSize: 24, fontFamily: 'Regular')),
                       ],
                     ),
                   ],
                 ),
               ),
-              const SizedBox(height: 20,),
+              const SizedBox(
+                height: 20,
+              ),
               Expanded(
                 child: SfDataGrid(
                   source: scheduleDataSource,
@@ -134,7 +138,6 @@ class _StaffRegistWorkState extends State<StaffRegistWork> {
                         )),
                   ],
                 ),
-
               ),
               Container(
                 width: 150,
@@ -156,7 +159,9 @@ class _StaffRegistWorkState extends State<StaffRegistWork> {
                       ).show();
                     }),
               ),
-              const SizedBox(height: 20,),
+              const SizedBox(
+                height: 20,
+              ),
             ],
           ),
         ),
@@ -207,25 +212,20 @@ class _StaffRegistWorkState extends State<StaffRegistWork> {
   }
 }
 
-String parseDay(time){
+String parseDay(time) {
   DateTime dt1 = DateTime.parse(time);
   return '${dt1.day}/${dt1.month}';
 }
-String requestDate(time){
+
+String requestDate(time) {
   DateTime dt1 = DateTime.parse(time);
   return '${dt1.year}-${dt1.month}-${dt1.day}';
 }
 
 List<Schedule> getScheduleData(List listDay) {
   return [
-    for(int i=0;i<listDay.length; i++)
-      Schedule(
-          listDay[i],
-          false,
-          false,
-          false,
-          false)
-
+    for (int i = 0; i < listDay.length; i++)
+      Schedule(listDay[i], false, false, false, false)
   ];
 }
 
@@ -234,41 +234,46 @@ List<StaffRegister> getScheduleDataOfEachDay(List<Schedule> schedule) {
   for (int i = 0; i < schedule.length; i++) {
     String time = schedule[i].time;
     if (schedule[i].check1) {
-      final eachSchedule1 = StaffRegister(date: requestDate(time), slot: 1, start: 800, end:930);
+      final eachSchedule1 =
+          StaffRegister(date: requestDate(time), slot: 1, start: 800, end: 930);
       list.add(eachSchedule1);
-      final eachSchedule2 = StaffRegister(date: requestDate(time), slot: 2, start: 930, end:1100);
+      final eachSchedule2 = StaffRegister(
+          date: requestDate(time), slot: 2, start: 930, end: 1100);
       list.add(eachSchedule2);
-
     }
 
     if (schedule[i].check2) {
-      final eachSchedule1 = StaffRegister(date: requestDate(time), slot: 3, start: 1100, end:1230);
+      final eachSchedule1 = StaffRegister(
+          date: requestDate(time), slot: 3, start: 1100, end: 1230);
       list.add(eachSchedule1);
-      final eachSchedule2 = StaffRegister(date: requestDate(time), slot: 4, start: 1230, end:1400);
+      final eachSchedule2 = StaffRegister(
+          date: requestDate(time), slot: 4, start: 1230, end: 1400);
       list.add(eachSchedule2);
     }
 
     if (schedule[i].check3) {
-      final eachSchedule1 = StaffRegister(date: requestDate(time), slot: 5, start: 1400, end:1530);
+      final eachSchedule1 = StaffRegister(
+          date: requestDate(time), slot: 5, start: 1400, end: 1530);
       list.add(eachSchedule1);
-      final eachSchedule2 = StaffRegister(date: requestDate(time), slot: 6, start: 1530, end:1700);
+      final eachSchedule2 = StaffRegister(
+          date: requestDate(time), slot: 6, start: 1530, end: 1700);
       list.add(eachSchedule2);
     }
 
     if (schedule[i].check4) {
-      final eachSchedule1 = StaffRegister(date: requestDate(time), slot: 7, start: 1700, end:1830);
+      final eachSchedule1 = StaffRegister(
+          date: requestDate(time), slot: 7, start: 1700, end: 1830);
       list.add(eachSchedule1);
-      final eachSchedule2 = StaffRegister(date: requestDate(time), slot: 8, start: 1830, end:2000);
+      final eachSchedule2 = StaffRegister(
+          date: requestDate(time), slot: 8, start: 1830, end: 2000);
       list.add(eachSchedule2);
     }
   }
   return list;
 }
 
- checkAndPostSchedule(List<StaffRegister> list, token, context) async{
-      StaffAssignWorkSchedule().addSchedule(
-          context, token, list);
-
+checkAndPostSchedule(List<StaffRegister> list, token, context) async {
+  StaffAssignWorkSchedule().addSchedule(context, token, list);
 }
 
 class Schedule {
@@ -278,7 +283,6 @@ class Schedule {
   bool check2;
   bool check3;
   bool check4;
-
 }
 
 class ScheduleDataSource extends DataGridSource {
@@ -368,7 +372,6 @@ class ScheduleDataSource extends DataGridSource {
                   rowColumnIndex: RowColumnIndex(index, 4));
             },
           )),
-
     ]);
   }
 }

@@ -1,4 +1,3 @@
-
 import 'package:computer_service_system/constants/color_constant.dart';
 import 'package:computer_service_system/features/auth_services.dart';
 import 'package:computer_service_system/providers/data_class.dart';
@@ -26,7 +25,7 @@ class AppState extends State<MyApp> {
   final AuthService authService = AuthService();
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
     authService.getUserData(context);
   }
@@ -45,12 +44,9 @@ class AppState extends State<MyApp> {
       onGenerateRoute: (settings) => generateRoute(settings),
       home: Provider.of<DataClass>(context).user.accessToken.isNotEmpty
           ? Provider.of<DataClass>(context).user.role == 'customer'
-          ? const NavScreen()
-          : const StaffHomePage() // Staff BottomBar
+              ? const NavScreen()
+              : const StaffHomePage() // Staff BottomBar
           : const AuthScreen(),
-
     );
-
   }
-
 }
