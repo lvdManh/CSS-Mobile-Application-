@@ -50,7 +50,7 @@ class _StaffViewAppointmentDetailsState
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                const SizedBox(height: 16),
+                const SizedBox(height: 10),
                 const Text("Thông tin khách hàng",
                     style: TextStyle(
                         color: mTextColorSecondary,
@@ -73,7 +73,7 @@ class _StaffViewAppointmentDetailsState
                     //const Divider()
                   ],
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 16),
                 Column(
                   children: <Widget>[
                     Row(
@@ -89,7 +89,7 @@ class _StaffViewAppointmentDetailsState
                     ),
                   ],
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 16),
                 Column(
                   children: <Widget>[
                     Row(
@@ -136,7 +136,7 @@ class _StaffViewAppointmentDetailsState
                     //const Divider()
                   ],
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 16),
                 Column(
                   children: <Widget>[
                     Row(
@@ -157,7 +157,7 @@ class _StaffViewAppointmentDetailsState
                     //const Divider()
                   ],
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 16),
                 Column(
                   children: <Widget>[
                     Row(
@@ -174,7 +174,7 @@ class _StaffViewAppointmentDetailsState
                     //const Divider()
                   ],
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 16),
                 Column(
                   children: <Widget>[
                     Row(
@@ -206,7 +206,6 @@ class _StaffViewAppointmentDetailsState
                     ),
                   ],
                 ),
-                const SizedBox(height: 20),
                 Column(
                   children: <Widget>[
                     Row(
@@ -217,13 +216,10 @@ class _StaffViewAppointmentDetailsState
                             TextStyle(fontSize: 18, fontFamily: 'Regular')),
                       ],
                     ),
-                    const SizedBox(height: 8),
                   ],
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
-                  // padding:
-                  //     const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
                   children: [
                     Flexible(
                       child: Padding(
@@ -236,10 +232,68 @@ class _StaffViewAppointmentDetailsState
                         ),
                       ),
                     ),
-
                   ],
                 ),
-                const SizedBox(height: 10),
+                const Divider(),
+                const SizedBox(height: 16),
+                const Text("Chi tiết hóa đơn",
+                    style: TextStyle(
+                        color: mTextColorSecondary,
+                        fontSize: 16,
+                        fontFamily: 'Regular')),
+                const SizedBox(height: 8),
+                Column(
+                  children: <Widget>[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        const Text("Mã hóa đơn:",
+                            style:
+                            TextStyle(fontSize: 18, fontFamily: 'Regular')),
+                        Text('${widget.order.orderId?.id}',
+                            style: const TextStyle(
+                                fontSize: 18, fontFamily: 'Regular')),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        const Text("Ngày tạo:",
+                            style:
+                            TextStyle(fontSize: 18, fontFamily: 'Regular')),
+                        Text(parseDate(widget.order.orderId?.createdAt),
+                            style: const TextStyle(
+                                fontSize: 18, fontFamily: 'Regular')),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        const Text("Trạng thái:",
+                            style:
+                            TextStyle(fontSize: 18, fontFamily: 'Regular')),
+                        Text('${widget.order.orderId?.status}',
+                            style: const TextStyle(
+                                fontSize: 18, fontFamily: 'Regular')),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        const Text("Tổng giá:",
+                            style:
+                            TextStyle(fontSize: 18, fontFamily: 'Regular')),
+                        Text('${convertMoney(widget.order.orderId?.totalPrice)}đ',
+                            style: const TextStyle(
+                                fontSize: 18, fontFamily: 'Regular')),
+                      ],
+                    ),
+                    //const Divider()
+                  ],
+                ),
 
               ],
             ),
