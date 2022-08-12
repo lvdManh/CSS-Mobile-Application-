@@ -1,14 +1,11 @@
-// ignore_for_file: deprecated_member_use
-
-library flutx;
-
-import 'package:computer_service_system/models/staff_get_booking_object.dart';
+import 'package:computer_service_system/constants/utils.dart';
+import 'package:computer_service_system/features/order_services.dart';
+import 'package:computer_service_system/models/order_staff_data.dart';
 import 'package:computer_service_system/screens/staff_screens/view_appointment_details.dart';
-import 'package:computer_service_system/screens/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-
+import 'package:provider/provider.dart';
 import '../../constants/color_constant.dart';
+import '../../providers/data_class.dart';
 
 class StaffViewAppointmentPage extends StatefulWidget {
   static const String routeName = '/view_appointment_page';
@@ -21,39 +18,12 @@ class StaffViewAppointmentPage extends StatefulWidget {
 class _StaffViewAppointmentPageState extends State<StaffViewAppointmentPage> {
   int _selectedItemIndex = 1;
   int currentPage = 1;
-  late List<Booking>? listBooking = [];
-
-  Future<bool> getBookingData() async {
-    final Uri uri = Uri.parse(
-        "http://computer-services-api.herokuapp.com/booking/all?sort=desc&status=accepted&page=1&limit=10");
-    final response = await http.get(uri);
-    if (response.statusCode == 200) {
-      final result = appointmentFromJson(response.body);
-      listBooking = result.bookings;
-      currentPage++;
-      setState(() {});
-      return true;
-    } else if (response.statusCode == 404) {
-      throw Exception('Not Found');
-    } else {
-      throw Exception('Can\'t get booking list');
-    }
-  }
-
-//'desc', 'accepted', 1, 10
-  @override
-  void initState() {
-    super.initState();
-    getBookingData();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-  }
+  late Future<List<OrderStaff>> futureOrderStaff;
 
   @override
   Widget build(BuildContext context) {
+    String token = Provider.of<DataClass>(context).user.accessToken;
+    futureOrderStaff = OrderServices().getOrderListForStaff(token);
     return Scaffold(
       backgroundColor: Colors.orangeAccent,
       appBar: AppBar(
@@ -68,49 +38,52 @@ class _StaffViewAppointmentPageState extends State<StaffViewAppointmentPage> {
         centerTitle: true,
       ),
       body: Container(
-        decoration: const BoxDecoration(color: mBackgroundColor),
-        child: Column(children: [
-          const Padding(
-              padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
-              child: Text('Xem lịch hẹn',
-                  style: TextStyle(
-                    color: Colors.orange,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 25,
-                  ))),
-          ListView.builder(
-            padding: const EdgeInsets.all(10),
-            scrollDirection: Axis.vertical,
-            shrinkWrap: true,
-            itemCount: listBooking?.length,
-            itemBuilder: (context, index) {
-              return Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      CustomButton(
-                          text:
-                              'Tên khách hàng: ${listBooking?[index].cusName}\nSố điện thoại: ${listBooking?[index].phonenum} \nĐịa chỉ: đường ${listBooking?[index].cusAddress?.ward},  ${listBooking?[index].cusAddress?.street}, ${listBooking?[index].cusAddress?.district}, ${listBooking?[index].cusAddress?.city}',
+        width: double.infinity,
+        decoration: const BoxDecoration(
+            color: mBackgroundColor,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(30),
+              topRight: Radius.circular(30),
+            )),
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: FutureBuilder<List<OrderStaff>>(
+              future: OrderServices().getOrderListForStaff(token),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return const Center(child: CircularProgressIndicator());
+                } else {
+                  return ListView.builder(
+                    padding: const EdgeInsets.all(5),
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                    itemCount: snapshot.data?.length,
+                    itemBuilder: (context, index) {
+                      return Card(
+                        child: ListTile(
+                          leading: Text(parseDateDownLine(snapshot.data![index].orderId?.bookingId?.time),textAlign: TextAlign.center,),
+                          title: Text('Khách hàng: ${snapshot.data![index].orderId?.bookingId?.cusName}'),
+                          subtitle:
+                          Text('Địa chỉ: ${printAddress(snapshot.data![index].orderId?.bookingId?.cusAddress?.street,
+                                                        snapshot.data![index].orderId?.bookingId?.cusAddress?.ward,
+                                                        snapshot.data![index].orderId?.bookingId?.cusAddress?.district)}'),
+                          trailing:
+                          Text('${snapshot.data![index].orderId?.status}'),
                           onTap: () {
                             Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    StaffViewAppointmentDetailsPage(
-                                        booking: listBooking?[index]),
-                              ),
-                            );
-                          }),
-                    ],
-                  ),
-                ),
-              );
-            },
-          )
-        ]),
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => StaffViewAppointmentDetailsPage(
+                                      order: snapshot.data![index],
+                                    )));
+                          },
+                        ),
+                      );
+                    },
+                  );
+                }
+              }),
+        ),
       ),
       // Bottom Navigation
       bottomNavigationBar: Row(

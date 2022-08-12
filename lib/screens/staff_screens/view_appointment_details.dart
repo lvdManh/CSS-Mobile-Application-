@@ -1,19 +1,17 @@
-import 'package:computer_service_system/models/staff_get_booking_object.dart';
-import 'package:computer_service_system/screens/staff_screens/create_order_page.dart';
-import 'package:computer_service_system/screens/widgets/custom_button.dart';
+import 'package:computer_service_system/constants/utils.dart';
+import 'package:computer_service_system/models/order_staff_data.dart';
 import 'package:flutter/material.dart';
 
 import '../../constants/color_constant.dart';
 
 class StaffViewAppointmentDetailsPage extends StatefulWidget {
-  static const String routeName = '/view_appointment_details';
   @override
   State<StaffViewAppointmentDetailsPage> createState() =>
       _StaffViewAppointmentDetailsState();
 
-  final Booking? booking;
+  final OrderStaff order;
 
-  const StaffViewAppointmentDetailsPage({super.key, required this.booking});
+  const StaffViewAppointmentDetailsPage({super.key, required this.order});
 }
 
 class _StaffViewAppointmentDetailsState
@@ -23,87 +21,230 @@ class _StaffViewAppointmentDetailsState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      //App Bar
-      backgroundColor: Colors.orangeAccent,
-      appBar: AppBar(
-        elevation: 0.0,
         backgroundColor: Colors.orangeAccent,
-        title: const Text(
-          "Computer Services",
-          style: TextStyle(
-            fontSize: 23,
+        appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(50),
+          child: AppBar(
+            elevation: 0.0,
+            backgroundColor: Colors.orangeAccent,
+            title: const Text(
+              "Lịch hẹn",
+              style: TextStyle(
+                fontSize: 23,
+              ),
+            ),
+            centerTitle: true,
           ),
         ),
-        centerTitle: true,
-      ),
-      //--------------------Body------
-      body: Container(
-        decoration: const BoxDecoration(color: mBackgroundColor),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            const Padding(
-                padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
-                child: Text('Xem lịch hẹn',
+        body: Container(
+          width: double.infinity,
+          height: double.infinity,
+          padding: const EdgeInsets.all(16),
+          decoration: const BoxDecoration(
+              color: mBackgroundColor,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(30),
+                topRight: Radius.circular(30),
+              )),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                const SizedBox(height: 16),
+                const Text("Thông tin khách hàng",
                     style: TextStyle(
-                      color: Colors.orange,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 25,
-                    ))),
-            Container(
-              width: 120,
-              margin: const EdgeInsets.all(15.0),
-              padding: const EdgeInsets.all(3.0),
-              decoration:
-                  BoxDecoration(border: Border.all(color: Colors.orange)),
-              child: Text(
-                'Thời gian: ${widget.booking?.time} \n Địa chỉ: ${widget.booking?.cusAddress} \n SDT: ${widget.booking?.phonenum}',
-              ),
-            ),
-            const Padding(
-                padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-                child: Text('Thông tin khách hàng',
-                    style: TextStyle(
-                      color: Colors.orange,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 15,
-                    ))),
-            Container(
-              height: 200,
-              margin: const EdgeInsets.all(15.0),
-              padding: const EdgeInsets.all(3.0),
-              decoration:
-                  BoxDecoration(border: Border.all(color: Colors.orange)),
-              child: Text(
-                'Khách hàng: ${widget.booking?.cusName} \nTình trạng máy: ${widget.booking?.description}',
-              ),
-            ),
-            CustomButton(
-                text: 'Tạo hóa đơn',
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          StaffCreateOrderPage(booked: widget.booking),
+                        color: mTextColorSecondary,
+                        fontSize: 16,
+                        fontFamily: 'Regular')),
+                const SizedBox(height: 8),
+                Column(
+                  children: <Widget>[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        const Text("Tên khách hàng:",
+                            style:
+                            TextStyle(fontSize: 18, fontFamily: 'Regular')),
+                        Text('${widget.order.orderId?.bookingId?.cusName}',
+                            style: const TextStyle(
+                                fontSize: 18, fontFamily: 'Regular')),
+                      ],
                     ),
-                  );
-                }),
-          ],
-        ),
-      ),
-      // Bottom Navigation----------------
-      bottomNavigationBar: Row(
-        children: <Widget>[
-          buildNavBarItem(Icons.home, 0),
-          buildNavBarItem(Icons.list_alt, 1),
-          buildNavBarItem(Icons.notifications, 2),
-          buildNavBarItem(Icons.person, 3)
-        ],
-      ),
-      // This is Background Color
-    );
+                    //const Divider()
+                  ],
+                ),
+                const SizedBox(height: 20),
+                Column(
+                  children: <Widget>[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        const Text("Số điện thoại:",
+                            style:
+                            TextStyle(fontSize: 18, fontFamily: 'Regular')),
+                        Text('${widget.order.orderId?.bookingId?.phonenum}',
+                            style: const TextStyle(
+                                fontSize: 18, fontFamily: 'Regular')),
+                      ],
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                Column(
+                  children: <Widget>[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        const Text("Địa chỉ:   ",
+                            style:
+                            TextStyle(fontSize: 18, fontFamily: 'Regular')),
+                        Flexible(
+                          child: Text(
+                            printAddress(widget.order.orderId?.bookingId?.cusAddress?.street,
+                                widget.order.orderId?.bookingId?.cusAddress?.ward,
+                                widget.order.orderId?.bookingId?.cusAddress?.district),
+                            style: const TextStyle(
+                                fontSize: 18, fontFamily: 'Regular'),
+                            textAlign: TextAlign.right,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const Divider()
+                  ],
+                ),
+                const SizedBox(height: 16),
+                const Text("Thông tin lịch hẹn",
+                    style: TextStyle(
+                        color: mTextColorSecondary,
+                        fontSize: 16,
+                        fontFamily: 'Regular')),
+                const SizedBox(height: 8),
+                Column(
+                  children: <Widget>[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        const Text("Id lịch hẹn:",
+                            style:
+                            TextStyle(fontSize: 18, fontFamily: 'Regular')),
+                        Text('${widget.order.orderId?.bookingId?.id}',
+                            style: const TextStyle(
+                                fontSize: 18, fontFamily: 'Regular')),
+                      ],
+                    ),
+                    //const Divider()
+                  ],
+                ),
+                const SizedBox(height: 20),
+                Column(
+                  children: <Widget>[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        const Text("Thời gian hẹn:",
+                            style:
+                            TextStyle(fontSize: 18, fontFamily: 'Regular')),
+                        Flexible(
+                          child: Text(parseDate(widget.order.orderId?.bookingId?.time),
+                            style: const TextStyle(
+                                fontSize: 18, fontFamily: 'Regular'),
+                            textAlign: TextAlign.right,
+                          ),
+                        ),
+                      ],
+                    ),
+                    //const Divider()
+                  ],
+                ),
+                const SizedBox(height: 20),
+                Column(
+                  children: <Widget>[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        const Text("Loại dịch vụ:",
+                            style:
+                            TextStyle(fontSize: 18, fontFamily: 'Regular')),
+                        Text('${widget.order.orderId?.bookingId?.type}',
+                            style: const TextStyle(
+                                fontSize: 18, fontFamily: 'Regular')),
+                      ],
+                    ),
+                    //const Divider()
+                  ],
+                ),
+                const SizedBox(height: 20),
+                Column(
+                  children: <Widget>[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: const <Widget>[
+                        Text("Dịch vụ yêu cầu:",
+                            style:
+                            TextStyle(fontSize: 18, fontFamily: 'Regular')),
+                      ],
+                    ),
+                    //const Divider()
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  // padding:
+                  //     const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+                  children: [
+                    Flexible(
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(80, 8, 8, 20),
+                        child: Text('${widget.order.orderId?.bookingId?.services?.join(',\n').toString()}',
+                          textAlign: TextAlign.right,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(fontSize: 18.0),
+                          maxLines: 10,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                Column(
+                  children: <Widget>[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: const <Widget>[
+                        Text("Mô tả vấn đề:",
+                            style:
+                            TextStyle(fontSize: 18, fontFamily: 'Regular')),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  // padding:
+                  //     const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+                  children: [
+                    Flexible(
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(80, 8, 8, 20),
+                        child: Text('${widget.order.orderId?.bookingId?.description}',
+                          textAlign: TextAlign.justify,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(fontSize: 18.0),
+                          maxLines: 10,
+                        ),
+                      ),
+                    ),
+
+                  ],
+                ),
+                const SizedBox(height: 10),
+
+              ],
+            ),
+          ),
+        ));
   }
 
   Widget buildNavBarItem(IconData icon, int index) {

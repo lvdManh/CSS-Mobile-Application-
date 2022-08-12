@@ -8,6 +8,7 @@ import 'package:computer_service_system/screens/widgets/edit_appointment.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../constants/color_constant.dart';
+import '../../constants/utils.dart';
 import '../../models/booking_object.dart';
 
 class AppointmentDetail extends StatelessWidget {
@@ -197,7 +198,7 @@ class AppointmentDetail extends StatelessWidget {
                           padding: const EdgeInsets.fromLTRB(80, 8, 8, 20),
                         child: Text(
                           bookings.description.toString(),
-                          textAlign: TextAlign.right,
+                          textAlign: TextAlign.justify,
                           overflow: TextOverflow.ellipsis,
                           style: const TextStyle(fontSize: 18.0),
                           maxLines: 10,
@@ -409,21 +410,4 @@ class _ShowOrderState extends State<ShowOrder> {
   }
 }
 
-String parseDate(date){
-  DateTime dt1 = DateTime.parse(date);
-  String hour = dt1.hour.toString();
-  String minute = dt1.minute.toString();
-  if(dt1.hour<10){
-    hour = '0$hour';
-  }
-  if(dt1.minute<10){
-    minute = '0$minute';
-  }
-  return '$hour:$minute, ${dt1.day}/${dt1.month}/${dt1.year}';
-}
 
-String convertMoney(int? price) {
-  String converted = price.toString().replaceAllMapped(
-      RegExp(r"(?<=\d)(?=(\d\d\d)+(?!\d))"), (match) => "${match.group(0)}.");
-  return converted;
-}

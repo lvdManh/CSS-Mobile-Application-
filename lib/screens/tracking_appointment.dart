@@ -107,9 +107,8 @@ class _TrackingAppointmentState extends State<TrackingAppointment> {
                                     Text('Thời gian: ${parseDate(bookingList[(bookingList.length-1)-index].time)}'),
                                 trailing:
                                     Text(bookingList[(bookingList.length-1)-index].status.toString()),
-                                onTap: () async {
-                                  if(!mounted) return;
-                                  await Navigator.push(
+                                onTap: () {
+                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) => AppointmentDetail(

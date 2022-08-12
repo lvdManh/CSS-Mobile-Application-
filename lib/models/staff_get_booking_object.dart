@@ -1,3 +1,5 @@
+// ignore_for_file: camel_case_types
+
 import 'dart:convert';
 
 appointment appointmentFromJson(String str) =>
@@ -16,16 +18,16 @@ class appointment {
     if (json['bookings'] != null) {
       bookings = <Booking>[];
       json['bookings'].forEach((v) {
-        bookings!.add(new Booking.fromJson(v));
+        bookings!.add(Booking.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['count'] = this.count;
-    if (this.bookings != null) {
-      data['bookings'] = this.bookings!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['count'] = count;
+    if (bookings != null) {
+      data['bookings'] = bookings!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -63,7 +65,7 @@ class Booking {
 
   Booking.fromJson(Map<String, dynamic> json) {
     cusAddress = json['cus_address'] != null
-        ? new CusAddress.fromJson(json['cus_address'])
+        ? CusAddress.fromJson(json['cus_address'])
         : null;
     sId = json['_id'];
     cusName = json['cus_name'];
@@ -80,22 +82,22 @@ class Booking {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.cusAddress != null) {
-      data['cus_address'] = this.cusAddress!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if (cusAddress != null) {
+      data['cus_address'] = cusAddress!.toJson();
     }
-    data['_id'] = this.sId;
-    data['cus_name'] = this.cusName;
-    data['services'] = this.services;
-    data['description'] = this.description;
-    data['type'] = this.type;
-    data['time'] = this.time;
-    data['status'] = this.status;
-    data['phonenum'] = this.phonenum;
-    data['createdAt'] = this.createdAt;
-    data['updatedAt'] = this.updatedAt;
-    data['__v'] = this.iV;
-    data['acc_id'] = this.accId;
+    data['_id'] = sId;
+    data['cus_name'] = cusName;
+    data['services'] = services;
+    data['description'] = description;
+    data['type'] = type;
+    data['time'] = time;
+    data['status'] = status;
+    data['phonenum'] = phonenum;
+    data['createdAt'] = createdAt;
+    data['updatedAt'] = updatedAt;
+    data['__v'] = iV;
+    data['acc_id'] = accId;
     return data;
   }
 }
@@ -116,11 +118,11 @@ class CusAddress {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['city'] = this.city;
-    data['district'] = this.district;
-    data['ward'] = this.ward;
-    data['street'] = this.street;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['city'] = city;
+    data['district'] = district;
+    data['ward'] = ward;
+    data['street'] = street;
     return data;
   }
 }

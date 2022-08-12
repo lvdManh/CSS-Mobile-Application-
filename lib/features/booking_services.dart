@@ -96,7 +96,6 @@ class BookingServices{
   Future editBooking(context,token,id,
       street, ward, district, name, phonenum, services, description
       ) async{
-    print(id);
     final response = await http.put(
       Uri.parse(
           'https://computer-services-api.herokuapp.com/booking/update/$id'),

@@ -342,112 +342,112 @@ class _StaffCreateOrderPageState extends State<StaffCreateOrderPage> {
     );
   }
 
-  Widget _billingWidget() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        const Text(
-          'Thông tin dịch vụ',
-          style: TextStyle(
-            color: Colors.orange,
-            fontSize: 15,
-          ),
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: const [
-            Text(
-              'Loại dịch vụ',
-              style: TextStyle(
-                color: Colors.orange,
-                fontSize: 15,
-              ),
-            ),
-            Text(
-              'Thành tiền',
-              style: TextStyle(
-                color: Colors.orange,
-                fontSize: 15,
-              ),
-            ),
-          ],
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: const [
-            Text(
-              'Cài lại win',
-              style: TextStyle(
-                color: Colors.orange,
-                fontSize: 15,
-              ),
-            ),
-            Text(
-              '50.000đ',
-              style: TextStyle(
-                color: Colors.orange,
-                fontSize: 15,
-              ),
-            ),
-          ],
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: const [
-            Text(
-              'Vệ sinh máy',
-              style: TextStyle(
-                color: Colors.orange,
-                fontSize: 15,
-              ),
-            ),
-            Text(
-              '100.000đ',
-              style: TextStyle(
-                color: Colors.orange,
-                fontSize: 15,
-              ),
-            ),
-          ],
-        ),
-        Row(
-          children: const [
-            Text(
-              'Thay quạt',
-              style: TextStyle(
-                color: Colors.orange,
-                fontSize: 15,
-              ),
-            ),
-            Text(
-              '1.000.000đ',
-              style: TextStyle(
-                color: Colors.orange,
-                fontSize: 15,
-              ),
-            ),
-          ],
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: const [
-            Text(
-              'Tổng',
-              style: TextStyle(
-                color: Colors.orange,
-                fontSize: 15,
-              ),
-            ),
-            Text(
-              '1.150.000đ',
-              style: TextStyle(
-                color: Colors.orange,
-                fontSize: 15,
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
+//   Widget _billingWidget() {
+//     return Column(
+//       crossAxisAlignment: CrossAxisAlignment.center,
+//       children: [
+//         const Text(
+//           'Thông tin dịch vụ',
+//           style: TextStyle(
+//             color: Colors.orange,
+//             fontSize: 15,
+//           ),
+//         ),
+//         Row(
+//           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//           children: const [
+//             Text(
+//               'Loại dịch vụ',
+//               style: TextStyle(
+//                 color: Colors.orange,
+//                 fontSize: 15,
+//               ),
+//             ),
+//             Text(
+//               'Thành tiền',
+//               style: TextStyle(
+//                 color: Colors.orange,
+//                 fontSize: 15,
+//               ),
+//             ),
+//           ],
+//         ),
+//         Row(
+//           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//           children: const [
+//             Text(
+//               'Cài lại win',
+//               style: TextStyle(
+//                 color: Colors.orange,
+//                 fontSize: 15,
+//               ),
+//             ),
+//             Text(
+//               '50.000đ',
+//               style: TextStyle(
+//                 color: Colors.orange,
+//                 fontSize: 15,
+//               ),
+//             ),
+//           ],
+//         ),
+//         Row(
+//           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//           children: const [
+//             Text(
+//               'Vệ sinh máy',
+//               style: TextStyle(
+//                 color: Colors.orange,
+//                 fontSize: 15,
+//               ),
+//             ),
+//             Text(
+//               '100.000đ',
+//               style: TextStyle(
+//                 color: Colors.orange,
+//                 fontSize: 15,
+//               ),
+//             ),
+//           ],
+//         ),
+//         Row(
+//           children: const [
+//             Text(
+//               'Thay quạt',
+//               style: TextStyle(
+//                 color: Colors.orange,
+//                 fontSize: 15,
+//               ),
+//             ),
+//             Text(
+//               '1.000.000đ',
+//               style: TextStyle(
+//                 color: Colors.orange,
+//                 fontSize: 15,
+//               ),
+//             ),
+//           ],
+//         ),
+//         Row(
+//           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//           children: const [
+//             Text(
+//               'Tổng',
+//               style: TextStyle(
+//                 color: Colors.orange,
+//                 fontSize: 15,
+//               ),
+//             ),
+//             Text(
+//               '1.150.000đ',
+//               style: TextStyle(
+//                 color: Colors.orange,
+//                 fontSize: 15,
+//               ),
+//             ),
+//           ],
+//         ),
+//       ],
+//     );
+//   }
 }

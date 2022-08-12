@@ -55,35 +55,35 @@ class Accessory {
     description = json['description'];
     insurance = json['insurance'];
     supplierId = json['supplier_id'] != null
-        ? new SupplierId.fromJson(json['supplier_id'])
+        ? SupplierId.fromJson(json['supplier_id'])
         : null;
     deleted = json['deleted'];
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
     iV = json['__v'];
     serviceId = json['service_id'] != null
-        ? new ServiceId.fromJson(json['service_id'])
+        ? ServiceId.fromJson(json['service_id'])
         : null;
     price = json['price'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['_id'] = this.sId;
-    data['name'] = this.name;
-    data['description'] = this.description;
-    data['insurance'] = this.insurance;
-    if (this.supplierId != null) {
-      data['supplier_id'] = this.supplierId!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['_id'] = sId;
+    data['name'] = name;
+    data['description'] = description;
+    data['insurance'] = insurance;
+    if (supplierId != null) {
+      data['supplier_id'] = supplierId!.toJson();
     }
-    data['deleted'] = this.deleted;
-    data['createdAt'] = this.createdAt;
-    data['updatedAt'] = this.updatedAt;
-    data['__v'] = this.iV;
-    if (this.serviceId != null) {
-      data['service_id'] = this.serviceId!.toJson();
+    data['deleted'] = deleted;
+    data['createdAt'] = createdAt;
+    data['updatedAt'] = updatedAt;
+    data['__v'] = iV;
+    if (serviceId != null) {
+      data['service_id'] = serviceId!.toJson();
     }
-    data['price'] = this.price;
+    data['price'] = price;
     return data;
   }
 }
@@ -123,16 +123,16 @@ class SupplierId {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['_id'] = this.sId;
-    data['name'] = this.name;
-    data['address'] = this.address;
-    data['phonenum'] = this.phonenum;
-    data['accessories_id'] = this.accessoriesId;
-    data['deleted'] = this.deleted;
-    data['createdAt'] = this.createdAt;
-    data['updatedAt'] = this.updatedAt;
-    data['__v'] = this.iV;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['_id'] = sId;
+    data['name'] = name;
+    data['address'] = address;
+    data['phonenum'] = phonenum;
+    data['accessories_id'] = accessoriesId;
+    data['deleted'] = deleted;
+    data['createdAt'] = createdAt;
+    data['updatedAt'] = updatedAt;
+    data['__v'] = iV;
     return data;
   }
 }
@@ -178,18 +178,18 @@ class ServiceId {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['_id'] = this.sId;
-    data['name'] = this.name;
-    data['price'] = this.price;
-    data['description'] = this.description;
-    data['type'] = this.type;
-    data['hasAccessory'] = this.hasAccessory;
-    data['accessories_id'] = this.accessoriesId;
-    data['deleted'] = this.deleted;
-    data['createdAt'] = this.createdAt;
-    data['updatedAt'] = this.updatedAt;
-    data['__v'] = this.iV;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['_id'] = sId;
+    data['name'] = name;
+    data['price'] = price;
+    data['description'] = description;
+    data['type'] = type;
+    data['hasAccessory'] = hasAccessory;
+    data['accessories_id'] = accessoriesId;
+    data['deleted'] = deleted;
+    data['createdAt'] = createdAt;
+    data['updatedAt'] = updatedAt;
+    data['__v'] = iV;
     return data;
   }
 }
