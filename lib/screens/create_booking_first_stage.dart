@@ -215,8 +215,21 @@ class _BookAppointmentState extends State<BookAppointment> {
               width: 70,
               margin: const EdgeInsets.only(right: 10),
               decoration: BoxDecoration(
-                color: const Color(0xff107163),
+                color: Colors.blueGrey,
+                gradient: const LinearGradient(
+                  colors: [Colors.amber,Colors.red],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
                 borderRadius: BorderRadius.circular(18),
+                border: Border.all(width: 1.0, color: Colors.black54),
+                boxShadow: const [
+                  BoxShadow(
+                    color: Colors.red,
+                    offset: Offset(1,2),
+                    blurRadius: 2,
+                  ),
+                ],
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -239,6 +252,7 @@ class _BookAppointmentState extends State<BookAppointment> {
               decoration: BoxDecoration(
                 color: const Color(0xffEEEEEE),
                 borderRadius: BorderRadius.circular(18),
+                border: Border.all(width: 0.8, color: Colors.black54),
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -259,7 +273,9 @@ class _BookAppointmentState extends State<BookAppointment> {
   }
 
   bool isSlotAvailable(index){
-     final thisSlot = futureSchedule[selectedDate].slots.firstWhere((element) => element.slot == index+1, orElse: (){ return Slots(id: '0', slot: 0, start: 0, end: 0, status: '0', workSlot: [], scheduleId: '0');});
+     final thisSlot = futureSchedule[selectedDate].slots.firstWhere((element)
+      => element.slot == index+1,
+         orElse: (){ return Slots(id: '0', slot: 0, start: 0, end: 0, status: '0', workSlot: [], scheduleId: '0');});
     if(thisSlot.status == 'Available'){
       return true;
     }
@@ -288,7 +304,7 @@ class _BookAppointmentState extends State<BookAppointment> {
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(18),
                 border: Border.all(width: 1.0, color: Colors.black54),
                 boxShadow: const [
                   BoxShadow(
@@ -336,8 +352,9 @@ class _BookAppointmentState extends State<BookAppointment> {
           : Container(
               margin: const EdgeInsets.only(left: 10, top: 10),
               decoration: BoxDecoration(
-                color: isAvailable ? Colors.white.withOpacity(0.5) : Colors.black.withOpacity(0.3),
-                borderRadius: BorderRadius.circular(10),
+                color: isAvailable ? Colors.white.withOpacity(0.5) : Colors.black.withOpacity(0.2),
+                border: Border.all(width: 0.8, color: Colors.black54),
+                borderRadius: BorderRadius.circular(18),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,

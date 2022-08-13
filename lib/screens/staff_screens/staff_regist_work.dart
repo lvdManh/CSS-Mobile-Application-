@@ -24,7 +24,7 @@ class _StaffRegistWorkState extends State<StaffRegistWork> {
   late ScheduleDataSource scheduleDataSource;
   List<Slot> schedules = [];
   List<StaffRegister> list = [];
-
+  int selectWeek = 14;
   List<WorkSchedule> futureWorkSchedule = [];
   Future<List<WorkSchedule>> getFutureWorkSchedule() async {
     futureWorkSchedule = await ScheduleServices().fetchWorkSlotList();
@@ -45,12 +45,13 @@ class _StaffRegistWorkState extends State<StaffRegistWork> {
   }
   List<String> nextTwoWeek = [];
   List<String> weekday() {
-    var nextWeekDay = DateTime.now().add(const Duration(days: 14));
+    var nextWeekDay = DateTime.now().add(Duration(days: selectWeek));
     var startFrom = nextWeekDay.subtract(Duration(days: nextWeekDay.weekday));
     nextTwoWeek =
         List.generate(7, (i) => '${startFrom.add(Duration(days: i))}');
     return nextTwoWeek;
   }
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -76,7 +77,9 @@ class _StaffRegistWorkState extends State<StaffRegistWork> {
         ),
         centerTitle: true,
       ),
-      body: Container(
+      body: isLoading
+          ? const ProgressDialogPrimary()
+          :Container(
         decoration: const BoxDecoration(color: mBackgroundColor),
         child: Center(
           child: Column(
@@ -86,26 +89,43 @@ class _StaffRegistWorkState extends State<StaffRegistWork> {
             children: [
               const Padding(
                   padding: EdgeInsets.fromLTRB(0, 50, 0, 20),
-                  child: Text('Đăng ký lịch làm việc',
+                  child: Text('Đăng ký lịch làm việc theo tuần',
                       style: TextStyle(
-                        color: Colors.orange,
+                        color: Colors.black87,
                         fontWeight: FontWeight.bold,
-                        fontSize: 24,
+                        fontSize: 18,
                       ))),
               Padding(
                 padding:
-                    const EdgeInsets.symmetric(vertical: 0, horizontal: 140),
+                    const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
                 child: Column(
                   children: <Widget>[
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
+                        IconButton(
+                            icon: const Icon(Icons.skip_previous_rounded),
+                            onPressed: (){
+                              setState(() {
+                                selectWeek -= 7;
+                                weekday();
+                        });}),
                         Text(parseDay(nextTwoWeek.first),
                             style: const TextStyle(
-                                fontSize: 24, fontFamily: 'Regular')),
+                                fontSize: 18, fontFamily: 'Regular')),
+                        const Text(' - ', style: TextStyle(fontSize: 24, fontFamily: 'Regular'),),
                         Text(parseDay(nextTwoWeek.last),
                             style: const TextStyle(
-                                fontSize: 24, fontFamily: 'Regular')),
+                                fontSize: 18, fontFamily: 'Regular')),
+                        IconButton(
+                            icon: const Icon(
+                                Icons.skip_next_rounded), onPressed: (){
+                          setState(() {
+                            selectWeek += 7;
+                            weekday();
+                          });
+                        }),
                       ],
                     ),
                   ],
@@ -122,7 +142,7 @@ class _StaffRegistWorkState extends State<StaffRegistWork> {
                     } else {
                       getListOpenDay();
                       schedules = getScheduleData(nextTwoWeek,listOpenDay,userId);
-                      scheduleDataSource = ScheduleDataSource(scheduleData: schedules);
+                      scheduleDataSource = ScheduleDataSource(scheduleData: schedules, checkWeek: selectWeek);
                       return Expanded(
                         child: SfDataGrid(
                           source: scheduleDataSource,
@@ -166,7 +186,7 @@ class _StaffRegistWorkState extends State<StaffRegistWork> {
                       );
                     }
                   }),
-              Container(
+              if(selectWeek >= 14 && selectWeek <= 35)Container(
                 width: 150,
                 padding: const EdgeInsets.all(15.0),
                 child: CustomButton(
@@ -181,7 +201,8 @@ class _StaffRegistWorkState extends State<StaffRegistWork> {
                         btnCancelOnPress: () {},
                         btnOkOnPress: () {
                           list = getScheduleDataOfEachDay(schedules);
-                          checkAndPostSchedule(list, token, context);
+                            checkAndPostSchedule(list, token, context);
+
                         },
                       ).show();
                     }),
@@ -407,7 +428,6 @@ checkAndPostSchedule(List<StaffRegister> list, token, context) async {
     ).show();
   }
   else{
-    const CircularProgressIndicator();
     StaffAssignWorkSchedule().addSchedule(context, token, list);
   }
 }
@@ -433,7 +453,8 @@ class Slot {
 }
 
 class ScheduleDataSource extends DataGridSource {
-  ScheduleDataSource({required this.scheduleData}) {
+  int checkWeek;
+  ScheduleDataSource({required this.scheduleData, required this.checkWeek}) {
     updateDataGridRow();
   }
 
@@ -469,6 +490,7 @@ class ScheduleDataSource extends DataGridSource {
           child: !scheduleData[_dataGridRow.indexOf(row)].valid1
               && !scheduleData[_dataGridRow.indexOf(row)].isAssigned1
               && checkMaxSlot(scheduleData) < 14
+              && checkWeek >=14
               ?  Checkbox(
             value: row.getCells()[1].value,
             onChanged: (value) {
@@ -487,7 +509,9 @@ class ScheduleDataSource extends DataGridSource {
             // padding: EdgeInsets.symmetric(horizontal: 16),
             child: !scheduleData[_dataGridRow.indexOf(row)].valid2
                 && !scheduleData[_dataGridRow.indexOf(row)].isAssigned2
-                && checkMaxSlot(scheduleData)< 14 ? Checkbox(
+                && checkMaxSlot(scheduleData)< 14
+                && checkWeek >=14
+                ? Checkbox(
               value: row.getCells()[2].value,
               onChanged: (value) {
                 final index = _dataGridRow.indexOf(row);
@@ -506,6 +530,7 @@ class ScheduleDataSource extends DataGridSource {
           child: !scheduleData[_dataGridRow.indexOf(row)].valid3
               && !scheduleData[_dataGridRow.indexOf(row)].isAssigned3
               && checkMaxSlot(scheduleData) < 14
+              && checkWeek >=14
               ? Checkbox(
             value: row.getCells()[3].value,
             onChanged: (value) {
@@ -525,6 +550,7 @@ class ScheduleDataSource extends DataGridSource {
           child: ! scheduleData[_dataGridRow.indexOf(row)].valid4
               && !scheduleData[_dataGridRow.indexOf(row)].isAssigned4
               && checkMaxSlot(scheduleData) < 14
+              && checkWeek >=14
               ? Checkbox(
             value: row.getCells()[4].value,
             onChanged: (value) {
@@ -539,5 +565,25 @@ class ScheduleDataSource extends DataGridSource {
               ? const Checkbox(value: true, onChanged: null)
               : const Checkbox(value: false, onChanged: null)),
     ]);
+  }
+}
+
+class ProgressDialogPrimary extends StatelessWidget {
+  const ProgressDialogPrimary({Key? key}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    var brightness = MediaQuery
+        .of(context)
+        .platformBrightness == Brightness.light;
+    return Scaffold(
+      body: const Center(
+        child: CircularProgressIndicator(
+          valueColor: AlwaysStoppedAnimation<Color>(mBackgroundColor),
+        ),
+      ),
+      backgroundColor: brightness ? Colors.white.withOpacity(
+          0.70) : Colors.black.withOpacity(
+          0.30),
+    );
   }
 }

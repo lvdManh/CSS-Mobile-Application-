@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:awesome_dialog/awesome_dialog.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:computer_service_system/screens/staff_screens/staff_regist_work.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import 'auth_services.dart';
@@ -52,7 +53,12 @@ class StaffAssignWorkSchedule {
         dialogType: DialogType.SUCCES,
         title: 'Đăng ký lịch thành công',
         dismissOnTouchOutside: false,
-        btnOkOnPress: () {},
+        btnOkOnPress: () {
+          Navigator.push(
+              context, MaterialPageRoute(
+              builder: (context) => const StaffRegistWork()
+          ));
+        },
       ).show();
     } else {
       AwesomeDialog(
@@ -60,6 +66,7 @@ class StaffAssignWorkSchedule {
         animType: AnimType.SCALE,
         dialogType: DialogType.INFO,
         title: 'Đăng kí lịch gặp vấn đề',
+        desc: 'Vui lòng đăng ký lại',
         body: Center(child: SingleChildScrollView(
           child: Text(error),
         ),),
