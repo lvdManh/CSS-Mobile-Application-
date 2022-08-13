@@ -1,3 +1,4 @@
+
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:computer_service_system/constants/color_constant.dart';
 import 'package:computer_service_system/features/schedule_services.dart';
@@ -16,12 +17,19 @@ class BookAppointment extends StatefulWidget {
 class _BookAppointmentState extends State<BookAppointment> {
    List<Slot> futureSchedule =[];
    bool isSelected = false;
+   final List<int> slots = [800, 930, 1100, 1230, 1400, 1530, 1700,1830];
+   List<String> nextWeek = [];
    late String time;
   Future<List<Slot>> getFutureSchedule() async {
     futureSchedule = await ScheduleServices().fetchSevenDaySlot();
     return futureSchedule;
   }
-
+   List<String> weekday() {
+     var timeNow = DateTime.now();
+     nextWeek =
+         List.generate(7, (i) => '${timeNow.add(Duration(days: i))}');
+     return nextWeek;
+   }
   String parseDate(time) {
     DateTime dt1 = DateTime.parse(time);
     return '${dt1.day}/${dt1.month}';
@@ -42,6 +50,16 @@ class _BookAppointmentState extends State<BookAppointment> {
       });
 
   }
+   String showSlot(slotTime){
+     String hour;
+     String minute;
+     hour = slotTime.toString().substring(0,slotTime.toString().length-2);
+     if(hour.length==1){
+       hour = '0$hour';
+     }
+     minute = slotTime.toString().substring(slotTime.toString().length-2,slotTime.toString().length);
+     return time = '$hour:$minute';
+   }
 
   @override
   void initState() {
@@ -133,18 +151,25 @@ class _BookAppointmentState extends State<BookAppointment> {
                       child: GridView.builder(
                           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                               crossAxisCount: 2,
-                            childAspectRatio: 2.5,
+                            childAspectRatio: 2.5, 
                             crossAxisSpacing: 10,
                           ),
                           physics: const NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
-                          itemCount: futureSchedule[selectedDate].slots.length,
+                          itemCount: 8,
                           itemBuilder: (BuildContext ctx, index) {
-                            return workingSlot(
-                                futureSchedule[selectedDate].slots[index].slot.toString(),
-                                futureSchedule[selectedDate].slots[index].start.toString(),
+                            if (index >= 8) {
+                              return const Offstage ();
+                            }
+                            return isSlotAvailable(index)? workingSlot(
                                 index+1,
-                                true);
+                                slots[index].toString(),
+                                index+1,
+                                true): workingSlot(
+                                index+1,
+                                slots[index].toString(),
+                                index+1,
+                                false);
                           }),
                     ),
                     CustomButton(
@@ -233,14 +258,23 @@ class _BookAppointmentState extends State<BookAppointment> {
     );
   }
 
-  workingSlot(String slot, String time, int index, bool isAvailable) {
+  bool isSlotAvailable(index){
+     final thisSlot = futureSchedule[selectedDate].slots.firstWhere((element) => element.slot == index+1, orElse: (){ return Slots(id: '0', slot: 0, start: 0, end: 0, status: '0', workSlot: [], scheduleId: '0');});
+    if(thisSlot.status == 'Available'){
+      return true;
+    }
+    return false;
+  }
+  
+  workingSlot(int slot, String timeSlot, int index, bool isAvailable) {
     return GestureDetector(
       onTap: () {
         if (isAvailable == true) {
+          final startTime = futureSchedule[selectedDate].slots.where((element) => element.slot == slot);
           setState(() {
             selectedSlot = index;
             isSelected = true;
-            combineTime(futureSchedule[selectedDate].date, futureSchedule[selectedDate].slots[selectedSlot-1].start);
+            combineTime(futureSchedule[selectedDate].date, startTime);
           });
         }
       },
@@ -279,7 +313,7 @@ class _BookAppointmentState extends State<BookAppointment> {
                   Container(
                     margin: const EdgeInsets.only(right: 5),
                     child: Text(
-                      slot,
+                      '$slot:',
                       style: const TextStyle(
                           color: Colors.white,
                           fontSize: 18,
@@ -289,7 +323,7 @@ class _BookAppointmentState extends State<BookAppointment> {
                   Container(
                     margin: const EdgeInsets.only(right: 5),
                     child: Text(
-                      time,
+                      showSlot(timeSlot),
                       style: const TextStyle(
                           color: Colors.white,
                           fontSize: 18,
@@ -320,7 +354,7 @@ class _BookAppointmentState extends State<BookAppointment> {
                   Container(
                     margin: const EdgeInsets.only(right: 5),
                     child: Text(
-                      slot,
+                      '$slot:',
                       style: const TextStyle(
                           color: Colors.black,
                           fontSize: 18,
@@ -330,7 +364,7 @@ class _BookAppointmentState extends State<BookAppointment> {
                   Container(
                     margin: const EdgeInsets.only(right: 5),
                     child: Text(
-                      time,
+                      showSlot(timeSlot),
                       style: const TextStyle(
                           color: Colors.black,
                           fontSize: 18,
