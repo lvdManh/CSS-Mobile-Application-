@@ -20,6 +20,7 @@ class _BookAppointmentState extends State<BookAppointment> {
    final List<int> slots = [800, 930, 1100, 1230, 1400, 1530, 1700,1830];
    List<String> nextWeek = [];
    late String time;
+   late String resultTime;
   Future<List<Slot>> getFutureSchedule() async {
     futureSchedule = await ScheduleServices().fetchSevenDaySlot();
     return futureSchedule;
@@ -47,6 +48,7 @@ class _BookAppointmentState extends State<BookAppointment> {
       minute = slotTime.toString().substring(slotTime.toString().length-2,slotTime.toString().length);
       setState(() {
         time = '$result$hour:$minute';
+        resultTime = time;
       });
 
   }
@@ -65,6 +67,7 @@ class _BookAppointmentState extends State<BookAppointment> {
   void initState() {
     super.initState();
     time = '';
+    resultTime ='';
   }
 
   int selectedDate = 0;
@@ -180,7 +183,7 @@ class _BookAppointmentState extends State<BookAppointment> {
                               MaterialPageRoute(
                                   builder: (context) =>
                                       SubmitAppointment(
-                                          time: time,)))
+                                          time: resultTime,)))
                               : AwesomeDialog(
                             context: context,
                             animType: AnimType.SCALE,
@@ -290,7 +293,7 @@ class _BookAppointmentState extends State<BookAppointment> {
           setState(() {
             selectedSlot = index;
             isSelected = true;
-            combineTime(futureSchedule[selectedDate].date, startTime);
+            combineTime(futureSchedule[selectedDate].date, startTime.first.start);
           });
         }
       },

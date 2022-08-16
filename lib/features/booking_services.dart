@@ -28,12 +28,14 @@ class BookingServices{
           'street': street
         },
         'cus_name': name,
+        'type': 'Sửa tại nhà',
         'phonenum': phonenum,
         'services': services,
         'description': description,
         'time': time,
       }),
     );
+    print(time);
     if(response.statusCode==200){
       AwesomeDialog(
           context: context,
@@ -51,6 +53,7 @@ class BookingServices{
       },
       ).show();
     }else{
+      print(response.body);
       AwesomeDialog(
           context: context,
           animType: AnimType.SCALE,

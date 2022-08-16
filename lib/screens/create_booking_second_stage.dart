@@ -2,6 +2,7 @@
 import 'package:computer_service_system/constants/color_constant.dart';
 import 'package:computer_service_system/features/address_services.dart';
 import 'package:computer_service_system/features/booking_services.dart';
+import 'package:computer_service_system/models/computer_type_object.dart';
 import 'package:computer_service_system/screens/widgets/custom_button.dart';
 import 'package:computer_service_system/screens/widgets/multi_select_widget.dart';
 import 'package:computer_service_system/screens/widgets/pick_address_widget.dart';
@@ -40,6 +41,8 @@ class _SubmitAppointmentState extends State<SubmitAppointment> {
   List<String> _selectedItems = [];
   late String selectedDistrict;
   late String selectedWard;
+  late String selectedComType;
+  late String selectedComBrand;
 
   Future<void> getListDropdownData(token) async {
     address = await fetchHCMAddress();
@@ -119,6 +122,8 @@ class _SubmitAppointmentState extends State<SubmitAppointment> {
     phone.text = userProvider.user.username;
     selectedDistrict = '';
     selectedWard = '';
+    selectedComType = deviceType.first;
+    selectedComBrand = deviceBranch.first;
     getListDropdownData(userProvider.user.accessToken);
     // time.text = '22/7/2022';
   }
@@ -230,8 +235,8 @@ class _SubmitAppointmentState extends State<SubmitAppointment> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
-                                const Text("Dịch vụ:",
-                                    style: TextStyle(fontSize: 16, fontFamily: 'Regular')),
+                                 Text("Dịch vụ:",
+                                    style: TextStyle(fontSize: 16, color: Colors.black.withOpacity(0.6), fontFamily: 'Regular')),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
@@ -259,6 +264,65 @@ class _SubmitAppointmentState extends State<SubmitAppointment> {
                           ],
                         ),
                         const SizedBox(height: 8),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text('Loại máy:', style: TextStyle(fontSize: 16, color: Colors.black.withOpacity(0.6), fontFamily: 'Regular')),
+                            DropdownButton(
+                              // Initial Value
+                              value: selectedComType,
+                              // Down Arrow Icon
+                              icon: const Icon(Icons.keyboard_arrow_down),
+                              // Array list of items
+                              items: deviceType.map((String items) {
+                                return DropdownMenuItem(
+                                  value: items,
+                                  child: SizedBox(
+                                    width: MediaQuery.of(context).size.width / 6,
+                                    child: Text(items,
+                                        overflow: TextOverflow.ellipsis),
+                                  ),
+                                );
+                              }).toList(),
+                              // After selecting the desired option,it will
+                              // change button value to selected value
+                              onChanged: (String? newValue) {
+                                setState(() {
+                                  selectedComType = newValue!;
+                                  String desc = '$selectedComType-$selectedComBrand: ${description.text}';
+                                  print(desc);
+                                });
+                              },
+                            ),
+                            const SizedBox(width: 8),
+                            Text('Hãng máy:', style: TextStyle(fontSize: 16, color: Colors.black.withOpacity(0.6), fontFamily: 'Regular')),
+                            DropdownButton(
+                              // Initial Value
+                              value: selectedComBrand,
+                              // Down Arrow Icon
+                              icon: const Icon(Icons.keyboard_arrow_down),
+                              // Array list of items
+                              items: deviceBranch.map((String items) {
+                                return DropdownMenuItem(
+                                  value: items,
+                                  child: SizedBox(
+                                    width: MediaQuery.of(context).size.width / 5,
+                                    child: Text(items,
+                                        overflow: TextOverflow.ellipsis),
+                                  ),
+                                );
+                              }).toList(),
+                              // After selecting the desired option,it will
+                              // change button value to selected value
+                              onChanged: (String? newValue) {
+                                setState(() {
+                                  selectedComBrand = newValue!;
+                                });
+                              },
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 8,),
                         TextFormField(
                           decoration:
                               const InputDecoration(labelText: 'Mô tả vấn đề:'),
@@ -269,6 +333,7 @@ class _SubmitAppointmentState extends State<SubmitAppointment> {
                           text: 'Đặt lịch',
                           onTap: () {
                             if (_submitKey.currentState!.validate()) {
+                              String desc = '$selectedComType-$selectedComBrand: ${description.text}';
                               AwesomeDialog(
                                   context: context,
                                   animType: AnimType.SCALE,
@@ -287,7 +352,7 @@ class _SubmitAppointmentState extends State<SubmitAppointment> {
                                         username.text,
                                         phone.text,
                                         _selectedItems,
-                                        description.text,
+                                        desc,
                                         widget.time);
                                   },
                               ).show();

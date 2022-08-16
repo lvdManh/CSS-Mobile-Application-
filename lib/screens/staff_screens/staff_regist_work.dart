@@ -201,7 +201,7 @@ class _StaffRegistWorkState extends State<StaffRegistWork> {
                         btnCancelOnPress: () {},
                         btnOkOnPress: () {
                           list = getScheduleDataOfEachDay(schedules);
-                            checkAndPostSchedule(list, token, context);
+                            checkAndPostSchedule(list, schedules, token, context);
 
                         },
                       ).show();
@@ -362,8 +362,7 @@ bool checkSlotAvailable(String day,int slotFirst,int slotLast,List<WorkSchedule>
 
 List<StaffRegister> getScheduleDataOfEachDay(List<Slot> schedule) {
   List<StaffRegister> list = [];
-  int slotCount = checkMaxSlot(schedule);
-  for (int i = 0; i < schedule.length-slotCount; i++) {
+  for (int i = 0; i < schedule.length; i++) {
     String time = schedule[i].time;
     if (schedule[i].check1 == true && schedule[i].valid1==false && schedule[i].isAssigned1 ==false) {
       final eachSchedule1 =
@@ -404,7 +403,8 @@ List<StaffRegister> getScheduleDataOfEachDay(List<Slot> schedule) {
   return list;
 }
 
-checkAndPostSchedule(List<StaffRegister> list, token, context) async {
+checkAndPostSchedule(List<StaffRegister> list, schedule, token, context) async {
+  int slotCount = checkMaxSlot(schedule);
   if(list.isEmpty){
     AwesomeDialog(
       context: context,
@@ -415,7 +415,7 @@ checkAndPostSchedule(List<StaffRegister> list, token, context) async {
       btnOkOnPress: () {
       },
     ).show();
-  }else if(list.length>28){
+  }else if(list.length/2 + slotCount>14){
     AwesomeDialog(
       context: context,
       animType: AnimType.SCALE,

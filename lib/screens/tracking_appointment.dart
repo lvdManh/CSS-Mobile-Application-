@@ -101,10 +101,12 @@ class _TrackingAppointmentState extends State<TrackingAppointment> {
                           itemBuilder: (context, index) {
                             return Card(
                               child: ListTile(
-                                title: Text('Dịch vụ: ${bookingList[(bookingList.length-1)-index]
-                                    .services!.join(', ').toString()}'),
+                                title: Text('Thời gian: ${parseDate(bookingList[(bookingList.length-1)-index].time)}'),
                                 subtitle:
-                                    Text('Thời gian: ${parseDate(bookingList[(bookingList.length-1)-index].time)}'),
+                                    Padding(
+                                      padding: const EdgeInsets.only(right: 50),
+                                      child: Text('Dịch vụ: ${bookingList[(bookingList.length-1)-index].services!.join('\n').toString()}', maxLines: 5,),
+                                    ),
                                 trailing:
                                     Text(bookingList[(bookingList.length-1)-index].status.toString()),
                                 onTap: () {
