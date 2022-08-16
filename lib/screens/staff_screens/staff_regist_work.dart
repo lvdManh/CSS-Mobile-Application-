@@ -420,7 +420,7 @@ checkAndPostSchedule(List<StaffRegister> list, schedule, token, context) async {
       context: context,
       animType: AnimType.SCALE,
       dialogType: DialogType.WARNING,
-      title: 'Đăng kí tối đa 14 slot/tuần',
+      title: 'Đăng ký tối đa 14 slot/tuần',
       dismissOnTouchOutside: false,
       btnOkOnPress: () {
         list.clear();
@@ -428,7 +428,11 @@ checkAndPostSchedule(List<StaffRegister> list, schedule, token, context) async {
     ).show();
   }
   else{
-    StaffAssignWorkSchedule().addSchedule(context, token, list);
+    List<StaffRegister> slotList = [];
+    slotList.addAll(list);
+    ListScheduleRegister datas = ListScheduleRegister(datas: []);
+    datas.datas = slotList;
+    StaffAssignWorkSchedule().addSchedule(context, token, datas);
   }
 }
 
