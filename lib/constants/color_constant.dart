@@ -12,3 +12,4 @@ const mBorderColor = Color(0xFFE8E8F3);
 const mSecondaryColor = Color(0xFFD96914);
 const mTextColorSecondary = Color(0xFF747474);
 
+const mBoxColor = Color(0xE9E7C5B1);

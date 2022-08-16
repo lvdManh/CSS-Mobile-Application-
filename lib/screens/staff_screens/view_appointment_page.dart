@@ -23,7 +23,7 @@ class _StaffViewAppointmentPageState extends State<StaffViewAppointmentPage> {
   @override
   Widget build(BuildContext context) {
     String token = Provider.of<DataClass>(context).user.accessToken;
-    futureOrderStaff = OrderServices().getOrderListForStaff(token);
+    futureOrderStaff = OrderServices().getOrderListForStaff(token,context);
     return Scaffold(
       backgroundColor: Colors.orangeAccent,
       appBar: AppBar(
@@ -48,7 +48,7 @@ class _StaffViewAppointmentPageState extends State<StaffViewAppointmentPage> {
         child: Padding(
           padding: const EdgeInsets.all(10.0),
           child: FutureBuilder<List<OrderStaff>>(
-              future: OrderServices().getOrderListForStaff(token),
+              future: OrderServices().getOrderListForStaff(token, context),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
                   return const Center(child: CircularProgressIndicator());
@@ -75,6 +75,7 @@ class _StaffViewAppointmentPageState extends State<StaffViewAppointmentPage> {
                                 MaterialPageRoute(
                                     builder: (context) => StaffViewAppointmentDetailsPage(
                                       order: snapshot.data![index],
+                                      token: token,
                                     )));
                           },
                         ),
@@ -98,44 +99,6 @@ class _StaffViewAppointmentPageState extends State<StaffViewAppointmentPage> {
     );
   }
 
-  // Widget _buildBookingList() {
-  //   List<Widget> list = [];
-
-  //   list.add(FxSpacing.width(20));
-
-  //   for (Booking booking in bookingData!) {
-  //     list.add(FxContainer(
-  //       onTap: () {
-  //         controller.goToSingleAppointment(booking);
-  //       },
-  //       borderRadiusAll: 4,
-  //       paddingAll: 16,
-  //       margin: FxSpacing.nTop(20),
-  //       child: Row(
-  //         children: [
-  //           Expanded(
-  //             child: Column(
-  //               crossAxisAlignment: CrossAxisAlignment.start,
-  //               children: [
-  //                 Row(
-  //                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //                   children: [
-  //                     FxText.bodyMedium(
-  //                       'Tên khách hàng: ${booking.cusName} \n Triệu chứng: ${booking.description} \n Số điện thoại: ${booking.phonenum}',
-  //                     ),
-  //                   ],
-  //                 ),
-  //               ],
-  //             ),
-  //           ),
-  //         ],
-  //       ),
-  //     ));
-  //   }
-  //   return Column(
-  //     children: list,
-  //   );
-  // }
 
   Widget buildNavBarItem(IconData icon, int index) {
     return GestureDetector(

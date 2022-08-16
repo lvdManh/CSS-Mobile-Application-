@@ -42,14 +42,16 @@ class _SubmitAppointmentState extends State<SubmitAppointment> {
   late String selectedWard;
 
   Future<void> getListDropdownData(token) async {
-    futureService = await ServiceServices().fetchServices(token);
-    for(int i =0; i < futureService.length;i++){
-      serviceName.add(futureService[i].name.toString());
-    }
     address = await fetchHCMAddress();
     for(int i =0; i< address.length;i++){
       districts.add(address[i].name.toString());
     }
+
+    futureService = await ServiceServices().fetchServices(token);
+    for(int i =0; i < futureService.length;i++){
+      serviceName.add(futureService[i].name.toString());
+    }
+
 
   }
 
@@ -115,7 +117,6 @@ class _SubmitAppointmentState extends State<SubmitAppointment> {
     final userProvider = Provider.of<DataClass>(context, listen: false);
     super.initState();
     phone.text = userProvider.user.username;
-    username.text = userProvider.user.username;
     selectedDistrict = '';
     selectedWard = '';
     getListDropdownData(userProvider.user.accessToken);
@@ -220,7 +221,7 @@ class _SubmitAppointmentState extends State<SubmitAppointment> {
                         Divider(thickness: 1,color: Colors.black.withOpacity(0.4),),
                         const SizedBox(height: 8),
                         TextFormField(
-                          decoration: const InputDecoration(labelText: 'Số nhà:'),
+                          decoration: const InputDecoration(labelText: 'Số nhà, đường:'),
                           controller: street,
                         ),
                         const SizedBox(height: 8),

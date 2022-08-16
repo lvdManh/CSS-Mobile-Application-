@@ -1,21 +1,22 @@
+import 'package:computer_service_system/models/service_list_data.dart';
 import 'package:flutter/material.dart';
 
-class PickAddress extends StatefulWidget {
-  final List<String> items;
+class PickService extends StatefulWidget {
+  final ServiceList items;
   final String title;
-  const PickAddress({Key? key, required this.items, required this.title}) : super(key: key);
+  const PickService({Key? key, required this.items, required this.title}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _PickAddressState();
+  State<StatefulWidget> createState() => _PickServiceState();
 }
 
-class _PickAddressState extends State<PickAddress> {
+class _PickServiceState extends State<PickService> {
   // this variable holds the selected items
-   String _selectedItem = '';
+  String _selectedItem = '';
 // This function is triggered when a checkbox is checked or unchecked
   void _itemChange(String itemValue) {
     setState(() {
-        _selectedItem = itemValue;
+      _selectedItem = itemValue;
     });
   }
 
@@ -34,20 +35,23 @@ class _PickAddressState extends State<PickAddress> {
     return AlertDialog(
       scrollable: true,
       insetPadding: const EdgeInsets.symmetric(
-        horizontal: 50.0,
-        vertical: 200,
+        horizontal: 20.0,
+        vertical: 100,
       ),
       title: Text(widget.title),
       content: SingleChildScrollView(
-        child: ListBody(
-          children: widget.items
-              .map((item) => ListTile(
-            title: Text(item),
-            tileColor: _selectedItem==item ? Colors.black12.withOpacity(0.1):Colors.white,
-            onTap: () => _itemChange(item),
-          ))
-              .toList(),
-        ),
+        child:
+            ListBody(
+              children: widget.items.serviceHasAcc!
+                  .map((item) => Card(
+                child: ListTile(
+                  title: Text('${item.name}'),
+                  tileColor: _selectedItem==item.name ? Colors.black12.withOpacity(0.1):Colors.white,
+                  onTap: () => _itemChange(item.name!),
+                ),
+              ))
+                  .toList(),
+            ),
       ),
       actions: [
         TextButton(

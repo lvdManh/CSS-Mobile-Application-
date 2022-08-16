@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../../models/services_data.dart';
+import '../../models/product.dart';
 
 class AccessoriesWidget extends StatelessWidget {
-  final AccessoriesId product;
+  final Accessory product;
 
   const AccessoriesWidget({Key? key, required this.product}) : super(key: key);
 

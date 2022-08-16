@@ -22,6 +22,7 @@ class UserServices{
             return  parsed;
           }
           else{
+
             throw Exception('Lấy dữ liệu thất bại');
           }
     } catch (e){
