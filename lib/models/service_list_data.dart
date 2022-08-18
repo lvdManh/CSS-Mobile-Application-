@@ -1,144 +1,174 @@
-
-class ServiceList {
-  List<ServiceHasAcc>? serviceHasAcc;
-  List<ServiceNoAcc>? serviceNoAcc;
-
-  ServiceList({this.serviceHasAcc, this.serviceNoAcc});
-
-  ServiceList.fromJson(Map<String, dynamic> json) {
-    if(json["serviceHasAcc"] is List)
-      this.serviceHasAcc = json["serviceHasAcc"]==null ? null : (json["serviceHasAcc"] as List).map((e)=>ServiceHasAcc.fromJson(e)).toList();
-    if(json["serviceNoAcc"] is List)
-      this.serviceNoAcc = json["serviceNoAcc"]==null ? null : (json["serviceNoAcc"] as List).map((e)=>ServiceNoAcc.fromJson(e)).toList();
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if(this.serviceHasAcc != null)
-      data["serviceHasAcc"] = this.serviceHasAcc?.map((e)=>e.toJson()).toList();
-    if(this.serviceNoAcc != null)
-      data["serviceNoAcc"] = this.serviceNoAcc?.map((e)=>e.toJson()).toList();
-    return data;
-  }
+class ServiceAccessoryList{
+   ServiceAccessory? serviceAccessory;
+   int? i;
+   ServiceAccessoryList({this.serviceAccessory, this.i});
 }
-
-class ServiceNoAcc {
+class ServiceAccessory {
   String? id;
   String? name;
   String? description;
   String? type;
   int? price;
+  bool? hasAccessory;
+  List<SerHasAcc>? serHasAcc;
+  List<dynamic>? orderdetailId;
   bool? deleted;
   String? createdAt;
   String? updatedAt;
   int? v;
-  bool? hasAccessory;
-  List<String>? orderdetailId;
 
-  ServiceNoAcc({this.id, this.name, this.description, this.type, this.price, this.deleted, this.createdAt, this.updatedAt, this.v, this.hasAccessory, this.orderdetailId});
+  ServiceAccessory({this.id, this.name, this.description, this.type, this.price, this.hasAccessory, this.serHasAcc, this.orderdetailId, this.deleted, this.createdAt, this.updatedAt, this.v});
 
-  ServiceNoAcc.fromJson(Map<String, dynamic> json) {
-    if(json["_id"] is String)
-      this.id = json["_id"];
-    if(json["name"] is String)
-      this.name = json["name"];
-    if(json["description"] is String)
-      this.description = json["description"];
-    if(json["type"] is String)
-      this.type = json["type"];
-    if(json["price"] is int)
-      this.price = json["price"];
-    if(json["deleted"] is bool)
-      this.deleted = json["deleted"];
-    if(json["createdAt"] is String)
-      this.createdAt = json["createdAt"];
-    if(json["updatedAt"] is String)
-      this.updatedAt = json["updatedAt"];
-    if(json["__v"] is int)
-      this.v = json["__v"];
-    if(json["hasAccessory"] is bool)
-      this.hasAccessory = json["hasAccessory"];
-    if(json["orderdetail_id"] is List)
-      this.orderdetailId = json["orderdetail_id"]==null ? null : List<String>.from(json["orderdetail_id"]);
+  ServiceAccessory.fromJson(Map<String, dynamic> json) {
+    if(json["_id"] is String) {
+      id = json["_id"];
+    }
+    if(json["name"] is String) {
+      name = json["name"];
+    }
+    if(json["description"] is String) {
+      description = json["description"];
+    }
+    if(json["type"] is String) {
+      type = json["type"];
+    }
+    if(json["price"] is int) {
+      price = json["price"];
+    }
+    if(json["hasAccessory"] is bool) {
+      hasAccessory = json["hasAccessory"];
+    }
+    if(json["serHasAcc"] is List) {
+      serHasAcc = json["serHasAcc"]==null ? null : (json["serHasAcc"] as List).map((e)=>SerHasAcc.fromJson(e)).toList();
+    }
+    if(json["orderdetail_id"] is List) {
+      orderdetailId = json["orderdetail_id"] ?? [];
+    }
+    if(json["deleted"] is bool) {
+      deleted = json["deleted"];
+    }
+    if(json["createdAt"] is String) {
+      createdAt = json["createdAt"];
+    }
+    if(json["updatedAt"] is String) {
+      updatedAt = json["updatedAt"];
+    }
+    if(json["__v"] is int) {
+      v = json["__v"];
+    }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data["_id"] = this.id;
-    data["name"] = this.name;
-    data["description"] = this.description;
-    data["type"] = this.type;
-    data["price"] = this.price;
-    data["deleted"] = this.deleted;
-    data["createdAt"] = this.createdAt;
-    data["updatedAt"] = this.updatedAt;
-    data["__v"] = this.v;
-    data["hasAccessory"] = this.hasAccessory;
-    if(this.orderdetailId != null)
-      data["orderdetail_id"] = this.orderdetailId;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data["_id"] = id;
+    data["name"] = name;
+    data["description"] = description;
+    data["type"] = type;
+    data["price"] = price;
+    data["hasAccessory"] = hasAccessory;
+    if(serHasAcc != null) {
+      data["serHasAcc"] = serHasAcc?.map((e)=>e.toJson()).toList();
+    }
+    if(orderdetailId != null) {
+      data["orderdetail_id"] = orderdetailId;
+    }
+    data["deleted"] = deleted;
+    data["createdAt"] = createdAt;
+    data["updatedAt"] = updatedAt;
+    data["__v"] = v;
     return data;
   }
 }
 
-class ServiceHasAcc {
-  String? name;
-  String? description;
-  String? type;
-  List<AccessoriesDetail>? accessoriesDetail;
-  int? price;
+class SerHasAcc {
+  String? id;
+  AccessoryId? accessoryId;
 
-  ServiceHasAcc({this.name, this.description, this.type, this.accessoriesDetail, this.price});
+  SerHasAcc({this.id, this.accessoryId});
 
-  ServiceHasAcc.fromJson(Map<String, dynamic> json) {
-    if(json["name"] is String)
-      this.name = json["name"];
-    if(json["description"] is String)
-      this.description = json["description"];
-    if(json["type"] is String)
-      this.type = json["type"];
-    if(json["accessories_detail"] is List)
-      this.accessoriesDetail = json["accessories_detail"]==null ? null : (json["accessories_detail"] as List).map((e)=>AccessoriesDetail.fromJson(e)).toList();
-    if(json["price"] is int)
-      this.price = json["price"];
+  SerHasAcc.fromJson(Map<String, dynamic> json) {
+    if(json["_id"] is String) {
+      id = json["_id"];
+    }
+    if(json["accessory_id"] is Map) {
+      accessoryId = json["accessory_id"] == null ? null : AccessoryId.fromJson(json["accessory_id"]);
+    }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data["name"] = this.name;
-    data["description"] = this.description;
-    data["type"] = this.type;
-    if(this.accessoriesDetail != null)
-      data["accessories_detail"] = this.accessoriesDetail?.map((e)=>e.toJson()).toList();
-    data["price"] = this.price;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data["_id"] = id;
+    if(accessoryId != null) {
+      data["accessory_id"] = accessoryId?.toJson();
+    }
     return data;
   }
 }
 
-class AccessoriesDetail {
+class AccessoryId {
   String? id;
   String? name;
+  int? price;
   String? description;
   String? insurance;
+  SupplierId? supplierId;
 
-  AccessoriesDetail({this.id, this.name, this.description, this.insurance});
+  AccessoryId({this.id, this.name, this.price, this.description, this.insurance, this.supplierId});
 
-  AccessoriesDetail.fromJson(Map<String, dynamic> json) {
-    if(json["_id"] is String)
-      this.id = json["_id"];
-    if(json["name"] is String)
-      this.name = json["name"];
-    if(json["description"] is String)
-      this.description = json["description"];
-    if(json["insurance"] is String)
-      this.insurance = json["insurance"];
+  AccessoryId.fromJson(Map<String, dynamic> json) {
+    if(json["_id"] is String) {
+      id = json["_id"];
+    }
+    if(json["name"] is String) {
+      name = json["name"];
+    }
+    if(json["price"] is int) {
+      price = json["price"];
+    }
+    if(json["description"] is String) {
+      description = json["description"];
+    }
+    if(json["insurance"] is String) {
+      insurance = json["insurance"];
+    }
+    if(json["supplier_id"] is Map) {
+      supplierId = json["supplier_id"] == null ? null : SupplierId.fromJson(json["supplier_id"]);
+    }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data["_id"] = this.id;
-    data["name"] = this.name;
-    data["description"] = this.description;
-    data["insurance"] = this.insurance;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data["_id"] = id;
+    data["name"] = name;
+    data["price"] = price;
+    data["description"] = description;
+    data["insurance"] = insurance;
+    if(supplierId != null) {
+      data["supplier_id"] = supplierId?.toJson();
+    }
+    return data;
+  }
+}
+
+class SupplierId {
+  String? id;
+  String? name;
+
+  SupplierId({this.id, this.name});
+
+  SupplierId.fromJson(Map<String, dynamic> json) {
+    if(json["_id"] is String) {
+      id = json["_id"];
+    }
+    if(json["name"] is String) {
+      name = json["name"];
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data["_id"] = id;
+    data["name"] = name;
     return data;
   }
 }

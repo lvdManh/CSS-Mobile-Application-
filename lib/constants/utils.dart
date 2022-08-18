@@ -53,3 +53,7 @@ String printAddress(street, ward, district) {
   }
   return '$street, $ward, $district';
 }
+
+int convertTimeToInt(String hour,String minute){
+  return int.parse(hour+minute);
+}

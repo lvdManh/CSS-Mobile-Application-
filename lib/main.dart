@@ -42,6 +42,7 @@ class AppState extends State<MyApp> {
           primary: mSecondaryColor,
         ),
       ),
+
       onGenerateRoute: (settings) => generateRoute(settings),
       home: Provider.of<DataClass>(context).user.accessToken.isNotEmpty
           ? Provider.of<DataClass>(context).user.role == 'customer'

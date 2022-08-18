@@ -3,6 +3,8 @@ import 'package:computer_service_system/features/registing_work.dart';
 import 'package:computer_service_system/models/staff_register.dart';
 import 'package:computer_service_system/models/work_schedule_data.dart';
 import 'package:computer_service_system/providers/data_class.dart';
+import 'package:computer_service_system/screens/staff_screens/staff_home_page.dart';
+import 'package:computer_service_system/screens/staff_screens/view_appointment_page.dart';
 import 'package:computer_service_system/screens/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -10,6 +12,7 @@ import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 import '../../constants/color_constant.dart';
 import '../../features/schedule_services.dart';
+import '../account_screen.dart';
 
 class StaffRegistWork extends StatefulWidget {
   static const String routeName = '/staff_regist_work';
@@ -19,7 +22,7 @@ class StaffRegistWork extends StatefulWidget {
 }
 
 class _StaffRegistWorkState extends State<StaffRegistWork> {
-  int _selectedItemIndex = 1;
+  int _selectedItemIndex = 2;
   bool isChecked = false;
   late ScheduleDataSource scheduleDataSource;
   List<Slot> schedules = [];
@@ -80,7 +83,11 @@ class _StaffRegistWorkState extends State<StaffRegistWork> {
       body: isLoading
           ? const ProgressDialogPrimary()
           :Container(
-        decoration: const BoxDecoration(color: mBackgroundColor),
+        decoration: const BoxDecoration(color: mBackgroundColor,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(30),
+              topRight: Radius.circular(30),
+            )),
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -219,7 +226,7 @@ class _StaffRegistWorkState extends State<StaffRegistWork> {
         children: <Widget>[
           buildNavBarItem(Icons.home, 0),
           buildNavBarItem(Icons.list_alt, 1),
-          buildNavBarItem(Icons.notifications, 2),
+          buildNavBarItem(Icons.schedule, 2),
           buildNavBarItem(Icons.person, 3)
         ],
       ),
@@ -233,6 +240,33 @@ class _StaffRegistWorkState extends State<StaffRegistWork> {
         setState(() {
           _selectedItemIndex = index;
         });
+        if(_selectedItemIndex == 1){
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            StaffViewAppointmentPage.routeName,
+                (route) => false,
+          );
+        }
+        if(_selectedItemIndex == 0){
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            StaffHomePage.routeName,
+                (route) => false,
+          );
+        }
+        if(_selectedItemIndex == 2){
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            StaffRegistWork.routeName,
+                (route) => false,
+          );
+        }
+        if(_selectedItemIndex == 3){
+          Navigator.push(
+              context, MaterialPageRoute(
+              builder: (context) => const AccountScreen()
+          ));
+        }
       },
       child: Container(
         height: 60,

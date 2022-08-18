@@ -1,11 +1,14 @@
 import 'package:computer_service_system/constants/utils.dart';
 import 'package:computer_service_system/features/order_services.dart';
 import 'package:computer_service_system/models/order_staff_data.dart';
+import 'package:computer_service_system/screens/staff_screens/staff_home_page.dart';
+import 'package:computer_service_system/screens/staff_screens/staff_regist_work.dart';
 import 'package:computer_service_system/screens/staff_screens/view_appointment_details.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../constants/color_constant.dart';
 import '../../providers/data_class.dart';
+import '../account_screen.dart';
 
 class StaffViewAppointmentPage extends StatefulWidget {
   static const String routeName = '/view_appointment_page';
@@ -53,7 +56,7 @@ class _StaffViewAppointmentPageState extends State<StaffViewAppointmentPage> {
                 if (!snapshot.hasData) {
                   return const Center(child: CircularProgressIndicator());
                 } else {
-                  return ListView.builder(
+                  return snapshot.data!.isNotEmpty ? ListView.builder(
                     padding: const EdgeInsets.all(5),
                     scrollDirection: Axis.vertical,
                     shrinkWrap: true,
@@ -81,7 +84,7 @@ class _StaffViewAppointmentPageState extends State<StaffViewAppointmentPage> {
                         ),
                       );
                     },
-                  );
+                  ) : const Center(child: Text('Chưa có lịch hẹn'),);
                 }
               }),
         ),
@@ -91,7 +94,7 @@ class _StaffViewAppointmentPageState extends State<StaffViewAppointmentPage> {
         children: <Widget>[
           buildNavBarItem(Icons.home, 0),
           buildNavBarItem(Icons.list_alt, 1),
-          buildNavBarItem(Icons.notifications, 2),
+          buildNavBarItem(Icons.schedule, 2),
           buildNavBarItem(Icons.person, 3)
         ],
       ),
@@ -106,6 +109,33 @@ class _StaffViewAppointmentPageState extends State<StaffViewAppointmentPage> {
         setState(() {
           _selectedItemIndex = index;
         });
+        if(_selectedItemIndex == 1){
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            StaffViewAppointmentPage.routeName,
+                (route) => false,
+          );
+        }
+        if(_selectedItemIndex == 0){
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            StaffHomePage.routeName,
+                (route) => false,
+          );
+        }
+        if(_selectedItemIndex == 2){
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            StaffRegistWork.routeName,
+                (route) => false,
+          );
+        }
+        if(_selectedItemIndex == 3){
+          Navigator.push(
+              context, MaterialPageRoute(
+              builder: (context) => const AccountScreen()
+          ));
+        }
       },
       child: Container(
         height: 60,

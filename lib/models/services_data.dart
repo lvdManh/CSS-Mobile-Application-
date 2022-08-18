@@ -1,6 +1,4 @@
-
 class Service {
-  List<dynamic>? orderdetailId;
   String? id;
   String? name;
   String? description;
@@ -13,12 +11,9 @@ class Service {
   int? v;
   bool? hasAccessory;
 
-  Service({this.orderdetailId, this.id, this.name, this.description, this.type, this.price, this.accessoriesId, this.deleted, this.createdAt, this.updatedAt, this.v, this.hasAccessory});
+  Service({this.id, this.name, this.description, this.type, this.price, this.accessoriesId, this.deleted, this.createdAt, this.updatedAt, this.v, this.hasAccessory});
 
   Service.fromJson(Map<String, dynamic> json) {
-    if(json["orderdetail_id"] is List) {
-      orderdetailId = json["orderdetail_id"] ?? [];
-    }
     if(json["_id"] is String) {
       id = json["_id"];
     }
@@ -56,9 +51,6 @@ class Service {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    if(orderdetailId != null) {
-      data["orderdetail_id"] = orderdetailId;
-    }
     data["_id"] = id;
     data["name"] = name;
     data["description"] = description;

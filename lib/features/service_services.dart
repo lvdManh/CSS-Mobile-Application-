@@ -23,23 +23,25 @@ class ServiceServices{
     }
   }
 
-  Future<ServiceList> fetchServiceToPick(token
+  Future<List<ServiceAccessory>> fetchServiceToPick(token, hasAccessory, typeCom, brandCom, typeSer
       ) async{
+
     final response = await http.get(
       Uri.parse(
-          'https://computer-services-api.herokuapp.com/order/show-service-to-choose'),
+          'https://computer-services-api.herokuapp.com/order/show-service-to-choose?hasAccessory=$hasAccessory&typeSer=$typeSer&typeCom=$typeCom&brandCom=$brandCom',),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'token': 'bearer $token',
       },
     );
-
+    print(response.statusCode);
     if(response.statusCode == 200){
-      final parsed = ServiceList.fromJson(jsonDecode(response.body.toString()));
-      return  parsed;
+      final parsed = json.decode(response.body).cast<Map<String, dynamic>>();
+      return  parsed.map<ServiceAccessory>((json) => ServiceAccessory.fromJson(json)).toList();
     }else{
-      print(response.body);
       throw Exception('Lấy dữ liệu thất bại');
     }
   }
+
+
 }

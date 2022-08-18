@@ -63,4 +63,41 @@ class OrderServices{
     }
   }
 
+  Future<void> addDetailOrder(context, token,id, data) async {
+
+    final response = await http.post(
+      Uri.parse(
+          'https://computer-services-api.herokuapp.com/order/add-detail-order/$id'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'token': 'bearer $token',
+      },
+      body: json.encode(
+        data.toJson(),
+      ),
+    );
+    if(response.statusCode == 200){
+      AwesomeDialog(
+        context: context,
+        animType: AnimType.SCALE,
+        dialogType: DialogType.SUCCES,
+        title: 'Lưu thành công',
+        dismissOnTouchOutside: false,
+        btnOkOnPress: () {
+        },
+      ).show();
+    }else{
+      AwesomeDialog(
+        context: context,
+        animType: AnimType.SCALE,
+        dialogType: DialogType.ERROR,
+        title: 'Lưu thất bại',
+        desc: response.statusCode.toString(),
+        dismissOnTouchOutside: false,
+        btnOkOnPress: () {
+        },
+      ).show();
+    }
+  }
+
 }

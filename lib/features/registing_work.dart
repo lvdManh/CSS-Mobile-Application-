@@ -35,7 +35,7 @@ class StaffAssignWorkSchedule {
         },
       ).show();
         }else if(response.statusCode ==200 || response.statusCode ==503){
-        final parsed = json.decode(response.body);
+        final parsed = json.decode(response.body.toString());
         List<HandleMessage>?  handleMes= [];
         String result = '';
         int count =0;

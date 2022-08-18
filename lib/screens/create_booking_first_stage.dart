@@ -1,6 +1,7 @@
 
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:computer_service_system/constants/color_constant.dart';
+import 'package:computer_service_system/constants/utils.dart';
 import 'package:computer_service_system/features/schedule_services.dart';
 import 'package:computer_service_system/models/slot_data.dart';
 import 'package:computer_service_system/screens/create_booking_second_stage.dart';
@@ -50,7 +51,6 @@ class _BookAppointmentState extends State<BookAppointment> {
         time = '$result$hour:$minute';
         resultTime = time;
       });
-
   }
    String showSlot(slotTime){
      String hour;
@@ -175,24 +175,27 @@ class _BookAppointmentState extends State<BookAppointment> {
                                 false);
                           }),
                     ),
-                    CustomButton(
-                        text: "Tiếp tục",
-                        onTap: () {
-                          isSelected ? Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      SubmitAppointment(
-                                          time: resultTime,)))
-                              : AwesomeDialog(
-                            context: context,
-                            animType: AnimType.SCALE,
-                            dialogType: DialogType.WARNING,
-                            title: 'Hãy chọn thời gian hẹn',
-                            dismissOnTouchOutside: false,
-                            btnOkOnPress: () {},
-                          ).show();
-                        }
+                    Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: CustomButton(
+                          text: "Tiếp tục",
+                          onTap: () {
+                            isSelected ? Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        SubmitAppointment(
+                                            time: resultTime,)))
+                                : AwesomeDialog(
+                              context: context,
+                              animType: AnimType.SCALE,
+                              dialogType: DialogType.WARNING,
+                              title: 'Hãy chọn thời gian hẹn',
+                              dismissOnTouchOutside: false,
+                              btnOkOnPress: () {},
+                            ).show();
+                          }
+                      ),
                     )
                   ],
                 ),
@@ -276,11 +279,17 @@ class _BookAppointmentState extends State<BookAppointment> {
   }
 
   bool isSlotAvailable(index){
+    var timeNow = DateTime.now();
+    int currentTime = convertTimeToInt(timeNow.hour.toString(), timeNow.minute.toString());
      final thisSlot = futureSchedule[selectedDate].slots.firstWhere((element)
       => element.slot == index+1,
          orElse: (){ return Slots(id: '0', slot: 0, start: 0, end: 0, status: '0', workSlot: [], scheduleId: '0');});
     if(thisSlot.status == 'Available'){
-      return true;
+      if(thisSlot.start - currentTime < 10 && parseDate(futureSchedule[selectedDate].date.toString()) == parseDate(timeNow.toString()) ) {
+        return false;
+      }else{
+        return true;
+      }
     }
     return false;
   }

@@ -1,5 +1,6 @@
 import 'package:computer_service_system/constants/utils.dart';
-import 'package:computer_service_system/features/service_services.dart';
+import 'package:computer_service_system/features/order_services.dart';
+import 'package:computer_service_system/models/order_detail_data.dart';
 import 'package:computer_service_system/models/order_staff_data.dart';
 import 'package:computer_service_system/models/service_list_data.dart';
 import 'package:computer_service_system/screens/widgets/accessory_picker_widget.dart';
@@ -11,7 +12,6 @@ class StaffViewAppointmentDetailsPage extends StatefulWidget {
   @override
   State<StaffViewAppointmentDetailsPage> createState() =>
       _StaffViewAppointmentDetailsState();
-
   final OrderStaff order;
   final String token;
   const StaffViewAppointmentDetailsPage(
@@ -20,32 +20,33 @@ class StaffViewAppointmentDetailsPage extends StatefulWidget {
 
 class _StaffViewAppointmentDetailsState
     extends State<StaffViewAppointmentDetailsPage> {
-  int _selectedItemIndex = 1;
-  late ServiceList futureServiceList;
-  late String selectedService;
+  late List<ServiceAccessoryList> servicesListGet = [];
+  late int _currentAmount = 1;
+  late final OrderDetails _orderDetails = OrderDetails(datas: []);
   void _showServiceToChoose() async {
-    final String results = await showDialog(
+    final ServiceAccessoryList results = await showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AccessoryPicker(items: futureServiceList);
+        return const AccessoryPicker();
       },
     );
-    if (results != '') {
-      setState(() {
-        selectedService = results;
-      });
+
+    setState(() {
+        servicesListGet.add(results);
+    });
+  }
+  void generateOrderDetails(){
+    for(var i in servicesListGet){
+      if(i.serviceAccessory!.hasAccessory==false){
+        _orderDetails.datas!.add(Datas(hasAccessory: false,discount: 5,serviceId: i.serviceAccessory!.id));
+      }else{
+        _orderDetails.datas!.add(Datas(hasAccessory: true,discount: 5,serviceId: i.serviceAccessory!.id,
+            accessories: [Accessories(accessoryId: i.serviceAccessory!.serHasAcc?[i.i!].accessoryId!.id, amountAcc: 1)]
+        ));
+      }
     }
   }
 
-  @override
-  void initState() {
-    super.initState();
-    ServiceServices().fetchServiceToPick(widget.token).then((result) async {
-      setState(() {
-        futureServiceList = result;
-      });
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -157,7 +158,7 @@ class _StaffViewAppointmentDetailsState
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      const Text("Id lịch hẹn:",
+                      const Text("Mã lịch hẹn:",
                           style:
                               TextStyle(fontSize: 18, fontFamily: 'Regular')),
                       Text('${widget.order.orderId?.bookingId?.id}',
@@ -326,58 +327,118 @@ class _StaffViewAppointmentDetailsState
                               fontSize: 18, fontFamily: 'Regular')),
                     ],
                   ),
-
-                  //const Divider()
+                  const Divider()
                 ],
               ),
+              const SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text("Danh sách dịch vụ",
+                      style: TextStyle(
+                          color: mTextColorSecondary,
+                          fontSize: 16,
+                          fontFamily: 'Regular')),
+                  InkWell(
+                    onTap: (){ _showServiceToChoose(); },
+                    child: Row(
+                      children: [
+                        const Icon(Icons.add, color: Colors.orange,size: 20,),
+                        Text('Thêm dịch vụ (${servicesListGet.length})'),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              if(servicesListGet.isNotEmpty) ListView.builder(
+                  physics: const NeverScrollableScrollPhysics(),
+                  scrollDirection: Axis.vertical,
+                  shrinkWrap: true,
+                  itemCount: servicesListGet.length,
+                  itemBuilder: (context, index) {
+                    return Card(
+                      child: ListTile(
+                        title: Text(
+                            'Dịch vụ: ${servicesListGet[index].serviceAccessory?.name}'),
+                        subtitle: servicesListGet[index].serviceAccessory?.hasAccessory != true ? Text(
+                            'Giá dịch vụ: ${convertMoney(servicesListGet[index].serviceAccessory?.price)}')
+                            : Column(
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text('Sản phẩm: ${servicesListGet[index].serviceAccessory!.serHasAcc![servicesListGet[index].i!].accessoryId!.name}'),
+                                    Row(
+                                      children: <Widget>[
+                                        InkWell(
+                                          child: const Icon(
+                                            Icons.remove,
+                                          ),
+                                          onTap: () {
+                                            setState(() {
+                                              _currentAmount -= 1;
+                                            });
+                                          },
+                                        ),
+                                        const SizedBox(width: 5,),
+                                        Text('$_currentAmount'),
+                                        const SizedBox(width: 5,),
+                                        InkWell(
+                                          child: const Icon(
+                                            Icons.add,
+                                          ),
+                                          onTap: () {
+                                            setState(() {
+                                              _currentAmount += 1;
+                                            });
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text('Đơn giá: ${convertMoney(servicesListGet[index].serviceAccessory!.serHasAcc![servicesListGet[index].i!].accessoryId!.price)}đ'),
+                                  ],
+                                ),
+                              ],
+                            ),
+                        trailing: InkWell(
+                          onTap: (){
+                            setState(() {
+                              servicesListGet.removeAt(index);
+                            });
+                          },
+                          child: const Icon(Icons.delete_forever_outlined),
+                        ),
+                      ),
+                    );
+                  }),
+              const SizedBox(height: 50,),
             ],
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          // ignore: unnecessary_null_comparison
-          if (futureServiceList != null) {
-            _showServiceToChoose();
-          }
-        },
-        icon: const Icon(Icons.add),
-        label: const Text('Thêm dịch vụ'),
-        backgroundColor: Colors.orangeAccent,
+      floatingActionButton: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          FloatingActionButton.extended(
+            onPressed: () {
+              generateOrderDetails();
+
+              OrderServices().addDetailOrder(context, widget.token, widget.order.orderId!.id, _orderDetails);
+
+            },
+            icon: const Icon(Icons.send),
+            label: const Text('Lưu'),
+            backgroundColor: Colors.orangeAccent,
+          ),
+        ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-    );
-  }
-
-  Widget buildNavBarItem(IconData icon, int index) {
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          _selectedItemIndex = index;
-        });
-      },
-      child: Container(
-        height: 60,
-        width: MediaQuery.of(context).size.width / 4,
-        decoration: index == _selectedItemIndex
-            ? BoxDecoration(
-                border: const Border(
-                  bottom: BorderSide(width: 4, color: Colors.orangeAccent),
-                ),
-                gradient: LinearGradient(
-                  colors: [
-                    Colors.white.withOpacity(0.3),
-                    Colors.white.withOpacity(0.015),
-                  ],
-                  begin: Alignment.bottomCenter,
-                  end: Alignment.topCenter,
-                ))
-            : const BoxDecoration(),
-        child: Icon(
-          icon,
-          color: index == _selectedItemIndex ? Colors.redAccent : Colors.white,
-        ),
-      ),
     );
   }
 }

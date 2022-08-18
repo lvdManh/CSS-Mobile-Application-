@@ -16,7 +16,7 @@ class StaffHomePage extends StatefulWidget {
 }
 
 class _StaffHomePageState extends State<StaffHomePage> {
-  int _selectedItemIndex = 1;
+  int _selectedItemIndex = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,7 +52,7 @@ class _StaffHomePageState extends State<StaffHomePage> {
               width: 120,
               padding: const EdgeInsets.all(15.0),
               child: CustomButton(
-                  text: 'Xem lịch hẹn',
+                  text: 'Xem toàn bộ lịch hẹn cá nhân',
                   onTap: () {
                     Navigator.push(
                       context,
@@ -67,7 +67,7 @@ class _StaffHomePageState extends State<StaffHomePage> {
               width: 120,
               padding: const EdgeInsets.all(15.0),
               child: CustomButton(
-                  text: 'Đăng ký lịch làm việc',
+                  text: 'Quản lí lịch làm việc cá nhân',
                   onTap: () {
                     Navigator.push(
                       context,
@@ -109,7 +109,7 @@ class _StaffHomePageState extends State<StaffHomePage> {
         children: <Widget>[
           buildNavBarItem(Icons.home, 0),
           buildNavBarItem(Icons.list_alt, 1),
-          buildNavBarItem(Icons.notifications, 2),
+          buildNavBarItem(Icons.schedule, 2),
           buildNavBarItem(Icons.person, 3)
         ],
       ),
@@ -123,6 +123,33 @@ class _StaffHomePageState extends State<StaffHomePage> {
         setState(() {
           _selectedItemIndex = index;
         });
+        if(_selectedItemIndex == 1){
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            StaffViewAppointmentPage.routeName,
+                (route) => false,
+          );
+        }
+        if(_selectedItemIndex == 0){
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            StaffHomePage.routeName,
+                (route) => false,
+          );
+        }
+        if(_selectedItemIndex == 2){
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            StaffRegistWork.routeName,
+                (route) => false,
+          );
+        }
+        if(_selectedItemIndex == 3){
+          Navigator.push(
+              context, MaterialPageRoute(
+              builder: (context) => const AccountScreen()
+          ));
+        }
       },
       child: Container(
         height: 60,

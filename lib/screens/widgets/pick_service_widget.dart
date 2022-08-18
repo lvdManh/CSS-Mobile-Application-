@@ -2,7 +2,7 @@ import 'package:computer_service_system/models/service_list_data.dart';
 import 'package:flutter/material.dart';
 
 class PickService extends StatefulWidget {
-  final ServiceList items;
+  final List<ServiceAccessory> items;
   final String title;
   const PickService({Key? key, required this.items, required this.title}) : super(key: key);
 
@@ -42,7 +42,7 @@ class _PickServiceState extends State<PickService> {
       content: SingleChildScrollView(
         child:
             ListBody(
-              children: widget.items.serviceHasAcc!
+              children: widget.items
                   .map((item) => Card(
                 child: ListTile(
                   title: Text('${item.name}'),
