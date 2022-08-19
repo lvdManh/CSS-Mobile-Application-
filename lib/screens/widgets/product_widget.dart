@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../models/product.dart';
+import '../../models/accessory_data.dart';
 
 class ProductWidget extends StatelessWidget {
   final Accessory product;
@@ -21,7 +21,6 @@ class ProductWidget extends StatelessWidget {
     return Card(
       child: ListTile(
         onTap: () {
-
         },
         leading: Image(
           image: AssetImage(checkAccessoryName()),

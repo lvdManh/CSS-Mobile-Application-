@@ -289,8 +289,6 @@ class _SubmitAppointmentState extends State<SubmitAppointment> {
                               onChanged: (String? newValue) {
                                 setState(() {
                                   selectedComType = newValue!;
-                                  String desc = '$selectedComType-$selectedComBrand: ${description.text}';
-                                  print(desc);
                                 });
                               },
                             ),

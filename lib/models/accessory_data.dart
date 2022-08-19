@@ -1,5 +1,6 @@
 
 class Accessory {
+  List<dynamic>? serHasAcc;
   String? id;
   String? name;
   String? description;
@@ -11,11 +12,14 @@ class Accessory {
   int? v;
   String? serviceId;
   int? price;
-  List<String>? serHasAcc;
+  List<dynamic>? orderdetailId;
 
-  Accessory({this.id, this.name, this.description, this.insurance, this.supplierId, this.deleted, this.createdAt, this.updatedAt, this.v, this.serviceId, this.price, this.serHasAcc});
+  Accessory({this.serHasAcc, this.id, this.name, this.description, this.insurance, this.supplierId, this.deleted, this.createdAt, this.updatedAt, this.v, this.serviceId, this.price, this.orderdetailId});
 
   Accessory.fromJson(Map<String, dynamic> json) {
+    if(json["serHasAcc"] is List) {
+      serHasAcc = json["serHasAcc"] ?? [];
+    }
     if(json["_id"] is String) {
       id = json["_id"];
     }
@@ -49,13 +53,16 @@ class Accessory {
     if(json["price"] is int) {
       price = json["price"];
     }
-    if(json["serHasAcc"] is List) {
-      serHasAcc = json["serHasAcc"]==null ? null : List<String>.from(json["serHasAcc"]);
+    if(json["orderdetail_id"] is List) {
+      orderdetailId = json["orderdetail_id"] ?? [];
     }
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
+    if(serHasAcc != null) {
+      data["serHasAcc"] = serHasAcc;
+    }
     data["_id"] = id;
     data["name"] = name;
     data["description"] = description;
@@ -69,8 +76,8 @@ class Accessory {
     data["__v"] = v;
     data["service_id"] = serviceId;
     data["price"] = price;
-    if(serHasAcc != null) {
-      data["serHasAcc"] = serHasAcc;
+    if(orderdetailId != null) {
+      data["orderdetail_id"] = orderdetailId;
     }
     return data;
   }

@@ -1,4 +1,3 @@
-// ignore_for_file: deprecated_member_use
 
 import 'package:computer_service_system/models/staff_get_booking_object.dart';
 import 'package:computer_service_system/screens/widgets/custom_button.dart';

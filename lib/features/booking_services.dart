@@ -2,10 +2,10 @@ import 'dart:convert';
 
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:computer_service_system/models/booking_object.dart';
-import 'package:computer_service_system/screens/tracking_appointment.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
+import '../models/booking_data.dart';
 import '../screens/nav_screen.dart';
 
 class BookingServices{
@@ -35,7 +35,6 @@ class BookingServices{
         'time': time,
       }),
     );
-    print(time);
     if(response.statusCode==200){
       AwesomeDialog(
           context: context,
@@ -53,7 +52,6 @@ class BookingServices{
       },
       ).show();
     }else{
-      print(response.body);
       AwesomeDialog(
           context: context,
           animType: AnimType.SCALE,
@@ -81,6 +79,35 @@ class BookingServices{
     if(response.statusCode == 200){
       final parsed = json.decode(response.body).cast<Map<String, dynamic>>();
       return  parsed.map<Booking>((json) => Booking.fromJson(json)).toList();
+    }else{
+      // AwesomeDialog(
+      //   context: context,
+      //   animType: AnimType.SCALE,
+      //   dialogType: DialogType.WARNING,
+      //   title: 'Hết phiên đăng nhập',
+      //   desc: 'Vui lòng đăng nhập lại',
+      //   dismissOnTouchOutside: false,
+      //   btnOkOnPress: () { AuthService().logOut(context);},
+      // ).show();
+      throw Exception('Lấy dữ liệu thất bại');
+    }
+
+  }
+
+  Future<Bookings> getOneBookingById(token,id
+      ) async{
+    final response = await http.get(
+      Uri.parse(
+          "https://computer-services-api.herokuapp.com/booking/$id"),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'token': 'bearer $token',
+      },
+    );
+
+    if(response.statusCode == 200){
+      final parsed = Bookings.fromJson(jsonDecode(response.body.toString()));
+      return  parsed;
     }else{
       // AwesomeDialog(
       //   context: context,
@@ -126,11 +153,7 @@ class BookingServices{
         title: 'Cập nhật thành công',
         dismissOnTouchOutside: false,
         btnOkOnPress: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) =>
-                  const TrackingAppointment()));
+          Navigator.pop(context);
         },
       ).show();
 

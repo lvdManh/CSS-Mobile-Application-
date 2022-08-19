@@ -18,13 +18,27 @@ class AccessoryPicker extends StatefulWidget {
 class _AccessoryPickerState extends State<AccessoryPicker> {
   late List<ServiceAccessory> _futureSerAcc;
   late bool hasAccessory = false;
-  late String brandCom;
-  late String typeSer = '';
+  late String typeSer;
   late int servicePick = -1;
   late String selectedComType;
   Future<List<ServiceAccessory>> getSerAndAcc(token) async {
+    String ts = typeSer;
+    if(ts == "Tất cả"){
+      ts = '';
+      hasAccessory = false;
+    }
+    if(typeSer == "Thay linh kiện"){
+      ts = '';
+      setState(() {
+        hasAccessory = true;
+      });
+    }else{
+      setState(() {
+        hasAccessory = false;
+      });
+    }
     _futureSerAcc = await ServiceServices().fetchServiceToPick(
-        token, hasAccessory, selectedComType, brandCom, typeSer);
+        token, hasAccessory, selectedComType,  ts);
     return _futureSerAcc;
   }
 
@@ -49,7 +63,7 @@ class _AccessoryPickerState extends State<AccessoryPicker> {
   void initState() {
     super.initState();
     selectedComType = deviceType.first;
-    brandCom = deviceBranch.first;
+    typeSer = typeService.first;
   }
 
   @override
@@ -72,33 +86,33 @@ class _AccessoryPickerState extends State<AccessoryPicker> {
               children: [
                 Padding(
                     padding:
-                        const EdgeInsets.only(top: 0, left: 20, right: 20),
+                        const EdgeInsets.only(top: 0, left: 10, right: 10),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
+                        // Row(
+                        //   children: [
+                        //     const Text('Linh kiện:'),
+                        //     Switch(
+                        //       onChanged: toggleSwitch,
+                        //       value: hasAccessory,
+                        //       activeColor: Colors.red,
+                        //       activeTrackColor: Colors.orangeAccent,
+                        //       inactiveThumbColor: Colors.red,
+                        //       inactiveTrackColor: Colors.black12,
+                        //     ),
+                        //   ],
+                        // ),
                         Row(
                           children: [
-                            const Text('Linh kiện:'),
-                            Switch(
-                              onChanged: toggleSwitch,
-                              value: hasAccessory,
-                              activeColor: Colors.red,
-                              activeTrackColor: Colors.orangeAccent,
-                              inactiveThumbColor: Colors.red,
-                              inactiveTrackColor: Colors.black12,
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            const Text('Hãng: '),
+                            const Text('Dịch vụ: '),
                             DropdownButton(
                               // Initial Value
-                              value: brandCom,
+                              value: typeSer,
                               // Down Arrow Icon
                               icon: const Icon(Icons.keyboard_arrow_down),
                               // Array list of items
-                              items: deviceBranch.map((String items) {
+                              items: typeService.map((String items) {
                                 return DropdownMenuItem(
                                   value: items,
                                   child: Text(items,
@@ -109,7 +123,7 @@ class _AccessoryPickerState extends State<AccessoryPicker> {
                               // change button value to selected value
                               onChanged: (String? newValue) {
                                 setState(() {
-                                  brandCom = newValue!;
+                                  typeSer = newValue!;
                                 });
                               },
                             ),
@@ -189,7 +203,7 @@ class _AccessoryPickerState extends State<AccessoryPicker> {
                                                         if(hasAccessory==false && servicePick == -1){ Navigator.pop(
                                                             context, ServiceAccessoryList(serviceAccessory:
                                                             snapshot
-                                                                .data![index], i: 0));
+                                                                .data![index], i: -1,amount: 1));
                                                         }
                                                         setState(() {
                                                           if (servicePick !=
@@ -283,7 +297,7 @@ class _AccessoryPickerState extends State<AccessoryPicker> {
                                                                   context,ServiceAccessoryList(serviceAccessory:
                                                                   snapshot
                                                                       .data![
-                                                                          servicePick],i: i)
+                                                                          servicePick],i: i, amount: 1)
                                                               );
                                                             },
                                                             child: Stack(

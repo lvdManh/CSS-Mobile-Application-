@@ -1,4 +1,3 @@
-// ignore_for_file: deprecated_member_use
 
 import 'package:computer_service_system/constants/color_constant.dart';
 import 'package:computer_service_system/screens/staff_screens/staff_regist_work.dart';
@@ -12,7 +11,7 @@ class StaffHomePage extends StatefulWidget {
   static const String routeName = '/staff_home_page';
   const StaffHomePage({Key? key}) : super(key: key);
   @override
-  State<StaffHomePage> createState() => _StaffHomePageState();
+  State<StatefulWidget> createState() => _StaffHomePageState();
 }
 
 class _StaffHomePageState extends State<StaffHomePage> {

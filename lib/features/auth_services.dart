@@ -68,7 +68,7 @@ class AuthService {
             SharedPreferences prefs = await SharedPreferences.getInstance();
             Provider.of<DataClass>(context, listen: false).setUser(res.body);
             await prefs.setString(
-                'accessToken', jsonDecode(res.body)['accessToken']);
+                'refreshToken', jsonDecode(res.body)['refreshToken']);
             Navigator.pushNamedAndRemoveUntil(
                 context,
                 Provider.of<DataClass>(context, listen: false).user.role ==
@@ -82,34 +82,27 @@ class AuthService {
     }
   }
 
-  void getUserData(
-    BuildContext context,
+  void getUserData(context
   ) async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? accessToken = prefs.getString('accessToken');
-      if (accessToken == null) {
-        prefs.setString('accessToken', '');
+      String? refreshToken = prefs.getString('refreshToken');
+      if (refreshToken == null) {
+        prefs.setString('refreshToken', '');
       }
       var tokenRes = await http.post(
           Uri.parse('https://computer-services-api.herokuapp.com/auth/refresh'),
           headers: <String, String>{
             'Context-Type': 'application/json; charset=UTF-8',
-            'token': accessToken!
+            'Cookie': 'refreshToken=$refreshToken',
           });
 
       var response = jsonDecode(tokenRes.body);
       if (response == true) {
-        http.Response userRes = await http.get(
-          Uri.parse(
-              'https://computer-services-api.herokuapp.com/account/${prefs.getString('username')}'),
-        );
-
-        var userProvider = Provider.of<DataClass>(context, listen: false);
-        userProvider.setUser(userRes.body);
+        prefs.setString('refreshToken', response['refreshToken']);
       }
     } catch (e) {
-      showSnackBar(context, e.toString());
+      rethrow;
     }
   }
 

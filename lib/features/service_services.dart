@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'package:computer_service_system/models/service_list_data.dart';
 import 'package:computer_service_system/models/services_data.dart';
 import 'package:http/http.dart' as http;
@@ -23,18 +24,17 @@ class ServiceServices{
     }
   }
 
-  Future<List<ServiceAccessory>> fetchServiceToPick(token, hasAccessory, typeCom, brandCom, typeSer
+  Future<List<ServiceAccessory>> fetchServiceToPick(token, hasAccessory, typeCom, typeSer
       ) async{
 
     final response = await http.get(
       Uri.parse(
-          'https://computer-services-api.herokuapp.com/order/show-service-to-choose?hasAccessory=$hasAccessory&typeSer=$typeSer&typeCom=$typeCom&brandCom=$brandCom',),
+          'https://computer-services-api.herokuapp.com/order/show-service-to-choose?hasAccessory=$hasAccessory&typeSer=$typeSer&typeCom=$typeCom',),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'token': 'bearer $token',
       },
     );
-    print(response.statusCode);
     if(response.statusCode == 200){
       final parsed = json.decode(response.body).cast<Map<String, dynamic>>();
       return  parsed.map<ServiceAccessory>((json) => ServiceAccessory.fromJson(json)).toList();

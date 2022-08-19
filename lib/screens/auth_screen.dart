@@ -60,16 +60,7 @@ class _AuthScreenState extends State<AuthScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Center(
-                  child: Text(
-                    'Computer services',
-                    style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ),
-
+                Stack(children: [Image.asset('assets/images/launch_image.png',color: mBackgroundColor.withOpacity(0.8), colorBlendMode: BlendMode.modulate,)]),
                 ListTile(
                   tileColor: _auth == Auth.signin ? mBackgroundColor : mGreyColor,
                   title: const Text(

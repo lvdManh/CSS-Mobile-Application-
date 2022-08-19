@@ -9,12 +9,33 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../constants/color_constant.dart';
 import '../../constants/utils.dart';
+import '../../models/booking_data.dart';
 import '../../models/booking_object.dart';
 
-class AppointmentDetail extends StatelessWidget {
+class AppointmentDetail extends StatefulWidget {
   final Booking bookings;
   const AppointmentDetail({Key? key, required this.bookings}) : super(key: key);
 
+  @override
+  State<AppointmentDetail> createState() => _AppointmentDetailState();
+}
+
+class _AppointmentDetailState extends State<AppointmentDetail> {
+  late Bookings futureBooking;
+  Future<Bookings> futureBookingByID(token) async {
+    futureBooking =
+        await BookingServices().getOneBookingById(token, widget.bookings.id);
+    setState(() {
+      futureBooking;
+    });
+    return futureBooking;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    futureBooking = Bookings();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,232 +69,252 @@ class AppointmentDetail extends StatelessWidget {
                 topRight: Radius.circular(30),
               )),
           child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                const SizedBox(height: 16),
-                const Text("Thông tin người hẹn",
-                    style: TextStyle(
-                        color: mTextColorSecondary,
-                        fontSize: 16,
-                        fontFamily: 'Regular')),
-                const SizedBox(height: 8),
-                Column(
+            physics: const AlwaysScrollableScrollPhysics(),
+            child: FutureBuilder<Bookings>(
+              future: futureBookingByID(token),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return const Center(child: CircularProgressIndicator());
+                } else {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        const Text("Tên:",
-                            style:
-                                TextStyle(fontSize: 18, fontFamily: 'Regular')),
-                        Text(bookings.cusName.toString(),
-                            style: const TextStyle(
-                                fontSize: 18, fontFamily: 'Regular')),
-                      ],
-                    ),
-                    //const Divider()
-                  ],
-                ),
-                const SizedBox(height: 20),
-                Column(
-                  children: <Widget>[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        const Text("Số điện thoại:",
-                            style:
-                                TextStyle(fontSize: 18, fontFamily: 'Regular')),
-                        Text(bookings.phonenum.toString(),
-                            style: const TextStyle(
-                                fontSize: 18, fontFamily: 'Regular')),
-                      ],
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 20),
-                Column(
-                  children: <Widget>[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        const Text("Địa chỉ:   ",
-                            style:
-                                TextStyle(fontSize: 18, fontFamily: 'Regular')),
-                        Flexible(
-                          child: Text(
-                            '${bookings.cusAddress!.street.toString()}, ${bookings.cusAddress!.ward.toString()}, ${bookings.cusAddress!.district.toString()}',
-                            style: const TextStyle(
-                                fontSize: 18, fontFamily: 'Regular'),
-                            textAlign: TextAlign.right,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const Divider()
-                  ],
-                ),
-                const SizedBox(height: 16),
-                const Text("Thông tin lịch hẹn",
-                    style: TextStyle(
-                        color: mTextColorSecondary,
-                        fontSize: 16,
-                        fontFamily: 'Regular')),
-                const SizedBox(height: 8),
-                Column(
-                  children: <Widget>[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        const Text("Loại máy:",
-                            style:
-                                TextStyle(fontSize: 18, fontFamily: 'Regular')),
-                        Text(bookings.type.toString(),
-                            style: const TextStyle(
-                                fontSize: 18, fontFamily: 'Regular')),
-                      ],
-                    ),
-                    //const Divider()
-                  ],
-                ),
-                const SizedBox(height: 20),
-                Column(
-                  children: <Widget>[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        const Text("Dịch vụ yêu cầu:",
-                            style:
-                                TextStyle(fontSize: 18, fontFamily: 'Regular')),
-                        Flexible(
-                          child: Text(
-                            bookings.services!.join(', ').toString(),
-                            style: const TextStyle(
-                                fontSize: 18, fontFamily: 'Regular'),
-                            textAlign: TextAlign.right,
-                          ),
-                        ),
-                      ],
-                    ),
-                    //const Divider()
-                  ],
-                ),
-                const SizedBox(height: 20),
-                Column(
-                  children: <Widget>[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        const Text("Thời gian hẹn:",
-                            style:
-                                TextStyle(fontSize: 18, fontFamily: 'Regular')),
-                        Text(parseDate(bookings.time),
-                            style: const TextStyle(
-                                fontSize: 18, fontFamily: 'Regular')),
-                      ],
-                    ),
-                    //const Divider()
-                  ],
-                ),
-                const SizedBox(height: 20),
-                Column(
-                  children: <Widget>[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: const <Widget>[
-                        Text("Mô tả tình trạng:",
-                            style:
-                                TextStyle(fontSize: 18, fontFamily: 'Regular')),
-                      ],
-                    ),
+                    const SizedBox(height: 16),
+                    const Text("Thông tin người hẹn",
+                        style: TextStyle(
+                            color: mTextColorSecondary,
+                            fontSize: 16,
+                            fontFamily: 'Regular')),
                     const SizedBox(height: 8),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  // padding:
-                  //     const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
-                  children: [
-                    Flexible(
-                      child: Padding(
-                          padding: const EdgeInsets.fromLTRB(80, 8, 8, 20),
-                        child: Text(
-                          bookings.description.toString(),
-                          textAlign: TextAlign.justify,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(fontSize: 18.0),
-                          maxLines: 10,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 10),
-                Column(
-                  children: <Widget>[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    Column(
                       children: <Widget>[
-                        const Text("Trạng thái lịch hẹn:",
-                            style:
-                                TextStyle(fontSize: 18, fontFamily: 'Regular')),
-                        Text(bookings.status.toString(),
-                            style: const TextStyle(
-                                fontSize: 18, fontFamily: 'Regular')),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            const Text("Tên:",
+                                style: TextStyle(
+                                    fontSize: 18, fontFamily: 'Regular')),
+                            Text(futureBooking.cusName.toString(),
+                                style: const TextStyle(
+                                    fontSize: 18, fontFamily: 'Regular')),
+                          ],
+                        ),
+                        //const Divider()
                       ],
                     ),
-                    const Divider()
-                  ],
-                ),
-                const SizedBox(height: 20),
-                if (bookings.status == 'Đang xử lí')
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    const SizedBox(height: 20),
+                    Column(
+                      children: <Widget>[
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            const Text("Số điện thoại:",
+                                style: TextStyle(
+                                    fontSize: 18, fontFamily: 'Regular')),
+                            Text(futureBooking.phonenum.toString(),
+                                style: const TextStyle(
+                                    fontSize: 18, fontFamily: 'Regular')),
+                          ],
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    Column(
+                      children: <Widget>[
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            const Text("Địa chỉ:   ",
+                                style: TextStyle(
+                                    fontSize: 18, fontFamily: 'Regular')),
+                            Flexible(
+                              child: Text(
+                                '${futureBooking.cusAddress!.street.toString()}, ${futureBooking.cusAddress!.ward.toString()}, ${futureBooking.cusAddress!.district.toString()}',
+                                style: const TextStyle(
+                                    fontSize: 18, fontFamily: 'Regular'),
+                                textAlign: TextAlign.right,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const Divider()
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    const Text("Thông tin lịch hẹn",
+                        style: TextStyle(
+                            color: mTextColorSecondary,
+                            fontSize: 16,
+                            fontFamily: 'Regular')),
+                    const SizedBox(height: 8),
+                    Column(
+                      children: <Widget>[
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            const Text("Loại:",
+                                style: TextStyle(
+                                    fontSize: 18, fontFamily: 'Regular')),
+                            Text(futureBooking.type.toString(),
+                                style: const TextStyle(
+                                    fontSize: 18, fontFamily: 'Regular')),
+                          ],
+                        ),
+                        //const Divider()
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    Column(
+                      children: <Widget>[
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            const Text("Dịch vụ yêu cầu:",
+                                style: TextStyle(
+                                    fontSize: 18, fontFamily: 'Regular')),
+                            Flexible(
+                              child: Text(
+                                futureBooking.services!.join(', ').toString(),
+                                style: const TextStyle(
+                                    fontSize: 18, fontFamily: 'Regular'),
+                                textAlign: TextAlign.right,
+                              ),
+                            ),
+                          ],
+                        ),
+                        //const Divider()
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    Column(
+                      children: <Widget>[
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            const Text("Thời gian hẹn:",
+                                style: TextStyle(
+                                    fontSize: 18, fontFamily: 'Regular')),
+                            Text(parseDate(futureBooking.time),
+                                style: const TextStyle(
+                                    fontSize: 18, fontFamily: 'Regular')),
+                          ],
+                        ),
+                        //const Divider()
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    Column(
+                      children: <Widget>[
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: const <Widget>[
+                            Text("Mô tả tình trạng:",
+                                style: TextStyle(
+                                    fontSize: 18, fontFamily: 'Regular')),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      // padding:
+                      //     const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
                       children: [
-                        SizedBox(
-                          width: 150,
-                          child: CustomButton(
-                            text: 'Hủy lịch hẹn',
-                            onTap: () {
-                              AwesomeDialog(
-                                context: context,
-                                dialogType: DialogType.WARNING,
-                                headerAnimationLoop: false,
-                                closeIcon:
-                                    const Icon(Icons.close_fullscreen_outlined),
-                                title: 'Chắc chắn hủy?',
-                                desc: 'Lịch hẹn bị hủy không thể thay đổi',
-                                btnCancelOnPress: () {},
-                                btnOkOnPress: () {
-                                  BookingServices().cancelBooking(
-                                      context, bookings.id, token);
-                                },
-                              ).show();
-                            },
-                          ),
-                        ),
-                        SizedBox(
-                          width: 150,
-                          child: CustomButton(
-                            text: 'Thay đổi lịch hẹn',
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => EditAppointment(
-                                            bookings: bookings,
-                                          )));
-                            },
+                        Flexible(
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(50, 0, 0, 10),
+                            child: Text(
+                              futureBooking.description.toString(),
+                              textAlign: TextAlign.justify,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(fontSize: 18.0),
+                              maxLines: 10,
+                            ),
                           ),
                         ),
                       ],
                     ),
-                  ) else if(bookings.status =='Đã tiếp nhận' && bookings.orderId!.isNotEmpty)
-                  ShowOrder(token: token,orderId: bookings.orderId!,)
-                else Container()
-
-              ],
+                    const SizedBox(height: 10),
+                    Column(
+                      children: <Widget>[
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            const Text("Trạng thái lịch hẹn:",
+                                style: TextStyle(
+                                    fontSize: 18, fontFamily: 'Regular')),
+                            Text(
+                              futureBooking.status.toString(),
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  fontFamily: 'Regular',
+                                  color:
+                                      getStatusColor(futureBooking.status)),
+                            ),
+                          ],
+                        ),
+                        const Divider()
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    if (futureBooking.status == 'Đang xử lí')
+                      Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            SizedBox(
+                              width: 150,
+                              child: CustomButton(
+                                text: 'Hủy lịch hẹn',
+                                onTap: () {
+                                  AwesomeDialog(
+                                    context: context,
+                                    dialogType: DialogType.WARNING,
+                                    headerAnimationLoop: false,
+                                    closeIcon: const Icon(
+                                        Icons.close_fullscreen_outlined),
+                                    title: 'Chắc chắn hủy?',
+                                    desc:
+                                        'Lịch hẹn bị hủy không thể thay đổi',
+                                    btnCancelOnPress: () {},
+                                    btnOkOnPress: () {
+                                      BookingServices().cancelBooking(
+                                          context, futureBooking.id, token);
+                                    },
+                                  ).show();
+                                },
+                              ),
+                            ),
+                            SizedBox(
+                              width: 150,
+                              child: CustomButton(
+                                text: 'Thay đổi lịch hẹn',
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              EditAppointment(
+                                                bookings: futureBooking,
+                                              )));
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    else if (futureBooking.status == 'Đã tiếp nhận')
+                      ShowOrder(
+                        token: token,
+                        orderId: futureBooking.orderId!.id!,
+                      )
+                    else
+                      Container()
+                  ],
+                );}
+              },
             ),
           ),
         ));
@@ -283,7 +324,8 @@ class AppointmentDetail extends StatelessWidget {
 class ShowOrder extends StatefulWidget {
   final String token;
   final String orderId;
-  const ShowOrder({Key? key,required this.token, required this.orderId}) : super(key: key);
+  const ShowOrder({Key? key, required this.token, required this.orderId})
+      : super(key: key);
 
   @override
   State<ShowOrder> createState() => _ShowOrderState();
@@ -292,9 +334,10 @@ class ShowOrder extends StatefulWidget {
 class _ShowOrderState extends State<ShowOrder> {
   bool showWidget = false;
   final OrderServices orderServices = OrderServices();
-  Future<Order> getOrder() async{
+  Future<Order> getOrder() async {
     return orderServices.getOrderByIdForCus(widget.token, widget.orderId);
   }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -304,110 +347,129 @@ class _ShowOrderState extends State<ShowOrder> {
         showWidget
             ? FutureBuilder<Order>(
                 future: getOrder(),
-                builder: (context,snapshot) {
-                  if(!snapshot.hasData){
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
                     return const Center(
                       child: CircularProgressIndicator(),
                     );
                   }
                   return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start, children: <
-                      Widget>[
-                     Column(
-                      children: <Widget>[
-                        const SizedBox(height: 10),
-                        const Text("Thông tin hóa đơn",
-                            style: TextStyle(
-                                color: mTextColorSecondary,
-                                fontSize: 16,
-                                fontFamily: 'Regular')),
-                        const SizedBox(height: 10),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            const Text("Trạng thái hóa đơn:",
-                                style: TextStyle(fontSize: 18, fontFamily: 'Regular')),
-                            Text('${snapshot.data!.status}',
-                                style: const TextStyle(fontSize: 18, fontFamily: 'Regular')),
-                          ],
-                        ),
-                        const SizedBox(height: 10),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            const Text("Ngày tạo:",
-                                style: TextStyle(fontSize: 18, fontFamily: 'Regular')),
-                            Text(parseDate(snapshot.data!.createdAt),
-                                style: const TextStyle(fontSize: 18, fontFamily: 'Regular')),
-                          ],
-                        ),
-                        const SizedBox(height: 10),
-                        if(snapshot.data!.orderDetailsId!.isNotEmpty)
-                          ListView.builder(
-                              scrollDirection: Axis.vertical,
-                              shrinkWrap: true,
-                              itemCount: snapshot.data!.orderDetailsId!.length,
-                              itemBuilder: (context,index) {
-                                return snapshot.data!.orderDetailsId![index].accessoriesId == null ? Card(
-                                  child: ListTile(
-                                    leading: Text('-${snapshot.data!.orderDetailsId![index].discount}%'),
-                                    title: Text('${snapshot.data!.orderDetailsId![index].serviceId!.name}'),
-                                    subtitle:
-                                    Text('Giá dịch vụ: ${snapshot.data!.orderDetailsId![index].serviceId!.price.toString()}'),
-                                    trailing: Column(
-                                      children: [
-                                        const SizedBox(height: 8,),
-                                        InkWell(child: Text('x${snapshot.data!.orderDetailsId![index].amountSer.toString()}')),
-                                        const SizedBox(height: 8,),
-                                         InkWell(child: Text('đ${convertMoney(snapshot.data!.orderDetailsId![index].priceAfter)}')),
-
-                                      ],
-                                    ),
-                                  ),
-                                ) : Card(
-                                  child: ListTile(
-                                    title: Text('${snapshot.data!.orderDetailsId![index].accessoriesId!.name}'),
-                                    subtitle:
-                                    Text('Giá dịch vụ: ${snapshot.data!.orderDetailsId![index].accessoriesId!.price.toString()}'),
-                                    trailing:
-                                    Text('x${snapshot.data!.orderDetailsId![index].amountAcc.toString()}'),
-                                  ),
-                                );
-                              }
-                          )
-                        else Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            const Text("Tổng giá:",
-                                style: TextStyle(fontSize: 18, fontFamily: 'Regular')),
-                            Text('${convertMoney(snapshot.data!.totalPrice)}đ',
-                                style: const TextStyle(fontSize: 18, fontFamily: 'Regular')),
-                          ],
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-                  ],
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Column(
+                        children: <Widget>[
+                          const SizedBox(height: 10),
+                          const Text("Thông tin hóa đơn",
+                              style: TextStyle(
+                                  color: mTextColorSecondary,
+                                  fontSize: 16,
+                                  fontFamily: 'Regular')),
+                          const SizedBox(height: 10),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              const Text("Trạng thái hóa đơn:",
+                                  style: TextStyle(
+                                      fontSize: 18, fontFamily: 'Regular')),
+                              Text('${snapshot.data!.status}',
+                                  style: const TextStyle(
+                                      fontSize: 18, fontFamily: 'Regular')),
+                            ],
+                          ),
+                          const SizedBox(height: 10),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              const Text("Ngày tạo:",
+                                  style: TextStyle(
+                                      fontSize: 18, fontFamily: 'Regular')),
+                              Text(parseDate(snapshot.data!.createdAt),
+                                  style: const TextStyle(
+                                      fontSize: 18, fontFamily: 'Regular')),
+                            ],
+                          ),
+                          const SizedBox(height: 10),
+                          if (snapshot.data!.orderDetailsId!.isNotEmpty)
+                            ListView.builder(
+                                scrollDirection: Axis.vertical,
+                                shrinkWrap: true,
+                                itemCount:
+                                    snapshot.data!.orderDetailsId!.length,
+                                itemBuilder: (context, index) {
+                                  return snapshot.data!.orderDetailsId![index]
+                                              .accessoriesId ==
+                                          null
+                                      ? Card(
+                                          child: ListTile(
+                                            leading: Text(
+                                                '-${snapshot.data!.orderDetailsId![index].discount}%'),
+                                            title: Text(
+                                                '${snapshot.data!.orderDetailsId![index].serviceId!.name}'),
+                                            subtitle: Text(
+                                                'Giá dịch vụ: ${snapshot.data!.orderDetailsId![index].serviceId!.price.toString()}'),
+                                            trailing: Column(
+                                              children: [
+                                                const SizedBox(
+                                                  height: 8,
+                                                ),
+                                                InkWell(
+                                                    child: Text(
+                                                        'x${snapshot.data!.orderDetailsId![index].amountSer.toString()}')),
+                                                const SizedBox(
+                                                  height: 8,
+                                                ),
+                                                InkWell(
+                                                    child: Text(
+                                                        'đ${convertMoney(snapshot.data!.orderDetailsId![index].priceAfter)}')),
+                                              ],
+                                            ),
+                                          ),
+                                        )
+                                      : Card(
+                                          child: ListTile(
+                                            title: Text(
+                                                '${snapshot.data!.orderDetailsId![index].accessoriesId!.name}'),
+                                            subtitle: Text(
+                                                'Giá dịch vụ: ${snapshot.data!.orderDetailsId![index].accessoriesId!.price.toString()}'),
+                                            trailing: Text(
+                                                'x${snapshot.data!.orderDetailsId![index].amountAcc.toString()}'),
+                                          ),
+                                        );
+                                })
+                          else
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                const Text("Tổng giá:",
+                                    style: TextStyle(
+                                        fontSize: 18, fontFamily: 'Regular')),
+                                Text(
+                                    '${convertMoney(snapshot.data!.totalPrice)}đ',
+                                    style: const TextStyle(
+                                        fontSize: 18, fontFamily: 'Regular')),
+                              ],
+                            ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                    ],
                   );
-                }
-            )
+                })
             : Align(
-              alignment: Alignment.bottomCenter,
-              child: SizedBox(
-                width: 150,
-                child: CustomButton(
-                  text: 'Xem hóa đơn',
-                  onTap: () {
-                    setState(() {
-                      showWidget = !showWidget;
-                    });
-                  },
+                alignment: Alignment.bottomCenter,
+                child: SizedBox(
+                  width: 150,
+                  child: CustomButton(
+                    text: 'Xem hóa đơn',
+                    onTap: () {
+                      setState(() {
+                        showWidget = !showWidget;
+                      });
+                    },
+                  ),
                 ),
-              ),
-            )
+              )
       ],
     );
   }
 }
-
-

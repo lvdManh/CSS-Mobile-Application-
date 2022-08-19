@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:computer_service_system/models/order_detail_data.dart';
+import 'package:computer_service_system/models/order_info_data.dart';
 import 'package:computer_service_system/models/order_staff_data.dart';
 import 'package:http/http.dart' as http;
 import 'package:computer_service_system/models/order_data.dart';
@@ -63,8 +65,7 @@ class OrderServices{
     }
   }
 
-  Future<void> addDetailOrder(context, token,id, data) async {
-
+   void addDetailOrder(context, token,id,OrderDetails data)  async {
     final response = await http.post(
       Uri.parse(
           'https://computer-services-api.herokuapp.com/order/add-detail-order/$id'),
@@ -92,12 +93,30 @@ class OrderServices{
         animType: AnimType.SCALE,
         dialogType: DialogType.ERROR,
         title: 'Lưu thất bại',
-        desc: response.statusCode.toString(),
+        desc: response.statusCode.toString() + response.body,
         dismissOnTouchOutside: false,
         btnOkOnPress: () {
         },
       ).show();
     }
+  }
+
+  Future<OrderInfo> getOrderInfoById(token,id) async{
+    final response = await http.get(
+      Uri.parse(
+          'http://computer-services-api.herokuapp.com/order/order-with-detail/$id'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'token': 'bearer $token',
+      },
+    );
+    if(response.statusCode ==200){
+      final parsed = OrderInfo.fromJson(json.decode(response.body));
+      return  parsed;
+    }else{
+      throw('Dữ liệu lỗi');
+    }
+
   }
 
 }

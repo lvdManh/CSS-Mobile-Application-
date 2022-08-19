@@ -1,7 +1,8 @@
 class ServiceAccessoryList{
    ServiceAccessory? serviceAccessory;
    int? i;
-   ServiceAccessoryList({this.serviceAccessory, this.i});
+   int? amount;
+   ServiceAccessoryList({this.serviceAccessory, this.i, this.amount});
 }
 class ServiceAccessory {
   String? id;

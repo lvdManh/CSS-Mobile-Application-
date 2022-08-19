@@ -14,7 +14,7 @@ class StaffViewAppointmentPage extends StatefulWidget {
   static const String routeName = '/view_appointment_page';
   const StaffViewAppointmentPage({Key? key}) : super(key: key);
   @override
-  State<StaffViewAppointmentPage> createState() =>
+  State<StatefulWidget> createState() =>
       _StaffViewAppointmentPageState();
 }
 

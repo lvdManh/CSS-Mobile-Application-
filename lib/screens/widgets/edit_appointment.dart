@@ -8,14 +8,14 @@ import '../../constants/color_constant.dart';
 import '../../features/address_services.dart';
 import '../../features/booking_services.dart';
 import '../../features/service_services.dart';
-import '../../models/booking_object.dart';
+import '../../models/booking_data.dart';
 import '../../models/hcm_address_data.dart';
 import '../../models/services_data.dart';
 import 'custom_button.dart';
 import 'multi_select_widget.dart';
 
 class EditAppointment extends StatefulWidget {
-  final Booking bookings;
+  final Bookings bookings;
 
   const EditAppointment({Key? key,required this.bookings}) : super(key: key);
 

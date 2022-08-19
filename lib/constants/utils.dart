@@ -57,3 +57,16 @@ String printAddress(street, ward, district) {
 int convertTimeToInt(String hour,String minute){
   return int.parse(hour+minute);
 }
+
+Color getStatusColor(String? status){
+  if(status == 'Đang xử lí') {
+    return Colors.orange;
+  }else if(status == 'Hủy'){
+    return Colors.red;
+  }else if(status == 'Đã tiếp nhận'){
+    return Colors.green.shade700;
+  }else{
+    return Colors.black;
+  }
+}
+

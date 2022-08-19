@@ -29,10 +29,11 @@ class _HomePageState extends State<HomePage> {
           ),
           child: ListView(
             children: [
+              Stack(children: [Image.asset('assets/images/launch_image.png',color: mBackgroundColor.withOpacity(0.8), colorBlendMode: BlendMode.modulate,)]),
               Container(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 20,
-                  vertical: 30,
+                  vertical: 10,
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
