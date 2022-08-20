@@ -9,33 +9,57 @@ class Booking {
   String? time;
   String? status;
   String? phonenum;
-  String? updatedAt;
-  String? cusId;
   String? createdAt;
+  String? updatedAt;
   int? v;
   String? accId;
   String? orderId;
 
-  Booking({this.cusAddress, this.id, this.cusName, this.services, this.description, this.type, this.time, this.status, this.phonenum, this.updatedAt, this.cusId, this.createdAt, this.v, this.accId, this.orderId});
+  Booking({this.cusAddress, this.id, this.cusName, this.services, this.description, this.type, this.time, this.status, this.phonenum, this.createdAt, this.updatedAt, this.v, this.accId, this.orderId});
 
-  Booking.fromJson(Map<dynamic, dynamic> json) {
-    cusAddress = json["cus_address"] == null ? null : CusAddress.fromJson(Map<String,dynamic>.from(json["cus_address"]));
-    id = json["_id"];
-    cusName = json["cus_name"];
-    services = json["services"]==null ? null : List<String>.from(json["services"]);
-    description = json["description"];
-    type = json["type"];
-    time = json["time"];
-    status = json["status"];
-    phonenum = json["phonenum"];
-    updatedAt = json["updatedAt"];
-    cusId = json["cus_id"];
-    createdAt = json["createdAt"];
-    v = json["__v"];
-    accId = json["acc_id"];
-    orderId = json["order_id"];
-        // == null ? null : AccId.fromJson(Map<String,dynamic>.from(json["acc_id"]));
-
+  Booking.fromJson(Map<String, dynamic> json) {
+    if(json["cus_address"] is Map) {
+      cusAddress = json["cus_address"] == null ? null : CusAddress.fromJson(json["cus_address"]);
+    }
+    if(json["_id"] is String) {
+      id = json["_id"];
+    }
+    if(json["cus_name"] is String) {
+      cusName = json["cus_name"];
+    }
+    if(json["services"] is List) {
+      services = json["services"]==null ? null : List<String>.from(json["services"]);
+    }
+    if(json["description"] is String) {
+      description = json["description"];
+    }
+    if(json["type"] is String) {
+      type = json["type"];
+    }
+    if(json["time"] is String) {
+      time = json["time"];
+    }
+    if(json["status"] is String) {
+      status = json["status"];
+    }
+    if(json["phonenum"] is String) {
+      phonenum = json["phonenum"];
+    }
+    if(json["createdAt"] is String) {
+      createdAt = json["createdAt"];
+    }
+    if(json["updatedAt"] is String) {
+      updatedAt = json["updatedAt"];
+    }
+    if(json["__v"] is int) {
+      v = json["__v"];
+    }
+    if(json["acc_id"] is String) {
+      accId = json["acc_id"];
+    }
+    if(json["order_id"] is String) {
+      orderId = json["order_id"];
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -53,15 +77,11 @@ class Booking {
     data["time"] = time;
     data["status"] = status;
     data["phonenum"] = phonenum;
-    data["updatedAt"] = updatedAt;
-    data["cus_id"] = cusId;
     data["createdAt"] = createdAt;
+    data["updatedAt"] = updatedAt;
     data["__v"] = v;
     data["acc_id"] = accId;
     data["order_id"] = orderId;
-    // if(accId != null) {
-    //   data["acc_id"] = accId?.toJson();
-    // }
     return data;
   }
 }
@@ -75,10 +95,18 @@ class CusAddress {
   CusAddress({this.city, this.district, this.ward, this.street});
 
   CusAddress.fromJson(Map<String, dynamic> json) {
-    city = json["city"];
-    district = json["district"];
-    ward = json["ward"];
-    street = json["street"];
+    if(json["city"] is String) {
+      city = json["city"];
+    }
+    if(json["district"] is String) {
+      district = json["district"];
+    }
+    if(json["ward"] is String) {
+      ward = json["ward"];
+    }
+    if(json["street"] is String) {
+      street = json["street"];
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -87,26 +115,6 @@ class CusAddress {
     data["district"] = district;
     data["ward"] = ward;
     data["street"] = street;
-    return data;
-  }
-}
-class AccId {
-  String? accountId;
-  String? username;
-
-  AccId({this.accountId, this.username});
-
-  AccId.fromJson(Map<String, dynamic> json) {
-    accountId = json["_id"];
-    username = json["username"];
-
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data["_id"] = accountId;
-    data["username"] = username;
-
     return data;
   }
 }

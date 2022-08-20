@@ -1,24 +1,16 @@
 class ServiceAccessoryList{
    ServiceAccessory? serviceAccessory;
-   int? i;
-   int? amount;
-   ServiceAccessoryList({this.serviceAccessory, this.i, this.amount});
+   ServiceAccessoryList({this.serviceAccessory});
 }
 class ServiceAccessory {
   String? id;
   String? name;
-  String? description;
   String? type;
   int? price;
   bool? hasAccessory;
   List<SerHasAcc>? serHasAcc;
-  List<dynamic>? orderdetailId;
-  bool? deleted;
-  String? createdAt;
-  String? updatedAt;
-  int? v;
 
-  ServiceAccessory({this.id, this.name, this.description, this.type, this.price, this.hasAccessory, this.serHasAcc, this.orderdetailId, this.deleted, this.createdAt, this.updatedAt, this.v});
+  ServiceAccessory({this.id, this.name, this.type, this.price, this.hasAccessory, this.serHasAcc});
 
   ServiceAccessory.fromJson(Map<String, dynamic> json) {
     if(json["_id"] is String) {
@@ -26,9 +18,6 @@ class ServiceAccessory {
     }
     if(json["name"] is String) {
       name = json["name"];
-    }
-    if(json["description"] is String) {
-      description = json["description"];
     }
     if(json["type"] is String) {
       type = json["type"];
@@ -42,63 +31,45 @@ class ServiceAccessory {
     if(json["serHasAcc"] is List) {
       serHasAcc = json["serHasAcc"]==null ? null : (json["serHasAcc"] as List).map((e)=>SerHasAcc.fromJson(e)).toList();
     }
-    if(json["orderdetail_id"] is List) {
-      orderdetailId = json["orderdetail_id"] ?? [];
-    }
-    if(json["deleted"] is bool) {
-      deleted = json["deleted"];
-    }
-    if(json["createdAt"] is String) {
-      createdAt = json["createdAt"];
-    }
-    if(json["updatedAt"] is String) {
-      updatedAt = json["updatedAt"];
-    }
-    if(json["__v"] is int) {
-      v = json["__v"];
-    }
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data["_id"] = id;
     data["name"] = name;
-    data["description"] = description;
     data["type"] = type;
     data["price"] = price;
     data["hasAccessory"] = hasAccessory;
     if(serHasAcc != null) {
       data["serHasAcc"] = serHasAcc?.map((e)=>e.toJson()).toList();
     }
-    if(orderdetailId != null) {
-      data["orderdetail_id"] = orderdetailId;
-    }
-    data["deleted"] = deleted;
-    data["createdAt"] = createdAt;
-    data["updatedAt"] = updatedAt;
-    data["__v"] = v;
     return data;
   }
 }
 
 class SerHasAcc {
   String? id;
-  AccessoryId? accessoryId;
+  int? amount;
+  AccessoryIdL? accessoryId;
 
-  SerHasAcc({this.id, this.accessoryId});
+  SerHasAcc({this.id, this.amount, this.accessoryId});
 
   SerHasAcc.fromJson(Map<String, dynamic> json) {
     if(json["_id"] is String) {
       id = json["_id"];
     }
+    if(json["amount"] is int) {
+      amount = json["amount"];
+    }
     if(json["accessory_id"] is Map) {
-      accessoryId = json["accessory_id"] == null ? null : AccessoryId.fromJson(json["accessory_id"]);
+      accessoryId = json["accessory_id"] == null ? null : AccessoryIdL.fromJson(json["accessory_id"]);
     }
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data["_id"] = id;
+    data["amount"] = amount;
     if(accessoryId != null) {
       data["accessory_id"] = accessoryId?.toJson();
     }
@@ -106,17 +77,16 @@ class SerHasAcc {
   }
 }
 
-class AccessoryId {
+class AccessoryIdL {
   String? id;
   String? name;
   int? price;
-  String? description;
   String? insurance;
   SupplierId? supplierId;
 
-  AccessoryId({this.id, this.name, this.price, this.description, this.insurance, this.supplierId});
+  AccessoryIdL({this.id, this.name, this.price, this.insurance, this.supplierId});
 
-  AccessoryId.fromJson(Map<String, dynamic> json) {
+  AccessoryIdL.fromJson(Map<String, dynamic> json) {
     if(json["_id"] is String) {
       id = json["_id"];
     }
@@ -125,9 +95,6 @@ class AccessoryId {
     }
     if(json["price"] is int) {
       price = json["price"];
-    }
-    if(json["description"] is String) {
-      description = json["description"];
     }
     if(json["insurance"] is String) {
       insurance = json["insurance"];
@@ -142,7 +109,6 @@ class AccessoryId {
     data["_id"] = id;
     data["name"] = name;
     data["price"] = price;
-    data["description"] = description;
     data["insurance"] = insurance;
     if(supplierId != null) {
       data["supplier_id"] = supplierId?.toJson();

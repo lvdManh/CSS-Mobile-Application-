@@ -331,7 +331,7 @@ class _SubmitAppointmentState extends State<SubmitAppointment> {
                           text: 'Đặt lịch',
                           onTap: () {
                             if (_submitKey.currentState!.validate()) {
-                              String desc = '$selectedComType-$selectedComBrand: ${description.text}';
+                              String desc = '$selectedComType-$selectedComBrand ${description.text}';
                               AwesomeDialog(
                                   context: context,
                                   animType: AnimType.SCALE,

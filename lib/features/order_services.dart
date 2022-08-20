@@ -78,6 +78,7 @@ class OrderServices{
       ),
     );
     if(response.statusCode == 200){
+      computeMoney(token, id);
       AwesomeDialog(
         context: context,
         animType: AnimType.SCALE,
@@ -117,6 +118,92 @@ class OrderServices{
       throw('Dữ liệu lỗi');
     }
 
+  }
+
+  void acceptServiceByCus(context, token,id) async{
+    final response = await http.patch(
+      Uri.parse(
+          'http://computer-services-api.herokuapp.com/order/order-with-detail/$id'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'token': 'bearer $token',
+      },
+      body: jsonEncode({
+        'id' : id,
+      }),
+    );
+    if(response.statusCode ==200){
+      AwesomeDialog(
+        context: context,
+        animType: AnimType.SCALE,
+        dialogType: DialogType.SUCCES,
+        title: 'Lưu thành công',
+        desc: response.body,
+        dismissOnTouchOutside: false,
+        btnOkOnPress: () {
+        },
+      ).show();
+    }else{
+      AwesomeDialog(
+        context: context,
+        animType: AnimType.SCALE,
+        dialogType: DialogType.INFO,
+        title: 'Không thành công',
+        desc: response.body,
+        dismissOnTouchOutside: false,
+        btnOkOnPress: () {
+        },
+      ).show();
+    }
+
+  }
+  void completeOderByStaff(context, token,id) async{
+    final response = await http.patch(
+      Uri.parse(
+          'http://computer-services-api.herokuapp.com/order/complete-order/$id'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'token': 'bearer $token',
+      },
+      body: jsonEncode({
+        'id' : id,
+      }),
+    );
+    if(response.statusCode ==200){
+      AwesomeDialog(
+        context: context,
+        animType: AnimType.SCALE,
+        dialogType: DialogType.SUCCES,
+        title: 'Đã hoàn thành',
+        desc: response.body,
+        dismissOnTouchOutside: false,
+        btnOkOnPress: () {
+        },
+      ).show();
+    }else{
+      AwesomeDialog(
+        context: context,
+        animType: AnimType.SCALE,
+        dialogType: DialogType.INFO,
+        title: 'Không thành công',
+        desc: response.body,
+        dismissOnTouchOutside: false,
+        btnOkOnPress: () {
+        },
+      ).show();
+    }
+
+  }
+
+  void computeMoney(token,id) async{
+    await http.get(
+      Uri.parse(
+          'http://computer-services-api.herokuapp.com/order/get-order-total-price/$id'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'token': 'bearer $token',
+      },
+    );
   }
 
 }

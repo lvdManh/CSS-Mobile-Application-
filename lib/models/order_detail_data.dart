@@ -23,7 +23,7 @@ class Datas {
   bool? hasAccessory;
   int? discount;
   String? serviceId;
-  List<Accessories>? accessories;
+  List<AccessoriesQ>? accessories;
 
   Datas({this.hasAccessory, this.discount, this.serviceId, this.accessories});
 
@@ -38,7 +38,7 @@ class Datas {
       serviceId = json["serviceId"];
     }
     if(json["accessories"] is List) {
-      accessories = json["accessories"]==null ? null : (json["accessories"] as List).map((e)=>Accessories.fromJson(e)).toList();
+      accessories = json["accessories"]==null ? null : (json["accessories"] as List).map((e)=>AccessoriesQ.fromJson(e)).toList();
     }
   }
 
@@ -54,13 +54,13 @@ class Datas {
   }
 }
 
-class Accessories {
+class AccessoriesQ {
   String? accessoryId;
   int? amountAcc;
 
-  Accessories({this.accessoryId, this.amountAcc});
+  AccessoriesQ({this.accessoryId, this.amountAcc});
 
-  Accessories.fromJson(Map<String, dynamic> json) {
+  AccessoriesQ.fromJson(Map<String, dynamic> json) {
     if(json["accessory_id"] is String) {
       accessoryId = json["accessory_id"];
     }

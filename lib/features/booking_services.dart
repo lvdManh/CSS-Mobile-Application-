@@ -44,18 +44,18 @@ class BookingServices{
           desc: 'Vui lòng chờ quản lí xác nhận lịch hẹn',
           dismissOnTouchOutside: false,
           btnOkOnPress: () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) =>
-                const NavScreen()));
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              NavScreen.routeName,
+                  (route) => false,
+            );
       },
       ).show();
     }else{
       AwesomeDialog(
           context: context,
           animType: AnimType.SCALE,
-          dialogType: DialogType.ERROR,
+          dialogType: DialogType.WARNING,
           title: 'Đặt lịch không thành công',
           desc: 'Vui lòng điền đầy đủ thông tin',
           dismissOnTouchOutside: false,
@@ -191,11 +191,6 @@ class BookingServices{
         title: 'Hủy lịch hèn thành công',
         dismissOnTouchOutside: false,
         btnOkOnPress: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) =>
-                  const NavScreen()));
         },
       ).show();
 

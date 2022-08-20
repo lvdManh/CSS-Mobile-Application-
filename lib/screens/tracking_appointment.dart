@@ -16,34 +16,18 @@ class TrackingAppointment extends StatefulWidget {
 }
 
 class _TrackingAppointmentState extends State<TrackingAppointment> {
-  List<Booking> bookingList = [];
-  late List<String> selectStatus = ['Tất cả'];
+  late List<Booking> bookingList = [];
+  final List<String> selectStatus = ["Tất cả", "Đang xử lí", "Đã tiếp nhận", "Hủy"];
   late String _selectedValue;
   late List<Booking> generateBookings = [];
   late Booking todayBooking = Booking();
   bool todayHave = false;
   Future<List<Booking>> getBookingListApi(token) async {
     bookingList = await BookingServices().fetchBooking(token);
-    getStatusList();
     findTodayBooking();
     return bookingList;
   }
 
-  String parseDate(time) {
-    DateTime dt1 = DateTime.parse(time);
-    return '${dt1.hour}:${dt1.minute}, ${dt1.day}/${dt1.month}/${dt1.year}';
-  }
-
-  void getStatusList() {
-    for (var e in bookingList) {
-      if (!selectStatus.contains(e.status)) {
-        selectStatus.add(e.status!);
-      }
-    }
-    setState(() {
-      selectStatus;
-    });
-  }
 
   void showListBooking() {
     generateBookings.clear();
@@ -56,27 +40,32 @@ class _TrackingAppointmentState extends State<TrackingAppointment> {
         }
       }
     }
-    setState(() {
+      setState(() {
       generateBookings;
     });
+
   }
 
-  void findTodayBooking() {
+   findTodayBooking() async {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
+    if(bookingList.isNotEmpty){
     var result = bookingList.firstWhere((element) =>
         DateTime(
           DateTime.parse(element.time!).year,
           DateTime.parse(element.time!).month,
           DateTime.parse(element.time!).day,
         ) ==
-        today);
-    setState(() {
-      if(result.id != null){
-        todayHave = true;
-        todayBooking = result;
-      }
-    });
+        today && element.status =='Đã tiếp nhận');
+    if(mounted) {
+      setState(() {
+        if (result.id != null) {
+          todayHave = true;
+          todayBooking = result;
+        }
+      });
+    }
+    }
   }
 
   @override
@@ -88,6 +77,7 @@ class _TrackingAppointmentState extends State<TrackingAppointment> {
   @override
   Widget build(BuildContext context) {
     String token = Provider.of<DataClass>(context).user.accessToken;
+    getBookingListApi(token);
     return Scaffold(
       backgroundColor: Colors.orangeAccent,
       appBar: PreferredSize(
@@ -121,11 +111,12 @@ class _TrackingAppointmentState extends State<TrackingAppointment> {
                     if (!snapshot.hasData) {
                       return const Center(child: CircularProgressIndicator());
                     } else {
-                      return bookingList.isNotEmpty
-                          ? Align(
+                      return snapshot.data!.isNotEmpty? Align(
                               alignment: Alignment.topCenter,
                               child: SingleChildScrollView(
                                 child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  mainAxisSize: MainAxisSize.max,
                                   children: [
                                     if(todayHave == true) Row(
                                       children: [
@@ -139,7 +130,7 @@ class _TrackingAppointmentState extends State<TrackingAppointment> {
                                                           bookings: todayBooking,
                                                         )));
                                           },
-                                          child: const Center(child: Text('Hôm nay bạn có 1 lịch hẹn!',style: TextStyle(color: Colors.blue, fontSize: 16 , decoration: TextDecoration.underline))),
+                                          child: const Center(child: Text('Bạn có lịch hẹn vào hôm nay!',style: TextStyle(color: Colors.blue, fontSize: 16 , decoration: TextDecoration.underline))),
                                         ),
                                       ],
                                     ),
@@ -153,7 +144,8 @@ class _TrackingAppointmentState extends State<TrackingAppointment> {
                                           icon: const Icon(
                                               Icons.keyboard_arrow_down),
                                           // Array list of items
-                                          items: selectStatus.map((String items) {
+                                          items:
+                                              selectStatus.map((String items) {
                                             return DropdownMenuItem(
                                               value: items,
                                               child: Text(items,
@@ -172,6 +164,7 @@ class _TrackingAppointmentState extends State<TrackingAppointment> {
                                         ),
                                       ],
                                     ),
+                                    const Divider(),
                                     generateBookings.isNotEmpty
                                         ? ListView.builder(
                                             scrollDirection: Axis.vertical,
@@ -183,30 +176,24 @@ class _TrackingAppointmentState extends State<TrackingAppointment> {
                                               return Card(
                                                 child: ListTile(
                                                   title: Text(
-                                                      'Thời gian: ${parseDate(generateBookings[(generateBookings.length - 1) - index].time)}'),
+                                                      'Thời gian: ${parseDate(generateBookings[index].time)}'),
                                                   subtitle: Padding(
                                                     padding:
                                                         const EdgeInsets.only(
                                                             right: 50, left: 0),
                                                     child: Text(
-                                                      'Dịch vụ: ${generateBookings[(generateBookings.length - 1) - index].services!.join('\n').toString()}',
+                                                      'Dịch vụ: ${generateBookings[index].services!.join('\n').toString()}',
                                                       maxLines: 5,
                                                     ),
                                                   ),
                                                   trailing: Text(
-                                                      generateBookings[
-                                                              (generateBookings
-                                                                          .length -
-                                                                      1) -
-                                                                  index]
+                                                      generateBookings[index]
                                                           .status
                                                           .toString(),
                                                       style: TextStyle(
                                                           color: getStatusColor(
                                                               generateBookings[
-                                                                      (generateBookings.length -
-                                                                              1) -
-                                                                          index]
+                                                                      index]
                                                                   .status))),
                                                   onTap: () {
                                                     Navigator.push(
@@ -214,16 +201,15 @@ class _TrackingAppointmentState extends State<TrackingAppointment> {
                                                         MaterialPageRoute(
                                                             builder: (context) =>
                                                                 AppointmentDetail(
-                                                                  bookings: generateBookings[
-                                                                      (generateBookings.length -
-                                                                              1) -
+                                                                  bookings:
+                                                                      generateBookings[
                                                                           index],
                                                                 )));
                                                   },
                                                 ),
                                               );
                                             })
-                                        : ListView.builder(
+                                        : _selectedValue == 'Tất cả' ? ListView.builder(
                                             scrollDirection: Axis.vertical,
                                             physics:
                                                 const NeverScrollableScrollPhysics(),
@@ -233,29 +219,23 @@ class _TrackingAppointmentState extends State<TrackingAppointment> {
                                               return Card(
                                                 child: ListTile(
                                                   title: Text(
-                                                      'Thời gian: ${parseDate(bookingList[(bookingList.length - 1) - index].time)}'),
+                                                      'Thời gian: ${parseDate(bookingList[index].time)}'),
                                                   subtitle: Padding(
                                                     padding:
                                                         const EdgeInsets.only(
                                                             right: 50, left: 0),
                                                     child: Text(
-                                                      'Dịch vụ: ${bookingList[(bookingList.length - 1) - index].services!.join('\n').toString()}',
+                                                      'Dịch vụ: ${bookingList[index].services!.join('\n').toString()}',
                                                       maxLines: 5,
                                                     ),
                                                   ),
                                                   trailing: Text(
-                                                      bookingList[(bookingList
-                                                                      .length -
-                                                                  1) -
-                                                              index]
+                                                      bookingList[index]
                                                           .status
                                                           .toString(),
                                                       style: TextStyle(
                                                           color: getStatusColor(
-                                                              bookingList[
-                                                                      (bookingList.length -
-                                                                              1) -
-                                                                          index]
+                                                              bookingList[index]
                                                                   .status))),
                                                   onTap: () {
                                                     Navigator.push(
@@ -263,15 +243,14 @@ class _TrackingAppointmentState extends State<TrackingAppointment> {
                                                         MaterialPageRoute(
                                                             builder: (context) =>
                                                                 AppointmentDetail(
-                                                                  bookings: bookingList[
-                                                                      (bookingList.length -
-                                                                              1) -
+                                                                  bookings:
+                                                                      bookingList[
                                                                           index],
                                                                 )));
                                                   },
                                                 ),
                                               );
-                                            }),
+                                            }): const Center(child: Text("Trống"),)
                                   ],
                                 ),
                               ),
