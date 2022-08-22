@@ -1,4 +1,5 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:computer_service_system/constants/utils.dart';
 import 'package:flutter/material.dart';
 
 import '../../constants/color_constant.dart';
@@ -92,7 +93,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 ),
                 CustomTextField(
                   controller: repeatPassController,
-                  hintText: 'Nhập lại mật khẩu',
+                  hintText: 'Mật khẩu mới',
                   secure: true,
                 ),
                 const SizedBox(
@@ -100,11 +101,11 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 ),
                 CustomTextField(
                   controller: newPassController,
-                  hintText: 'Mật khẩu mới',
+                  hintText: 'Nhập lại mật khẩu mới',
                   secure: true,
                 ),
                 const SizedBox(
-                  height: 10,
+                  height: 20,
                 ),
                 Row(
                   children: [
@@ -112,9 +113,13 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                       text: 'Đổi mật khẩu',
                       onTap: () => {
                         if(_changePassKey.currentState!.validate()){
-                          FocusScope.of(context).requestFocus(FocusNode()),
-                          changePass(widget.token)
-                          //changePass(user.accessToken),
+                            if(oldPassController.text != newPassController.text){
+                              FocusScope.of(context).requestFocus(FocusNode()),
+                              changePass(widget.token)
+                            }else{
+                              showSnackBar(context, "Mật khẩu mới trùng mật khẩu cũ")
+                            }
+                            //changePass(user.accessToken),
                         }
                       },
                     ),

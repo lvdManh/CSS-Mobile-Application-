@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../constants/color_constant.dart';
 import '../../providers/data_class.dart';
-import '../account_screen.dart';
+import '../widgets/account_screen.dart';
 
 class StaffViewAppointmentPage extends StatefulWidget {
   static const String routeName = '/view_appointment_page';
@@ -56,34 +56,37 @@ class _StaffViewAppointmentPageState extends State<StaffViewAppointmentPage> {
                 if (!snapshot.hasData) {
                   return const Center(child: CircularProgressIndicator());
                 } else {
-                  return snapshot.data!.isNotEmpty ? ListView.builder(
-                    padding: const EdgeInsets.all(5),
-                    scrollDirection: Axis.vertical,
-                    shrinkWrap: true,
-                    itemCount: snapshot.data?.length,
-                    itemBuilder: (context, index) {
-                      return Card(
-                        child: ListTile(
-                          leading: Text(parseDateDownLine(snapshot.data![index].orderId?.bookingId?.time),textAlign: TextAlign.center,),
-                          title: Text('Khách hàng: ${snapshot.data![index].orderId?.bookingId?.cusName}'),
-                          subtitle:
-                          Text('Địa chỉ: ${printAddress(snapshot.data![index].orderId?.bookingId?.cusAddress?.street,
-                                                        snapshot.data![index].orderId?.bookingId?.cusAddress?.ward,
-                                                        snapshot.data![index].orderId?.bookingId?.cusAddress?.district)}'),
-                          trailing:
-                          Text('${snapshot.data![index].orderId?.status}'),
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => StaffViewAppointmentDetailsPage(
-                                      order: snapshot.data![index],
-                                      token: token,
-                                    )));
-                          },
-                        ),
-                      );
-                    },
+                  return snapshot.data!.isNotEmpty ? Align(
+                    alignment: Alignment.topCenter,
+                    child: ListView.builder(
+                      padding: const EdgeInsets.all(5),
+                      scrollDirection: Axis.vertical,
+                      shrinkWrap: true,
+                      itemCount: snapshot.data?.length,
+                      itemBuilder: (context, index) {
+                        return Card(
+                          child: ListTile(
+                            leading: Text(parseDateDownLine(snapshot.data![index].orderId?.bookingId?.time),textAlign: TextAlign.center,),
+                            title: Text('Khách hàng: ${snapshot.data![index].orderId?.bookingId?.cusName}'),
+                            subtitle:
+                            Text('Địa chỉ: ${printAddress(snapshot.data![index].orderId?.bookingId?.cusAddress?.street,
+                                                          snapshot.data![index].orderId?.bookingId?.cusAddress?.ward,
+                                                          snapshot.data![index].orderId?.bookingId?.cusAddress?.district)}'),
+                            trailing:
+                            Text('${snapshot.data![index].orderId?.status}'),
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => StaffViewAppointmentDetailsPage(
+                                        order: snapshot.data![index],
+                                        token: token,
+                                      )));
+                            },
+                          ),
+                        );
+                      },
+                    ),
                   ) : const Center(child: Text('Chưa có lịch hẹn'),);
                 }
               }),

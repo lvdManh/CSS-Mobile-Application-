@@ -28,8 +28,6 @@ class _EditAppointmentState extends State<EditAppointment> {
   final BookingServices bookingServices = BookingServices();
   final TextEditingController username = TextEditingController();
   final TextEditingController phone = TextEditingController();
-  final TextEditingController district = TextEditingController();
-  final TextEditingController ward = TextEditingController();
   final TextEditingController street = TextEditingController();
   final TextEditingController description = TextEditingController();
   late List<Service> futureService;
@@ -71,6 +69,7 @@ class _EditAppointmentState extends State<EditAppointment> {
       setState(() {
         wards.clear();
         selectedWard ='';
+        street.text = '';
         selectedDistrict = results;
         getWardsData();
       });
@@ -87,6 +86,7 @@ class _EditAppointmentState extends State<EditAppointment> {
       );
       if (results != '') {
         setState(() {
+          street.text = '';
           selectedWard = results;
         });
       }
@@ -107,16 +107,16 @@ class _EditAppointmentState extends State<EditAppointment> {
     }
   }
  bool checkFieldEmpty(){
-    if(username.text.isEmpty
-        || phone.text.isEmpty
-        || street.text.isEmpty
-        || ward.text.isEmpty
-        || district.text.isEmpty
-        || _selectedItems.isEmpty
-        || description.text.isEmpty){
-      return false;
+    if(username.text.isNotEmpty
+        && phone.text.isNotEmpty
+        && street.text.isNotEmpty
+        && selectedWard.isNotEmpty
+        && selectedDistrict.isNotEmpty
+        && _selectedItems.isNotEmpty
+        && description.text.isNotEmpty){
+      return true;
     }
-    return true;
+    return false;
  }
 
   @override
@@ -126,8 +126,6 @@ class _EditAppointmentState extends State<EditAppointment> {
     username.text = widget.bookings.cusName!;
     phone.text = widget.bookings.phonenum!;
     street.text = widget.bookings.cusAddress!.street!;
-    ward.text = widget.bookings.cusAddress!.ward!;
-    district.text = widget.bookings.cusAddress!.district!;
     _selectedItems.addAll(widget.bookings.services!.toList());
     description.text = widget.bookings.description!;
     selectedDistrict = widget.bookings.cusAddress!.district!;
@@ -231,7 +229,7 @@ class _EditAppointmentState extends State<EditAppointment> {
                         Divider(thickness: 1,color: Colors.black.withOpacity(0.5),),
                         const SizedBox(height: 8),
                         TextFormField(
-                          decoration: const InputDecoration(labelText: 'Số nhà:'),
+                          decoration: const InputDecoration(labelText: 'Số nhà, tên đường:'),
                           controller: street,
                         ),
                         const SizedBox(height: 8),
@@ -255,7 +253,6 @@ class _EditAppointmentState extends State<EditAppointment> {
                               ],
                             ),
                             Column(
-
                               children: [
                                 Wrap(
                                   children: _selectedItems
@@ -272,7 +269,7 @@ class _EditAppointmentState extends State<EditAppointment> {
                         const SizedBox(height: 8),
                         TextFormField(
                           decoration:
-                          const InputDecoration(labelText: 'Mô tả vấn đề:'),
+                          const InputDecoration(labelText: 'Mô tả:'),
                           controller: description,
                         ),
                         const SizedBox(height: 20),
@@ -286,15 +283,17 @@ class _EditAppointmentState extends State<EditAppointment> {
                                 dialogType: DialogType.QUESTION,
                                 dismissOnTouchOutside: false,
                                 title: 'Lưu thay đổi?',
-                                btnCancelOnPress: (){},
+                                btnCancelOnPress: (){
+                                  Navigator.pop(context);
+                                },
                                 btnOkOnPress: () {
                                   bookingServices.editBooking(
                                       context,
                                       token,
                                       widget.bookings.id,
                                       street.text,
-                                      ward.text,
-                                      district.text,
+                                      selectedWard,
+                                      selectedDistrict,
                                       username.text,
                                       phone.text,
                                       _selectedItems,

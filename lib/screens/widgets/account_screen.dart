@@ -6,9 +6,9 @@ import 'package:computer_service_system/screens/widgets/change_password_widget.d
 import 'package:computer_service_system/screens/widgets/update_profile_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../constants/color_constant.dart';
-import '../features/user_services.dart';
-import '../models/user.dart';
+import '../../constants/color_constant.dart';
+import '../../features/user_services.dart';
+import '../../models/user.dart';
 
 
 

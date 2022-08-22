@@ -14,6 +14,23 @@ String parseDate(date){
     return '--:--\n--/--/----';
   }
   DateTime dt1 = DateTime.parse(date);
+  DateTime dt2 = dt1.add(const Duration(hours: 7));
+  String hour = dt2.hour.toString();
+  String minute = dt2.minute.toString();
+  if(dt2.hour<10){
+    hour = '0$hour';
+  }
+  if(dt2.minute<10){
+    minute = '0$minute';
+  }
+  return '$hour:$minute, ${dt2.day}/${dt2.month}/${dt2.year}';
+}
+
+String parseDateNoUTC(date){
+  if(date == null){
+    return '--:--\n--/--/----';
+  }
+  DateTime dt1 = DateTime.parse(date);
   String hour = dt1.hour.toString();
   String minute = dt1.minute.toString();
   if(dt1.hour<10){
@@ -25,20 +42,23 @@ String parseDate(date){
   return '$hour:$minute, ${dt1.day}/${dt1.month}/${dt1.year}';
 }
 
+
+
 String parseDateDownLine(date){
   if(date == null){
     return '--:--\ndd/MM';
   }
   DateTime dt1 = DateTime.parse(date);
-  String hour = dt1.hour.toString();
-  String minute = dt1.minute.toString();
-  if(dt1.hour<10){
+  DateTime dt2 = dt1.add(const Duration(hours: 7));
+  String hour = dt2.hour.toString();
+  String minute = dt2.minute.toString();
+  if(dt2.hour<10){
     hour = '0$hour';
   }
-  if(dt1.minute<10){
+  if(dt2.minute<10){
     minute = '0$minute';
   }
-  return '$hour:$minute\n${dt1.day}/${dt1.month}';
+  return '$hour:$minute\n${dt2.day}/${dt2.month}';
 }
 
 String convertMoney(int? price) {

@@ -5,7 +5,7 @@ import 'package:computer_service_system/models/booking_object.dart';
 import 'package:computer_service_system/screens/widgets/appointment_details.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../providers/data_class.dart';
+import '../../providers/data_class.dart';
 
 class TrackingAppointment extends StatefulWidget {
   static const String routeName = '/tracking-appointment';

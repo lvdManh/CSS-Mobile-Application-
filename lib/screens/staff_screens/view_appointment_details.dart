@@ -6,7 +6,6 @@ import 'package:computer_service_system/models/order_staff_data.dart';
 import 'package:computer_service_system/models/service_list_data.dart';
 import 'package:computer_service_system/screens/widgets/accessory_picker_widget.dart';
 import 'package:flutter/material.dart';
-
 import '../../constants/color_constant.dart';
 
 class StaffViewAppointmentDetailsPage extends StatefulWidget {
@@ -25,18 +24,22 @@ class _StaffViewAppointmentDetailsState
   late List<ServiceAccessoryList> servicesListGet = [];
   late final OrderDetails _orderDetails = OrderDetails(datas: []);
   late OrderInfo _orderInfo;
-  late bool _showSaveFloatButton;
+  late int _showSaveFloatButton;
   late bool _showBookingInfo;
   late bool isLoading;
   void checkStatusOrder(status) {
     if (status == 'Hoàn tất hóa đơn') {
       setState(() {
-        _showSaveFloatButton = true;
+        _showSaveFloatButton = 1;
       });
-    } else {
+    } else if(status == 'Hoàn thành'){
       setState(() {
-        _showSaveFloatButton = false;
+        _showSaveFloatButton = 2;
       });
+    }else{
+    setState(() {
+    _showSaveFloatButton = 0;
+    });
     }
   }
 
@@ -123,7 +126,7 @@ class _StaffViewAppointmentDetailsState
   @override
   void initState() {
     super.initState();
-    _showSaveFloatButton = false;
+    _showSaveFloatButton = 0;
     _showBookingInfo = false;
     isLoading = false;
   }
@@ -540,7 +543,6 @@ class _StaffViewAppointmentDetailsState
                                                       ),
                                                       onTap: () {
                                                         if(servicesListGet[index].serviceAccessory!.hasAccessory ==true){
-                                                          print('1');
                                                         }
                                                       },
                                                     ),
@@ -641,14 +643,14 @@ class _StaffViewAppointmentDetailsState
                 ),
         ),
       ),
-      floatingActionButton: _showSaveFloatButton ? FloatingActionButton.extended(
+      floatingActionButton: _showSaveFloatButton ==1 ? FloatingActionButton.extended(
         onPressed: () {
             OrderServices().completeOderByStaff(context, widget.token, widget.order.orderId!.id);
         },
         icon: const Icon(Icons.done_all) ,
         label: const Text('Hoàn thành sửa chữa'),
         backgroundColor: Colors.green,
-      ):
+      ): _showSaveFloatButton == 0 ?
         FloatingActionButton.extended(
         onPressed: () {
           generateOrderDetails();
@@ -657,7 +659,7 @@ class _StaffViewAppointmentDetailsState
         icon: const Icon(Icons.send) ,
         label: const Text('Lưu dịch vụ'),
         backgroundColor: Colors.orangeAccent,
-      ),
+      ) : const SizedBox(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }

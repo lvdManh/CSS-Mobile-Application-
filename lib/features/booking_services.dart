@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import '../models/booking_data.dart';
-import '../screens/nav_screen.dart';
+import '../screens/customer_screens/nav_screen.dart';
 
 class BookingServices{
 

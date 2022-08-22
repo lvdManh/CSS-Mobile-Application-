@@ -1,5 +1,6 @@
 
 import 'package:computer_service_system/constants/color_constant.dart';
+import 'package:computer_service_system/constants/utils.dart';
 import 'package:computer_service_system/features/address_services.dart';
 import 'package:computer_service_system/features/booking_services.dart';
 import 'package:computer_service_system/models/computer_type_object.dart';
@@ -9,10 +10,10 @@ import 'package:computer_service_system/screens/widgets/pick_address_widget.dart
 import 'package:flutter/material.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:provider/provider.dart';
-import '../features/service_services.dart';
-import '../models/hcm_address_data.dart';
-import '../models/services_data.dart';
-import '../providers/data_class.dart';
+import '../../features/service_services.dart';
+import '../../models/hcm_address_data.dart';
+import '../../models/services_data.dart';
+import '../../providers/data_class.dart';
 
 class SubmitAppointment extends StatefulWidget {
   static const String routeName = '/submit-appointment';
@@ -140,7 +141,7 @@ class _SubmitAppointmentState extends State<SubmitAppointment> {
           elevation: 0.0,
           backgroundColor: Colors.orangeAccent,
           title: const Text(
-            "Sửa chữa tại nhà",
+            "Nhập thông tin hẹn",
             style: TextStyle(
               fontSize: 23,
             ),
@@ -169,6 +170,16 @@ class _SubmitAppointmentState extends State<SubmitAppointment> {
                     key: _submitKey,
                     child: Column(
                       children: [
+                        const SizedBox(height: 8,),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text("Thời gian hẹn:",
+                                style: TextStyle(fontSize: 16, fontFamily: 'Regular')),
+                            Text(parseDateNoUTC(widget.time),
+                                style: const TextStyle(fontSize: 16, fontFamily: 'Regular')),
+                          ],
+                        ),
                         TextFormField(
                           decoration:
                               const InputDecoration(labelText: 'Tên người hẹn:'),

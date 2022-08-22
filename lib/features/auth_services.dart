@@ -2,7 +2,7 @@
 
 import 'dart:convert';
 import 'package:computer_service_system/providers/data_class.dart';
-import 'package:computer_service_system/screens/nav_screen.dart';
+import 'package:computer_service_system/screens/customer_screens/nav_screen.dart';
 import 'package:computer_service_system/screens/staff_screens/staff_home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -10,7 +10,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../constants/error_handling.dart';
 import '../constants/utils.dart';
-import '../screens/auth_screen.dart';
+import '../screens/widgets/auth_screen.dart';
 
 class AuthService {
   void signUpUser({

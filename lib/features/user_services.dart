@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:awesome_dialog/awesome_dialog.dart';
-import 'package:computer_service_system/screens/account_screen.dart';
+import 'package:computer_service_system/screens/widgets/account_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -36,7 +36,6 @@ class UserServices{
     required String repeatPass,
     required String newPass,
   }) async{
-    try {
 
       http.Response res = await http.patch(
         Uri.parse('https://computer-services-api.herokuapp.com/account/change-password'),
@@ -61,13 +60,13 @@ class UserServices{
                 Navigator.pop(context);
             }
         ).show();
+      }else if(res.statusCode==404){
+        showSnackBar(context, 'Sai mật khẩu');
       }else{
-        showSnackBar(context, res.body);
+        showSnackBar(context, 'Lỗi server');
       }
 
-    } catch (e){
-      showSnackBar(context, e.toString());
-    }
+
   }
 
   void changeProfile({

@@ -123,7 +123,7 @@ class OrderServices{
   void acceptServiceByCus(context, token,id) async{
     final response = await http.patch(
       Uri.parse(
-          'http://computer-services-api.herokuapp.com/order/order-with-detail/$id'),
+          'http://computer-services-api.herokuapp.com/order/customer-confirm'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'token': 'bearer $token',
@@ -137,7 +137,7 @@ class OrderServices{
         context: context,
         animType: AnimType.SCALE,
         dialogType: DialogType.SUCCES,
-        title: 'Lưu thành công',
+        title: 'Xác nhận thành công',
         desc: response.body,
         dismissOnTouchOutside: false,
         btnOkOnPress: () {
@@ -160,7 +160,7 @@ class OrderServices{
   void completeOderByStaff(context, token,id) async{
     final response = await http.patch(
       Uri.parse(
-          'http://computer-services-api.herokuapp.com/order/complete-order/$id'),
+          'http://computer-services-api.herokuapp.com/order/complete-order'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'token': 'bearer $token',

@@ -12,7 +12,7 @@ import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 import '../../constants/color_constant.dart';
 import '../../features/schedule_services.dart';
-import '../account_screen.dart';
+import '../widgets/account_screen.dart';
 
 class StaffRegistWork extends StatefulWidget {
   static const String routeName = '/staff_regist_work';
@@ -27,7 +27,7 @@ class _StaffRegistWorkState extends State<StaffRegistWork> {
   late ScheduleDataSource scheduleDataSource;
   List<Slot> schedules = [];
   List<StaffRegister> list = [];
-  int selectWeek = 14;
+  int selectWeek = 0;
   List<WorkSchedule> futureWorkSchedule = [];
   Future<List<WorkSchedule>> getFutureWorkSchedule() async {
     futureWorkSchedule = await ScheduleServices().fetchWorkSlotList();
@@ -454,7 +454,7 @@ checkAndPostSchedule(List<StaffRegister> list, schedule, token, context) async {
       context: context,
       animType: AnimType.SCALE,
       dialogType: DialogType.WARNING,
-      title: 'Đăng ký tối đa 14 slot/tuần',
+      title: 'Đăng ký tối đa 14 slots/tuần',
       dismissOnTouchOutside: false,
       btnOkOnPress: () {
         list.clear();

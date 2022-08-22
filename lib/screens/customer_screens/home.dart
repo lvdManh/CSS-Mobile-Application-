@@ -1,9 +1,9 @@
 
 import 'package:computer_service_system/constants/color_constant.dart';
-import 'package:computer_service_system/screens/create_booking_first_stage.dart';
-import 'package:computer_service_system/screens/product_screen.dart';
-import 'package:computer_service_system/screens/services_screen.dart';
-import 'package:computer_service_system/screens/tracking_appointment.dart';
+import 'package:computer_service_system/screens/customer_screens/create_booking_first_stage.dart';
+import 'package:computer_service_system/screens/customer_screens/product_screen.dart';
+import 'package:computer_service_system/screens/customer_screens/services_screen.dart';
+import 'package:computer_service_system/screens/customer_screens/tracking_appointment.dart';
 import 'package:flutter/material.dart';
 
 
@@ -29,17 +29,17 @@ class _HomePageState extends State<HomePage> {
           ),
           child: ListView(
             children: [
-              Stack(children: [Image.asset('assets/images/launch_image.png',color: mBackgroundColor.withOpacity(0.8), colorBlendMode: BlendMode.modulate,)]),
+              Stack(children: [Image.asset('assets/images/title_logo.jpg')]),
               Container(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 20,
-                  vertical: 10,
+                  vertical: 0,
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
-                      'Danh sách', style: TextStyle(
+                      'Danh mục', style: TextStyle(
                       fontSize: 20, color: Colors.black,
                     ),
                     ),

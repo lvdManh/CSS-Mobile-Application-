@@ -1,55 +1,57 @@
 import 'package:computer_service_system/constants/color_constant.dart';
 import 'package:computer_service_system/constants/utils.dart';
-import 'package:computer_service_system/models/services_data.dart';
+import 'package:computer_service_system/features/product_services.dart';
 import 'package:computer_service_system/providers/data_class.dart';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../features/service_services.dart';
+import '../../models/accessory_data.dart';
 
-class ServicesScreen extends StatefulWidget {
-  static const String routeName = '/services-screen';
-  const ServicesScreen({Key? key}) : super(key: key);
+
+
+class ProductScreen extends StatefulWidget {
+  static const String routeName = '/product-screen';
+  const ProductScreen({Key? key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _ServicesScreenState();
+  State<StatefulWidget> createState() => _ProductScreenState();
 }
 
-class _ServicesScreenState extends State<ServicesScreen> {
-  late List<Service> futureService =[];
+class _ProductScreenState extends State<ProductScreen> {
+
+  late List<Accessory> futureAccessory =[];
   late List<String> selectTypes = ['Tất cả'];
   late String _selectedValue;
-  late List<Service> serviceList = [];
-  Future<List<Service>> getFutureService(token) async {
-    futureService = await ServiceServices().fetchServices(token);
+  late List<Accessory> accessoryList = [];
+  Future<List<Accessory>> getFutureAccessory(token) async {
+    futureAccessory = await ProductRequest().fetchAccessory(token);
     getTypeList();
-    return futureService;
+    return futureAccessory;
   }
-void getTypeList(){
-  for(var e in futureService){
-    if(!selectTypes.contains(e.type)){
-      selectTypes.add(e.type!);
+  void getTypeList(){
+    for(var e in futureAccessory){
+      if(!selectTypes.contains(e.supplierId?.name)){
+        selectTypes.add(e.supplierId!.name!);
+      }
     }
+    setState(() {
+      selectTypes;
+    });
   }
-  setState(() {
-    selectTypes;
-  });
-}
 
-  void showListService(){
-    serviceList.clear();
+  void showListAccessories(){
+    accessoryList.clear();
     if(_selectedValue == 'Tất cả'){
-      serviceList.addAll(futureService);
+      accessoryList.addAll(futureAccessory);
     } else {
-      for (var e in futureService) {
-        if (_selectedValue == e.type) {
-          serviceList.add(e);
+      for (var e in futureAccessory) {
+        if (_selectedValue == e.supplierId?.name) {
+          accessoryList.add(e);
         }
       }
     }
     setState(() {
-      serviceList;
+      accessoryList;
     });
   }
 
@@ -70,7 +72,7 @@ void getTypeList(){
           elevation: 0.0,
           backgroundColor: Colors.orangeAccent,
           title: const Text(
-            "Dịch vụ",
+            "Linh kiện",
             style: TextStyle(
               fontSize: 23,
             ),
@@ -88,8 +90,8 @@ void getTypeList(){
             )),
         child: Padding(
             padding: const EdgeInsets.all(10.0),
-            child: FutureBuilder<List<Service>>(
-                future: getFutureService(token),
+            child: FutureBuilder<List<Accessory>>(
+                future: getFutureAccessory(token),
                 builder: (context, snapshot) {
                   if (!snapshot.hasData) {
                     return const Center(child: CircularProgressIndicator());
@@ -123,27 +125,27 @@ void getTypeList(){
                                   onChanged: (String? newValue) {
                                     setState(() {
                                       _selectedValue = newValue!;
-                                      showListService();
+                                      showListAccessories();
                                     });
                                   },
                                 ),
                               ],
                             ),
-                            serviceList.isNotEmpty ? ListView.builder(
+                            accessoryList.isNotEmpty ? ListView.builder(
                                 scrollDirection: Axis.vertical,
                                 physics: const NeverScrollableScrollPhysics(),
                                 shrinkWrap: true,
-                                itemCount: serviceList.length,
+                                itemCount: accessoryList.length,
                                 itemBuilder: (context, index) {
                                   return Card(
                                     child: ListTile(
-                                      leading: Text('${serviceList[index].type}'),
+                                      leading: Text('${accessoryList[index].supplierId?.name}'),
                                       title: Text(
-                                          'Dịch vụ: ${serviceList[index].name}'),
+                                          '${accessoryList[index].name}'),
                                       subtitle: Text(
-                                          'Mô tả: ${serviceList[index].description.toString()}'),
+                                          'Mô tả: ${accessoryList[index].description.toString()}'),
                                       trailing: Text(
-                                          '${convertMoney(serviceList[index].price)} đ'),
+                                          '${convertMoney(accessoryList[index].price)} đ'),
                                       onTap: () {
                                         // Navigator.push(
                                         //     context,
@@ -158,17 +160,17 @@ void getTypeList(){
                                 physics: const NeverScrollableScrollPhysics(),
                                 scrollDirection: Axis.vertical,
                                 shrinkWrap: true,
-                                itemCount: futureService.length,
+                                itemCount: futureAccessory.length,
                                 itemBuilder: (context, index) {
                                   return Card(
                                     child: ListTile(
-                                      leading: Text('${futureService[index].type}'),
+                                      leading: Text('${futureAccessory[index].supplierId?.name}'),
                                       title: Text(
-                                          'Dịch vụ: ${futureService[index].name}'),
+                                          'Dịch vụ: ${futureAccessory[index].name}'),
                                       subtitle: Text(
-                                          'Mô tả: ${futureService[index].description.toString()}'),
+                                          'Mô tả: ${futureAccessory[index].description.toString()}'),
                                       trailing: Text(
-                                          '${convertMoney(futureService[index].price)} đ'),
+                                          '${convertMoney(futureAccessory[index].price)} đ'),
                                       onTap: () {
                                         // Navigator.push(
                                         //     context,
@@ -183,7 +185,7 @@ void getTypeList(){
                           ],
                         ),
                       ),
-                    ): const Center(child: Text('Hiện chưa có dịch vụ'),);
+                    ): const Center(child: Text('Hiện chưa có nhóm linh kiện này'),);
                   }
                 })),
       ),

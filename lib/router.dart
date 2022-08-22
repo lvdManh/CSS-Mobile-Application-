@@ -1,15 +1,15 @@
-import 'package:computer_service_system/screens/account_screen.dart';
-import 'package:computer_service_system/screens/auth_screen.dart';
-import 'package:computer_service_system/screens/create_booking_first_stage.dart';
-import 'package:computer_service_system/screens/home.dart';
-import 'package:computer_service_system/screens/nav_screen.dart';
-import 'package:computer_service_system/screens/product_screen.dart';
-import 'package:computer_service_system/screens/services_screen.dart';
-import 'package:computer_service_system/screens/create_booking_second_stage.dart';
+import 'package:computer_service_system/screens/widgets/account_screen.dart';
+import 'package:computer_service_system/screens/widgets/auth_screen.dart';
+import 'package:computer_service_system/screens/customer_screens/create_booking_first_stage.dart';
+import 'package:computer_service_system/screens/customer_screens/home.dart';
+import 'package:computer_service_system/screens/customer_screens/nav_screen.dart';
+import 'package:computer_service_system/screens/customer_screens/product_screen.dart';
+import 'package:computer_service_system/screens/customer_screens/services_screen.dart';
+import 'package:computer_service_system/screens/customer_screens/create_booking_second_stage.dart';
 import 'package:computer_service_system/screens/staff_screens/staff_home_page.dart';
 import 'package:computer_service_system/screens/staff_screens/staff_regist_work.dart';
 import 'package:computer_service_system/screens/staff_screens/view_appointment_page.dart';
-import 'package:computer_service_system/screens/tracking_appointment.dart';
+import 'package:computer_service_system/screens/customer_screens/tracking_appointment.dart';
 import 'package:flutter/material.dart';
 
 Route<dynamic> generateRoute(RouteSettings routeSettings) {

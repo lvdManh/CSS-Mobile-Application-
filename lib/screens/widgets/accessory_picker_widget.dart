@@ -360,7 +360,7 @@ class _AccessoryPickerState extends State<AccessoryPicker> {
                                                                           Stack(
                                                                         children: [
                                                                           selected.contains(_accessoryToChoose[index].serHasAcc![i].id)
-                                                                              ? Align(
+                                                                              ? const Align(
                                                                                   alignment: Alignment.bottomRight,
                                                                                   child: Icon(Icons.check,color: Colors.green,),
                                                                                 )

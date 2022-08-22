@@ -34,7 +34,6 @@ class _AppointmentDetailState extends State<AppointmentDetail> {
           });
         }
     }
-      print('$isShowDetail');
     return futureBooking;
   }
 
@@ -58,7 +57,7 @@ class _AppointmentDetailState extends State<AppointmentDetail> {
             elevation: 0.0,
             backgroundColor: Colors.orangeAccent,
             title: const Text(
-              "Lịch hẹn",
+              "Thông tin lịch hẹn",
               style: TextStyle(
                 fontSize: 23,
               ),
@@ -87,13 +86,13 @@ class _AppointmentDetailState extends State<AppointmentDetail> {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 10),
                       const Text("Thông tin người hẹn",
                           style: TextStyle(
                               color: mTextColorSecondary,
                               fontSize: 16,
                               fontFamily: 'Regular')),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: 10),
                       Column(
                         children: <Widget>[
                           Row(
@@ -110,7 +109,7 @@ class _AppointmentDetailState extends State<AppointmentDetail> {
                           //const Divider()
                         ],
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 10),
                       Column(
                         children: <Widget>[
                           Row(
@@ -126,7 +125,7 @@ class _AppointmentDetailState extends State<AppointmentDetail> {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 10),
                       Column(
                         children: <Widget>[
                           Row(
@@ -148,13 +147,13 @@ class _AppointmentDetailState extends State<AppointmentDetail> {
                           const Divider()
                         ],
                       ),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 10),
                       const Text("Thông tin lịch hẹn",
                           style: TextStyle(
                               color: mTextColorSecondary,
                               fontSize: 16,
                               fontFamily: 'Regular')),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: 10),
                       Column(
                         children: <Widget>[
                           Row(
@@ -171,7 +170,7 @@ class _AppointmentDetailState extends State<AppointmentDetail> {
                           //const Divider()
                         ],
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 10),
                       Column(
                         children: <Widget>[
                           Row(
@@ -193,7 +192,7 @@ class _AppointmentDetailState extends State<AppointmentDetail> {
                           //const Divider()
                         ],
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 10),
                       Column(
                         children: <Widget>[
                           Row(
@@ -210,7 +209,7 @@ class _AppointmentDetailState extends State<AppointmentDetail> {
                           //const Divider()
                         ],
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 10),
                       Column(
                         children: <Widget>[
                           Row(
@@ -265,7 +264,7 @@ class _AppointmentDetailState extends State<AppointmentDetail> {
                           const Divider()
                         ],
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 10),
                       if (futureBooking.status == 'Đang xử lí')
                         Align(
                           alignment: Alignment.bottomCenter,
@@ -286,10 +285,13 @@ class _AppointmentDetailState extends State<AppointmentDetail> {
                                       title: 'Chắc chắn hủy?',
                                       desc:
                                           'Lịch hẹn bị hủy không thể thay đổi',
-                                      btnCancelOnPress: () {},
-                                      btnOkOnPress: () {
+                                      btnCancelOnPress: () {
                                         BookingServices().cancelBooking(
                                             context, futureBooking.id, token);
+                                      },
+                                      btnCancelText: 'Xác nhận',
+                                      btnOkText: 'Không',
+                                      btnOkOnPress: () {
                                       },
                                     ).show();
                                   },
@@ -362,7 +364,6 @@ class _ShowOrderState extends State<ShowOrder> {
   Future<Order> getOrder() async {
     _order =
         await orderServices.getOrderByIdForCus(widget.token, widget.orderId);
-    print(_order);
     return _order;
   }
 
@@ -415,6 +416,27 @@ class _ShowOrderState extends State<ShowOrder> {
                                   fontSize: 18, fontFamily: 'Regular')),
                           Text(parseDate(_order.createdAt),
                               style: const TextStyle(
+                                  fontSize: 18, fontFamily: 'Regular')),
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                      if(_order.workSlot?.staffId?.userId?.name != null) Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          const Text("Nhân viên kỹ thuật:",
+                              style: TextStyle(
+                                  fontSize: 18, fontFamily: 'Regular')),
+                          Text('${_order.workSlot?.staffId?.userId?.name}',
+                              style: const TextStyle(
+                                  fontSize: 18, fontFamily: 'Regular')),
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: const [
+                           Text("Dịch vụ:",
+                              style: TextStyle(
                                   fontSize: 18, fontFamily: 'Regular')),
                         ],
                       ),
@@ -487,7 +509,7 @@ class _ShowOrderState extends State<ShowOrder> {
                         child: SizedBox(
                           width: 150,
                           child: CustomButton(
-                            text: 'Xác nhận dịch vụ',
+                            text: 'Chấp nhận dịch vụ',
                             onTap: () {
                               setState(() {
                                   orderServices.acceptServiceByCus(context, widget.token, widget.orderId);
