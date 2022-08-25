@@ -86,7 +86,7 @@ class _AccountScreenState extends State<AccountScreen> {
               return const Center(
                 child: CircularProgressIndicator(),
               );
-            }
+            }else{
             return Column(
                 crossAxisAlignment: CrossAxisAlignment.start, children: <
             Widget>[
@@ -232,6 +232,7 @@ class _AccountScreenState extends State<AccountScreen> {
                 ),
  ],
             );
+            }
           }
         ),
       ),

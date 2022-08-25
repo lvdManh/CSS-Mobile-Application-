@@ -7,7 +7,7 @@ import 'package:http/http.dart' as http;
 import 'auth_services.dart';
 
 class StaffAssignWorkSchedule {
-  void addSchedule(context, token, datas) async {
+  Future addSchedule(context, token, datas) async {
 
       final response = await http.post(
         Uri.parse(
@@ -54,7 +54,7 @@ class StaffAssignWorkSchedule {
           desc: result,
           dismissOnTouchOutside: false,
           btnOkOnPress: () {
-            Navigator.push(
+            Navigator.pushReplacement(
                 context, MaterialPageRoute(
                 builder: (context) => const StaffRegistWork()
             ));

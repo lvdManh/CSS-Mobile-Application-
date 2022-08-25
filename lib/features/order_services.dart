@@ -65,7 +65,7 @@ class OrderServices{
     }
   }
 
-   void addDetailOrder(context, token,id,OrderDetails data)  async {
+   Future addDetailOrder(context, token,id,OrderDetails data)  async {
     final response = await http.post(
       Uri.parse(
           'https://computer-services-api.herokuapp.com/order/add-detail-order/$id'),
@@ -205,5 +205,86 @@ class OrderServices{
       },
     );
   }
+
+  Future addComputerToOrder(context, token,id, nameCom, codeCom, typeCom, brandCom)  async {
+    final response = await http.patch(
+      Uri.parse(
+          'https://computer-services-api.herokuapp.com/order/computer-to-order/$id'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'token': 'bearer $token',
+      },
+      body: json.encode(
+          {
+            'name': nameCom,
+            'code': codeCom,
+            'type': typeCom,
+            'brand': brandCom
+          }
+      ),
+    );
+    if(response.statusCode == 200){
+      AwesomeDialog(
+        context: context,
+        animType: AnimType.SCALE,
+        dialogType: DialogType.SUCCES,
+        title: 'Lưu thành công',
+        dismissOnTouchOutside: false,
+        btnOkOnPress: () {
+        },
+      ).show();
+    }else{
+      AwesomeDialog(
+        context: context,
+        animType: AnimType.SCALE,
+        dialogType: DialogType.ERROR,
+        title: 'Lưu thất bại',
+        desc: response.statusCode.toString() + response.body,
+        dismissOnTouchOutside: false,
+        btnOkOnPress: () {
+        },
+      ).show();
+    }
+  }
+
+  Future uploadImage(context, token,id, file)  async {
+
+    final response = await http.patch(
+      Uri.parse(
+          'https://computer-services-api.herokuapp.com/order/computer-to-order/$id'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'token': 'bearer $token',
+      },
+      body: json.encode(
+          {
+          }
+      ),
+    );
+    if(response.statusCode == 200){
+      AwesomeDialog(
+        context: context,
+        animType: AnimType.SCALE,
+        dialogType: DialogType.SUCCES,
+        title: 'Lưu thành công',
+        dismissOnTouchOutside: false,
+        btnOkOnPress: () {
+        },
+      ).show();
+    }else{
+      AwesomeDialog(
+        context: context,
+        animType: AnimType.SCALE,
+        dialogType: DialogType.ERROR,
+        title: 'Lưu thất bại',
+        desc: response.statusCode.toString() + response.body,
+        dismissOnTouchOutside: false,
+        btnOkOnPress: () {
+        },
+      ).show();
+    }
+  }
+
+
 
 }

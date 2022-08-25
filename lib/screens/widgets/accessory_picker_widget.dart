@@ -43,7 +43,7 @@ class _AccessoryPickerState extends State<AccessoryPicker> {
       });
     }
     _serviceToChoose = await ServiceServices()
-        .fetchServiceToPick(token, false, selectedComType, ts);
+        .fetchServiceToPick(token, hasAccessory, selectedComType, ts);
     return _serviceToChoose;
   }
 
@@ -406,96 +406,98 @@ class _AccessoryPickerState extends State<AccessoryPicker> {
                                                             ),
                                                         ],
                                                       );
-                                                    })
+                                                    }), const SizedBox(height: 80,),
                                               ])))
                                       : const Center(child: Text('Trống'));
                                 }
                               }))
-                      : FutureBuilder(
-                          future: getServiceList(token),
-                          builder: (context, snapshot) {
-                            if (!snapshot.hasData) {
-                              return const Center(
-                                  child: CircularProgressIndicator());
-                            } else {
-                              return _serviceToChoose.isNotEmpty
-                                  ? Align(
-                                      alignment: Alignment.topCenter,
-                                      child: SingleChildScrollView(
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          mainAxisSize: MainAxisSize.max,
-                                          children: [
-                                            ListView.builder(
-                                                scrollDirection: Axis.vertical,
-                                                physics:
-                                                    const NeverScrollableScrollPhysics(),
-                                                shrinkWrap: true,
-                                                itemCount:
-                                                    _serviceToChoose.length,
-                                                itemBuilder: (context, index) {
-                                                  return Card(
-                                                    child: ListTile(
-                                                      title: Text(
-                                                          '${_serviceToChoose[index].name}'),
-                                                      subtitle: Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                    .only(
-                                                                right: 50),
-                                                        child: Text(
-                                                          '${_serviceToChoose[index].description}',
-                                                          maxLines: 5,
+                      : Expanded(
+                        child: FutureBuilder(
+                            future: getServiceList(token),
+                            builder: (context, snapshot) {
+                              if (!snapshot.hasData) {
+                                return const Center(
+                                    child: CircularProgressIndicator());
+                              } else {
+                                return _serviceToChoose.isNotEmpty
+                                    ? Align(
+                                        alignment: Alignment.topCenter,
+                                        child: SingleChildScrollView(
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            mainAxisSize: MainAxisSize.max,
+                                            children: [
+                                              ListView.builder(
+                                                  scrollDirection: Axis.vertical,
+                                                  physics:
+                                                      const NeverScrollableScrollPhysics(),
+                                                  shrinkWrap: true,
+                                                  itemCount:
+                                                      _serviceToChoose.length,
+                                                  itemBuilder: (context, index) {
+                                                    return Card(
+                                                      child: ListTile(
+                                                        title: Text(
+                                                            '${_serviceToChoose[index].name}'),
+                                                        subtitle: Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .only(
+                                                                  right: 50),
+                                                          child: Text(
+                                                            '${_serviceToChoose[index].description}',
+                                                            maxLines: 5,
+                                                          ),
                                                         ),
+                                                        trailing: servicePick ==
+                                                                index
+                                                            ? const Icon(
+                                                                Icons.check,color: Colors.green,)
+                                                            : Text(
+                                                                '${convertMoney(_serviceToChoose[index].price)}đ'),
+                                                        onTap: () {
+                                                          servicePick = index;
+                                                          _serviceAccessoryList =
+                                                              ServiceAccessoryList(
+                                                                  serviceAccessory:
+                                                                  ServiceAccessory(
+                                                                    hasAccessory:
+                                                                    false,
+                                                                    price:
+                                                                    _serviceToChoose[
+                                                                    index]
+                                                                        .price,
+                                                                    id: _serviceToChoose[
+                                                                    index]
+                                                                        .id,
+                                                                    name:
+                                                                    _serviceToChoose[
+                                                                    index]
+                                                                        .name,
+                                                                    type:
+                                                                    _serviceToChoose[
+                                                                    index]
+                                                                        .type,
+                                                                  ));
+                                                          setState(() {
+                                                            servicePick;
+                                                            _serviceAccessoryList;
+                                                          });
+                                                        },
                                                       ),
-                                                      trailing: servicePick ==
-                                                              index
-                                                          ? const Icon(
-                                                              Icons.check,color: Colors.green,)
-                                                          : Text(
-                                                              '${convertMoney(_serviceToChoose[index].price)}đ'),
-                                                      onTap: () {
-                                                        servicePick = index;
-                                                        _serviceAccessoryList =
-                                                            ServiceAccessoryList(
-                                                                serviceAccessory:
-                                                                ServiceAccessory(
-                                                                  hasAccessory:
-                                                                  false,
-                                                                  price:
-                                                                  _serviceToChoose[
-                                                                  index]
-                                                                      .price,
-                                                                  id: _serviceToChoose[
-                                                                  index]
-                                                                      .id,
-                                                                  name:
-                                                                  _serviceToChoose[
-                                                                  index]
-                                                                      .name,
-                                                                  type:
-                                                                  _serviceToChoose[
-                                                                  index]
-                                                                      .type,
-                                                                ));
-                                                        setState(() {
-                                                          servicePick;
-                                                          _serviceAccessoryList;
-                                                        });
-                                                      },
-                                                    ),
-                                                  );
-                                                })
-                                          ],
+                                                    );
+                                                  }),const SizedBox(height: 80,),
+                                            ],
+                                          ),
                                         ),
-                                      ),
-                                    )
-                                  : const Center(
-                                      child: Text('Trống'),
-                                    );
-                            }
-                          })
+                                      )
+                                    : const Center(
+                                        child: Text('Trống'),
+                                      );
+                              }
+                            }),
+                      )
                 ]),
               ))),
       floatingActionButton: FloatingActionButton.extended(

@@ -42,7 +42,32 @@ String parseDateNoUTC(date){
   return '$hour:$minute, ${dt1.day}/${dt1.month}/${dt1.year}';
 }
 
+int parseDayToInt(date){
+  if(date == null){
+    return 0;
+  }
+  DateTime dt1 = DateTime.parse(date);
+  String day = dt1.day.toString();
+  if(day.length ==1){
+    day = '0$day';
+  }
+  String month = dt1.month.toString();
 
+  String result = month+day;
+  return int.parse(result);
+}
+int parseDayMonthToInt(date){
+  if(date == null){
+    return 0;
+  }
+  String day = date.toString().substring(0,date.toString().indexOf('/'));
+  if(day.length ==1){
+    day = '0$day';
+  }
+  String month = date.toString().substring(date.toString().indexOf('/')+1);
+  String result = month+day;
+  return int.parse(result);
+}
 
 String parseDateDownLine(date){
   if(date == null){
@@ -89,4 +114,6 @@ Color getStatusColor(String? status){
     return Colors.black;
   }
 }
+
+
 

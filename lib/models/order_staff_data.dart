@@ -1,4 +1,5 @@
 
+
 class OrderStaff {
   StaffId? staffId;
   OrderId? orderId;
@@ -36,8 +37,8 @@ class OrderId {
   int? v;
   BookingId? bookingId;
   String? workSlot;
-
-  OrderId({this.id, this.totalPrice, this.status, this.orderDetailsId, this.createdAt, this.updatedAt, this.v, this.bookingId, this.workSlot});
+  String? computerId;
+  OrderId({this.id, this.totalPrice, this.status, this.orderDetailsId, this.createdAt, this.updatedAt, this.v, this.bookingId, this.workSlot, this.computerId});
 
   OrderId.fromJson(Map<String, dynamic> json) {
     if(json["_id"] is String) {
@@ -66,6 +67,9 @@ class OrderId {
     }
     if(json["work_slot"] is String) {
       workSlot = json["work_slot"];
+    }
+    if(json["computer_id"] is String) {
+      computerId = json["computer_id"];
     }
   }
 

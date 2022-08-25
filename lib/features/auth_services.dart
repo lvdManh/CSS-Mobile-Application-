@@ -46,7 +46,7 @@ class AuthService {
   }
 
   void signInUser({
-    required BuildContext context,
+    required context,
     required String username,
     required String password,
   }) async {

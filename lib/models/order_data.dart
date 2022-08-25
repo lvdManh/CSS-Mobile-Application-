@@ -9,8 +9,9 @@ class Order {
   BookingId? bookingId;
   WorkSlot? workSlot;
   List<OrderDetailsId>? orderDetailsId;
+  Computer? computerId;
 
-  Order({this.id, this.totalPrice, this.status, this.createdAt, this.updatedAt, this.v, this.bookingId, this.workSlot, this.orderDetailsId});
+  Order({this.id, this.totalPrice, this.status, this.createdAt, this.updatedAt, this.v, this.bookingId, this.workSlot, this.orderDetailsId, this.computerId});
 
   Order.fromJson(Map<String, dynamic> json) {
     if(json["_id"] is String) {
@@ -39,6 +40,9 @@ class Order {
     }
     if(json["orderDetails_id"] is List) {
       orderDetailsId = json["orderDetails_id"]==null ? null : (json["orderDetails_id"] as List).map((e)=>OrderDetailsId.fromJson(e)).toList();
+    }
+    if(json["computer_id"] is Map) {
+      computerId = json["computer_id"] == null ? null : Computer.fromJson(json["computer_id"]);
     }
   }
 
@@ -314,5 +318,48 @@ class BookingId {
     data["_id"] = id;
     data["acc_id"] = accId;
     return data;
+  }
+}
+
+class Computer {
+  String? id;
+  String? name;
+  String? code;
+  String? type;
+  String? brand;
+
+  Computer({this.id, this.name, this.code, this.type, this.brand});
+
+  Computer.fromJson(Map<String, dynamic> json) {
+    if(json["_id"] is String) {
+      id = json["_id"];
+    }
+    if(json["name"] is String) {
+      name = json["name"];
+    }else{
+      name = '';
+    }
+    if(json["code"] is String) {
+      code = json["code"];
+    }
+    if(json["type"] is String) {
+      type = json["type"];
+    }
+    if(json["brand"] is String) {
+      brand = json["brand"];
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data["_id"] = id;
+    data["name"] = name;
+    data["code"] = code;
+    data["type"] = type;
+    data["brand"] = brand;
+    return data;
+  }
+  bool checkNullValue() {
+    return [id, name, code, type, brand].contains(null);
   }
 }

@@ -1,4 +1,6 @@
 
+import 'order_data.dart';
+
 class OrderInfo {
   int? totalPrice;
   String? id;
@@ -9,9 +11,12 @@ class OrderInfo {
   int? v;
   String? bookingId;
   List<OrderDetailsId>? orderDetailsId;
+  Computer? computerId;
 
-  OrderInfo({this.totalPrice, this.id, this.status, this.workSlot, this.createdAt, this.updatedAt, this.v, this.bookingId, this.orderDetailsId});
-
+  OrderInfo({this.totalPrice, this.id, this.status, this.workSlot, this.createdAt, this.updatedAt, this.v, this.bookingId, this.orderDetailsId, this.computerId});
+  bool checkNullValue() {
+    return [computerId].contains(null);
+  }
   OrderInfo.fromJson(Map<String, dynamic> json) {
     if(json["totalPrice"] is int) {
       totalPrice = json["totalPrice"];
@@ -39,6 +44,9 @@ class OrderInfo {
     }
     if(json["orderDetails_id"] is List) {
       orderDetailsId = json["orderDetails_id"]==null ? null : (json["orderDetails_id"] as List).map((e)=>OrderDetailsId.fromJson(e)).toList();
+    }
+    if(json["computer_id"] is Map) {
+      computerId = json["computer_id"] == null ? null : Computer.fromJson(json["computer_id"]);
     }
   }
 

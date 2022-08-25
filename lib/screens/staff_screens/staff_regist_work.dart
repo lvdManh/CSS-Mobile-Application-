@@ -1,4 +1,5 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:computer_service_system/constants/utils.dart';
 import 'package:computer_service_system/features/registing_work.dart';
 import 'package:computer_service_system/models/staff_register.dart';
 import 'package:computer_service_system/models/work_schedule_data.dart';
@@ -7,6 +8,7 @@ import 'package:computer_service_system/screens/staff_screens/staff_home_page.da
 import 'package:computer_service_system/screens/staff_screens/view_appointment_page.dart';
 import 'package:computer_service_system/screens/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
+import 'package:loading_overlay/loading_overlay.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
@@ -66,173 +68,217 @@ class _StaffRegistWorkState extends State<StaffRegistWork> {
   Widget build(BuildContext context) {
     String token = Provider.of<DataClass>(context).user.accessToken;
     String userId = Provider.of<DataClass>(context).user.id;
-    return Scaffold(
-      //App Bar
-      backgroundColor: Colors.orangeAccent,
-      appBar: AppBar(
-        elevation: 0.0,
+    return LoadingOverlay(
+      isLoading: isLoading,
+      opacity: 0.5,
+      color: Colors.black12.withOpacity(0.3),
+      progressIndicator: const CircularProgressIndicator(),
+      child: Scaffold(
+        //App Bar
         backgroundColor: Colors.orangeAccent,
-        title: const Text(
-          "Computer Services",
-          style: TextStyle(
-            fontSize: 23,
+        appBar: AppBar(
+          elevation: 0.0,
+          backgroundColor: Colors.orangeAccent,
+          title: const Text(
+            "Computer Services",
+            style: TextStyle(
+              fontSize: 23,
+            ),
           ),
+          centerTitle: true,
         ),
-        centerTitle: true,
-      ),
-      body: isLoading
-          ? const ProgressDialogPrimary()
-          :Container(
-        decoration: const BoxDecoration(color: mBackgroundColor,
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(30),
-              topRight: Radius.circular(30),
-            )),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            //mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const Padding(
-                  padding: EdgeInsets.fromLTRB(0, 50, 0, 20),
-                  child: Text('Đăng ký lịch làm việc theo tuần',
-                      style: TextStyle(
-                        color: Colors.black87,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                      ))),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-                child: Column(
-                  children: <Widget>[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        IconButton(
-                            icon: const Icon(Icons.skip_previous_rounded),
-                            onPressed: (){
-                              setState(() {
-                                selectWeek -= 7;
-                                weekday();
-                        });}),
-                        Text(parseDay(nextTwoWeek.first),
-                            style: const TextStyle(
-                                fontSize: 18, fontFamily: 'Regular')),
-                        const Text(' - ', style: TextStyle(fontSize: 24, fontFamily: 'Regular'),),
-                        Text(parseDay(nextTwoWeek.last),
-                            style: const TextStyle(
-                                fontSize: 18, fontFamily: 'Regular')),
-                        IconButton(
-                            icon: const Icon(
-                                Icons.skip_next_rounded), onPressed: (){
-                          setState(() {
-                            selectWeek += 7;
-                            weekday();
-                          });
-                        }),
-                      ],
-                    ),
-                  ],
+        body: Container(
+          decoration: const BoxDecoration(color: mBackgroundColor,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(30),
+                topRight: Radius.circular(30),
+              )),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              //mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const Padding(
+                    padding: EdgeInsets.fromLTRB(0, 50, 0, 20),
+                    child: Text('Đăng ký lịch làm việc theo tuần',
+                        style: TextStyle(
+                          color: Colors.black87,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ))),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+                  child: Column(
+                    children: <Widget>[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          IconButton(
+                              icon: const Icon(Icons.skip_previous_rounded),
+                              onPressed: (){
+                                setState(() {
+                                  selectWeek -= 7;
+                                  weekday();
+                          });}),
+                          Text(parseDay(nextTwoWeek.first),
+                              style: const TextStyle(
+                                  fontSize: 18, fontFamily: 'Regular')),
+                          const Text(' - ', style: TextStyle(fontSize: 24, fontFamily: 'Regular'),),
+                          Text(parseDay(nextTwoWeek.last),
+                              style: const TextStyle(
+                                  fontSize: 18, fontFamily: 'Regular')),
+                          IconButton(
+                              icon: const Icon(
+                                  Icons.skip_next_rounded), onPressed: (){
+                            setState(() {
+                              selectWeek += 7;
+                              weekday();
+                            });
+                          }),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              FutureBuilder(
-                  future: getFutureWorkSchedule(),
-                  builder: (context, snapshot) {
-                    if (!snapshot.hasData) {
-                      return const Center(child: CircularProgressIndicator());
-                    } else {
-                      getListOpenDay();
-                      schedules = getScheduleData(nextTwoWeek,listOpenDay,userId);
-                      scheduleDataSource = ScheduleDataSource(scheduleData: schedules, checkWeek: selectWeek);
-                      return Expanded(
-                        child: SfDataGrid(
-                          source: scheduleDataSource,
-                          columns: <GridColumn>[
-                            GridColumn(
-                                columnName: 'date',
-                                width: 60,
-                                label: Container(
+                const SizedBox(
+                  height: 20,
+                ),
+                FutureBuilder(
+                    future: getFutureWorkSchedule(),
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasData) {
+                        return const Center(child: CircularProgressIndicator());
+                      } else {
+                        getListOpenDay();
+                        schedules = getScheduleData(nextTwoWeek,listOpenDay,userId);
+                        scheduleDataSource = ScheduleDataSource(scheduleData: schedules, checkWeek: selectWeek);
+                        return Expanded(
+                          child: SfDataGrid(
+                            source: scheduleDataSource,
+                            columns: <GridColumn>[
+                              GridColumn(
+                                  columnName: 'date',
+                                  width: 60,
+                                  label: Container(
+                                      alignment: Alignment.center,
+                                      child: const Text(
+                                        'Ngày',
+                                      ))),
+                              GridColumn(
+                                  columnName: 'slot1',
+                                  width: 90,
+                                  label: Container(
+                                      alignment: Alignment.center,
+                                      child: const Text('8:00-11:00'))),
+                              GridColumn(
+                                  columnName: 'slot2',
+                                  width: 90,
+                                  label: Container(
+                                      alignment: Alignment.center,
+                                      child: const Text('11:00-14:00'))),
+                              GridColumn(
+                                  columnName: 'slot3',
+                                  width: 90,
+                                  label: Container(
                                     alignment: Alignment.center,
-                                    child: const Text(
-                                      'Ngày',
-                                    ))),
-                            GridColumn(
-                                columnName: 'slot1',
-                                width: 90,
-                                label: Container(
+                                    child: const Text('14:00-17:00'),
+                                  )),
+                              GridColumn(
+                                  columnName: 'slot4',
+                                  width: 90,
+                                  label: Container(
                                     alignment: Alignment.center,
-                                    child: const Text('8:00-11:00'))),
-                            GridColumn(
-                                columnName: 'slot2',
-                                width: 90,
-                                label: Container(
-                                    alignment: Alignment.center,
-                                    child: const Text('11:00-14:00'))),
-                            GridColumn(
-                                columnName: 'slot3',
-                                width: 90,
-                                label: Container(
-                                  alignment: Alignment.center,
-                                  child: const Text('14:00-17:00'),
-                                )),
-                            GridColumn(
-                                columnName: 'slot4',
-                                width: 90,
-                                label: Container(
-                                  alignment: Alignment.center,
-                                  child: const Text('17:00-20:00'),
-                                )),
-                          ],
-                        ),
-                      );
-                    }
-                  }),
-              if(selectWeek >= 14 && selectWeek <= 35)Container(
-                width: 150,
-                padding: const EdgeInsets.all(15.0),
-                child: CustomButton(
-                    text: 'Đăng ký',
-                    onTap: () {
-                      AwesomeDialog(
-                        context: context,
-                        animType: AnimType.SCALE,
-                        dialogType: DialogType.QUESTION,
-                        title: 'Xác nhận đăng ký lịch?',
-                        dismissOnTouchOutside: false,
-                        btnCancelOnPress: () {},
-                        btnOkOnPress: () {
-                          list = getScheduleDataOfEachDay(schedules);
+                                    child: const Text('17:00-20:00'),
+                                  )),
+                            ],
+                          ),
+                        );
+                      }
+                    }),
+                if(selectWeek >= 0 && selectWeek <= 28)Container(
+                  width: 150,
+                  padding: const EdgeInsets.all(15.0),
+                  child: CustomButton(
+                      text: 'Đăng ký',
+                      onTap: () {
+                        AwesomeDialog(
+                          context: context,
+                          animType: AnimType.SCALE,
+                          dialogType: DialogType.QUESTION,
+                          title: 'Xác nhận đăng ký lịch?',
+                          dismissOnTouchOutside: false,
+                          btnCancelOnPress: () {},
+                          btnOkOnPress: () {
+                            list = getScheduleDataOfEachDay(schedules);
                             checkAndPostSchedule(list, schedules, token, context);
 
-                        },
-                      ).show();
-                    }),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-            ],
+                          },
+                        ).show();
+                      }),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+              ],
+            ),
           ),
         ),
+        // Bottom Navigation----------------
+        bottomNavigationBar: Row(
+          children: <Widget>[
+            buildNavBarItem(Icons.home, 0),
+            buildNavBarItem(Icons.list_alt, 1),
+            buildNavBarItem(Icons.schedule, 2),
+            buildNavBarItem(Icons.person, 3)
+          ],
+        ),
+        // This is Background Color
       ),
-      // Bottom Navigation----------------
-      bottomNavigationBar: Row(
-        children: <Widget>[
-          buildNavBarItem(Icons.home, 0),
-          buildNavBarItem(Icons.list_alt, 1),
-          buildNavBarItem(Icons.schedule, 2),
-          buildNavBarItem(Icons.person, 3)
-        ],
-      ),
-      // This is Background Color
     );
   }
+
+  checkAndPostSchedule(List<StaffRegister> list, schedule, token, context) async {
+    int slotCount = checkMaxSlot(schedule);
+    if(list.isEmpty){
+      AwesomeDialog(
+        context: context,
+        animType: AnimType.SCALE,
+        dialogType: DialogType.WARNING,
+        title: 'Chưa chọn lịch làm việc',
+        dismissOnTouchOutside: false,
+        btnOkOnPress: () {
+        },
+      ).show();
+    }else if(list.length/2 + slotCount>14){
+      AwesomeDialog(
+        context: context,
+        animType: AnimType.SCALE,
+        dialogType: DialogType.WARNING,
+        title: 'Đăng ký tối đa 14 slots/tuần',
+        dismissOnTouchOutside: false,
+        btnOkOnPress: () {
+          list.clear();
+        },
+      ).show();
+    }
+    else{
+      List<StaffRegister> slotList = [];
+      slotList.addAll(list);
+      ListScheduleRegister datas = ListScheduleRegister(datas: []);
+      datas.datas = slotList;
+      setState(() {
+        isLoading = true;
+      });
+      await StaffAssignWorkSchedule().addSchedule(context, token, datas);
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
 
   Widget buildNavBarItem(IconData icon, int index) {
     return GestureDetector(
@@ -437,38 +483,6 @@ List<StaffRegister> getScheduleDataOfEachDay(List<Slot> schedule) {
   return list;
 }
 
-checkAndPostSchedule(List<StaffRegister> list, schedule, token, context) async {
-  int slotCount = checkMaxSlot(schedule);
-  if(list.isEmpty){
-    AwesomeDialog(
-      context: context,
-      animType: AnimType.SCALE,
-      dialogType: DialogType.WARNING,
-      title: 'Chưa chọn lịch làm việc',
-      dismissOnTouchOutside: false,
-      btnOkOnPress: () {
-      },
-    ).show();
-  }else if(list.length/2 + slotCount>14){
-    AwesomeDialog(
-      context: context,
-      animType: AnimType.SCALE,
-      dialogType: DialogType.WARNING,
-      title: 'Đăng ký tối đa 14 slots/tuần',
-      dismissOnTouchOutside: false,
-      btnOkOnPress: () {
-        list.clear();
-      },
-    ).show();
-  }
-  else{
-    List<StaffRegister> slotList = [];
-    slotList.addAll(list);
-    ListScheduleRegister datas = ListScheduleRegister(datas: []);
-    datas.datas = slotList;
-    StaffAssignWorkSchedule().addSchedule(context, token, datas);
-  }
-}
 
 class Slot {
   Slot(this.time,
@@ -528,7 +542,8 @@ class ScheduleDataSource extends DataGridSource {
           child: !scheduleData[_dataGridRow.indexOf(row)].valid1
               && !scheduleData[_dataGridRow.indexOf(row)].isAssigned1
               && checkMaxSlot(scheduleData) < 14
-              && checkWeek >=14
+              && checkWeek >=0
+              && parseDayMonthToInt(row.getCells()[0].value) > parseDayToInt(DateTime.now().toString())
               ?  Checkbox(
             value: row.getCells()[1].value,
             onChanged: (value) {
@@ -548,7 +563,8 @@ class ScheduleDataSource extends DataGridSource {
             child: !scheduleData[_dataGridRow.indexOf(row)].valid2
                 && !scheduleData[_dataGridRow.indexOf(row)].isAssigned2
                 && checkMaxSlot(scheduleData)< 14
-                && checkWeek >=14
+                && checkWeek >=0
+                && parseDayMonthToInt(row.getCells()[0].value) > parseDayToInt(DateTime.now().toString())
                 ? Checkbox(
               value: row.getCells()[2].value,
               onChanged: (value) {
@@ -568,7 +584,8 @@ class ScheduleDataSource extends DataGridSource {
           child: !scheduleData[_dataGridRow.indexOf(row)].valid3
               && !scheduleData[_dataGridRow.indexOf(row)].isAssigned3
               && checkMaxSlot(scheduleData) < 14
-              && checkWeek >=14
+              && checkWeek >=0
+              && parseDayMonthToInt(row.getCells()[0].value) > parseDayToInt(DateTime.now().toString())
               ? Checkbox(
             value: row.getCells()[3].value,
             onChanged: (value) {
@@ -588,7 +605,8 @@ class ScheduleDataSource extends DataGridSource {
           child: ! scheduleData[_dataGridRow.indexOf(row)].valid4
               && !scheduleData[_dataGridRow.indexOf(row)].isAssigned4
               && checkMaxSlot(scheduleData) < 14
-              && checkWeek >=14
+              && checkWeek >=0
+              && parseDayMonthToInt(row.getCells()[0].value) > parseDayToInt(DateTime.now().toString())
               ? Checkbox(
             value: row.getCells()[4].value,
             onChanged: (value) {
