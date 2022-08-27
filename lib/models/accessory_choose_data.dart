@@ -13,7 +13,6 @@ class AccessoryToChoose {
   String? updatedAt;
   int? v;
   String? brand;
-
   AccessoryToChoose({this.id, this.name, this.description, this.type, this.price, this.hasAccessory, this.serHasAcc, this.orderdetailId, this.deleted, this.createdAt, this.updatedAt, this.v, this.brand});
 
   AccessoryToChoose.fromJson(Map<String, dynamic> json) {
@@ -114,8 +113,8 @@ class AccessoryId {
   String? insurance;
   SupplierId? supplierId;
   int? price;
-
-  AccessoryId({this.id, this.name, this.type, this.description, this.insurance, this.supplierId, this.price});
+  String? imgURL;
+  AccessoryId({this.id, this.name, this.type, this.description, this.insurance, this.supplierId, this.price, this.imgURL});
 
   AccessoryId.fromJson(Map<String, dynamic> json) {
     if(json["_id"] is String) {
@@ -139,6 +138,10 @@ class AccessoryId {
     if(json["price"] is int) {
       price = json["price"];
     }
+    if(json["imgURL"] is String) {
+      imgURL = json["imgURL"];
+    }
+
   }
 
   Map<String, dynamic> toJson() {

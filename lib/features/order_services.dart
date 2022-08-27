@@ -194,7 +194,42 @@ class OrderServices{
     }
 
   }
+  void cancelOrderByStaff(context, token,id) async{
+    final response = await http.patch(
+      Uri.parse(
+          'http://computer-services-api.herokuapp.com/order/cancel-order'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'token': 'bearer $token',
+      },
+      body: jsonEncode({
+        'id' : id,
+      }),
+    );
+    if(response.statusCode ==200){
+      AwesomeDialog(
+        context: context,
+        animType: AnimType.SCALE,
+        dialogType: DialogType.SUCCES,
+        title: 'Đã hủy lịch hẹn',
+        desc: response.body,
+        btnOkOnPress: () {
+        },
+      ).show();
+    }else{
+      AwesomeDialog(
+        context: context,
+        animType: AnimType.SCALE,
+        dialogType: DialogType.ERROR,
+        title: 'Không thành công',
+        desc: response.body,
+        dismissOnTouchOutside: false,
+        btnOkOnPress: () {
+        },
+      ).show();
+    }
 
+  }
   void computeMoney(token,id) async{
     await http.get(
       Uri.parse(
@@ -247,44 +282,36 @@ class OrderServices{
     }
   }
 
-  Future uploadImage(context, token,id, file)  async {
+  Future<List<OrderStaff>> getHistoryOrderListForStaff(token,context
+      ) async{
+    try {
+      http.Response response = await http.get(
+        Uri.parse('https://computer-services-api.herokuapp.com/order/show/history-order-staff'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'token': 'bearer $token',
+        },
+      );
+      if(response.statusCode ==200){
+        final parsed = json.decode(response.body).cast<Map<String, dynamic>>();
+        return  parsed.map<OrderStaff>((json) => OrderStaff.fromJson(json)).toList();
+      }
+      else{
+        AwesomeDialog(
+          context: context,
+          animType: AnimType.SCALE,
+          dialogType: DialogType.WARNING,
+          title: 'Hết phiên đăng nhập',
+          desc: 'Vui lòng đăng nhập lại',
+          dismissOnTouchOutside: false,
+          btnOkOnPress: () { AuthService().logOut(context);},
+        ).show();
+        throw Exception('Lấy dữ liệu thất bại');
+      }
+    } catch (e){
 
-    final response = await http.patch(
-      Uri.parse(
-          'https://computer-services-api.herokuapp.com/order/computer-to-order/$id'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        'token': 'bearer $token',
-      },
-      body: json.encode(
-          {
-          }
-      ),
-    );
-    if(response.statusCode == 200){
-      AwesomeDialog(
-        context: context,
-        animType: AnimType.SCALE,
-        dialogType: DialogType.SUCCES,
-        title: 'Lưu thành công',
-        dismissOnTouchOutside: false,
-        btnOkOnPress: () {
-        },
-      ).show();
-    }else{
-      AwesomeDialog(
-        context: context,
-        animType: AnimType.SCALE,
-        dialogType: DialogType.ERROR,
-        title: 'Lưu thất bại',
-        desc: response.statusCode.toString() + response.body,
-        dismissOnTouchOutside: false,
-        btnOkOnPress: () {
-        },
-      ).show();
+      throw Exception(e);
     }
   }
-
-
 
 }

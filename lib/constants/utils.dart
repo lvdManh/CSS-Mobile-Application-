@@ -115,5 +115,14 @@ Color getStatusColor(String? status){
   }
 }
 
+Color getOrderStatusColor(String? status){
+  if(status == 'Hủy'){
+    return Colors.red;
+  }else if(status == 'Hoàn thành'){
+    return Colors.green.shade700;
+  }else{
+    return Colors.orange;
+  }
+}
 
 

@@ -32,7 +32,7 @@ class _AccessoryPickerState extends State<AccessoryPicker> {
       ts = '';
       hasAccessory = false;
     }
-    if (typeSer == "Thay linh kiện") {
+    if (typeSer == "Thay thế") {
       ts = '';
       setState(() {
         hasAccessory = true;
@@ -51,7 +51,7 @@ class _AccessoryPickerState extends State<AccessoryPicker> {
     if (typeSer == "Tất cả") {
       hasAccessory = false;
     }
-    if (typeSer == "Thay linh kiện") {
+    if (typeSer == "Thay thế") {
       setState(() {
         hasAccessory = true;
       });
@@ -181,7 +181,7 @@ class _AccessoryPickerState extends State<AccessoryPicker> {
                           ),
                         ],
                       )),
-                  typeSer == 'Thay linh kiện'
+                  typeSer == 'Thay thế'
                       ? Expanded(
                           child: FutureBuilder<List<AccessoryToChoose>>(
                               future: getAccessoryList(token),
@@ -373,8 +373,7 @@ class _AccessoryPickerState extends State<AccessoryPicker> {
                                                                                 CrossAxisAlignment.stretch,
                                                                             children: [
                                                                               Expanded(
-                                                                                child: Image.asset(
-                                                                                  checkAccessoryName(_accessoryToChoose[index].serHasAcc?[i].accessoryId!.name),
+                                                                                child: Image.network('${_accessoryToChoose[index].serHasAcc![i].accessoryId!.imgURL}',
                                                                                   fit: BoxFit.fill,
                                                                                 ),
                                                                               ),

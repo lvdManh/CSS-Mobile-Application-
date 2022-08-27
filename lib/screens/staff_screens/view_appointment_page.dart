@@ -73,7 +73,7 @@ class _StaffViewAppointmentPageState extends State<StaffViewAppointmentPage> {
                                                           snapshot.data![index].orderId?.bookingId?.cusAddress?.ward,
                                                           snapshot.data![index].orderId?.bookingId?.cusAddress?.district)}'),
                             trailing:
-                            Text('${snapshot.data![index].orderId?.status}'),
+                            Text('${snapshot.data![index].orderId?.status}', style: TextStyle(color: getOrderStatusColor(snapshot.data![index].orderId?.status)),),
                             onTap: () {
                               Navigator.push(
                                   context,

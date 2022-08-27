@@ -12,8 +12,8 @@ class OrderInfo {
   String? bookingId;
   List<OrderDetailsId>? orderDetailsId;
   Computer? computerId;
-
-  OrderInfo({this.totalPrice, this.id, this.status, this.workSlot, this.createdAt, this.updatedAt, this.v, this.bookingId, this.orderDetailsId, this.computerId});
+  List<String>? imgComUrls;
+  OrderInfo({this.totalPrice, this.id, this.status, this.workSlot, this.createdAt, this.updatedAt, this.v, this.bookingId, this.orderDetailsId, this.computerId, this.imgComUrls});
   bool checkNullValue() {
     return [computerId].contains(null);
   }
@@ -47,6 +47,9 @@ class OrderInfo {
     }
     if(json["computer_id"] is Map) {
       computerId = json["computer_id"] == null ? null : Computer.fromJson(json["computer_id"]);
+    }
+    if(json["imgComUrls"] is List) {
+      imgComUrls = json["imgComUrls"] ==null ? null : List<String>.from(json["imgComUrls"]);
     }
   }
 

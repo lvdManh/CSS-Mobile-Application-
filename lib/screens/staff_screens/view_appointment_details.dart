@@ -158,6 +158,38 @@ class _StaffViewAppointmentDetailsState
         appBar: PreferredSize(
           preferredSize: const Size.fromHeight(50),
           child: AppBar(
+            actions: <Widget>[
+              IconButton(
+                icon: const Icon(Icons.cancel,color: Colors.red),
+                tooltip: 'Hủy lịch hẹn',
+                onPressed: () {
+                  if(_orderInfo.status != "Hoàn thành" && _orderInfo.status != "Hủy") {
+                    AwesomeDialog(
+                      context: context,
+                      animType: AnimType.SCALE,
+                      dialogType: DialogType.WARNING,
+                      title: 'Xác nhận hủy lịch hẹn?',
+                      desc: 'Không thể hoàn tác khi đã hủy',
+                      btnCancelOnPress: () {
+                        OrderServices().cancelOrderByStaff(context, widget
+                            .token, widget.order.orderId!.id);
+                      },
+                      btnCancelText: 'Xác nhận',
+                      btnOkText: 'Không',
+                      btnOkOnPress: () {},
+                    ).show();
+                  }else{
+                    AwesomeDialog(
+                      context: context,
+                      animType: AnimType.SCALE,
+                      dialogType: DialogType.WARNING,
+                      title: 'Bạn không thể hủy đơn đã kết thúc',
+                      btnOkOnPress: () {},
+                    ).show();
+                  }
+                },
+              ), //IconButton//IconButton
+            ],
             elevation: 0.0,
             backgroundColor: Colors.orangeAccent,
             title: const Text(
@@ -252,166 +284,6 @@ class _StaffViewAppointmentDetailsState
                         const Divider(),
                       ],
                     ),
-                    const SizedBox(height: 8),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text("Thông tin máy khách",
-                            style: TextStyle(
-                                color: mTextColorSecondary,
-                                fontSize: 16,
-                                fontFamily: 'Regular')),
-                        InkWell(
-                          child: const Icon(
-                            Icons.computer,
-                            color: Colors.orange,
-                          ),
-                          onTap: () {
-                            if (!_orderInfo.checkNullValue()) {
-                              nameCom.text = _orderInfo.computerId!.name!;
-                              codeCom.text = _orderInfo.computerId!.code!;
-                              typeCom.text = _orderInfo.computerId!.type!;
-                              brandCom.text = _orderInfo.computerId!.brand!;
-                            }
-                            AwesomeDialog(
-                                context: context,
-                                animType: AnimType.SCALE,
-                                dialogType: DialogType.NO_HEADER,
-                                keyboardAware: true,
-                                body: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Form(
-                                    key: _submitKey,
-                                    child: Column(
-                                      children: <Widget>[
-                                        Text(
-                                          'Nhập thông tin máy',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .headline6,
-                                        ),
-                                        const SizedBox(
-                                          height: 20,
-                                        ),
-                                        Material(
-                                          elevation: 0,
-                                          color: Colors.blueGrey.withAlpha(40),
-                                          child: TextFormField(
-                                            controller: nameCom,
-                                            minLines: 1,
-                                            decoration: const InputDecoration(
-                                              border: InputBorder.none,
-                                              labelText: 'Tên máy',
-                                              prefixIcon: Icon(Icons.computer),
-                                            ),
-                                          ),
-                                        ),
-                                        const SizedBox(
-                                          height: 10,
-                                        ),
-                                        Material(
-                                          elevation: 0,
-                                          color: Colors.blueGrey.withAlpha(40),
-                                          child: TextFormField(
-                                            controller: codeCom,
-                                            keyboardType:
-                                                TextInputType.multiline,
-                                            minLines: 1,
-                                            maxLines: null,
-                                            decoration: const InputDecoration(
-                                              border: InputBorder.none,
-                                              labelText: 'Mã máy',
-                                              prefixIcon:
-                                                  Icon(Icons.confirmation_num),
-                                            ),
-                                          ),
-                                        ),
-                                        const SizedBox(
-                                          height: 10,
-                                        ),
-                                        Material(
-                                          elevation: 0,
-                                          color: Colors.blueGrey.withAlpha(40),
-                                          child: TextFormField(
-                                            keyboardType:
-                                                TextInputType.multiline,
-                                            minLines: 1,
-                                            controller: typeCom,
-                                            maxLines: null,
-                                            decoration: const InputDecoration(
-                                              border: InputBorder.none,
-                                              labelText: 'Loại máy',
-                                              prefixIcon:
-                                                  Icon(Icons.devices_other),
-                                            ),
-                                          ),
-                                        ),
-                                        const SizedBox(
-                                          height: 10,
-                                        ),
-                                        Material(
-                                          elevation: 0,
-                                          color: Colors.blueGrey.withAlpha(40),
-                                          child: TextFormField(
-                                            keyboardType:
-                                                TextInputType.multiline,
-                                            minLines: 1,
-                                            controller: brandCom,
-                                            maxLines: null,
-                                            decoration: const InputDecoration(
-                                              border: InputBorder.none,
-                                              labelText: 'Hãng',
-                                              prefixIcon: Icon(Icons.factory),
-                                            ),
-                                          ),
-                                        ),
-                                        const SizedBox(
-                                          height: 10,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                btnOkText: "Lưu",
-                                btnOkOnPress: () async {
-                                  if (_submitKey.currentState!.validate()) {
-                                    await OrderServices().addComputerToOrder(
-                                        context,
-                                        widget.token,
-                                        widget.order.orderId!.id,
-                                        nameCom.text,
-                                        codeCom.text,
-                                        typeCom.text,
-                                        brandCom.text);
-                                  }
-                                }).show();
-                          },
-                        )
-                      ],
-                    ),
-
-                    const Divider(),
-                    const SizedBox(height: 8),
-                    Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text("Ảnh",
-                              style: TextStyle(
-                                  color: mTextColorSecondary,
-                                  fontSize: 16,
-                                  fontFamily: 'Regular')),
-                          InkWell(
-                            child: const Icon(
-                              Icons.image,
-                              color: Colors.orange,
-                            ),
-                            onTap: () {
-                              Navigator.push(context, MaterialPageRoute(
-                                  builder: (context) => const ImagePickScreen()));
-                            },
-                          )
-                        ]),
-                    const Divider(),
                     const SizedBox(height: 8),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -547,6 +419,177 @@ class _StaffViewAppointmentDetailsState
                       ),
                     const Divider(),
                     const SizedBox(height: 8),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text("Thông tin máy khách",
+                            style: TextStyle(
+                                color: mTextColorSecondary,
+                                fontSize: 16,
+                                fontFamily: 'Regular')),
+                        InkWell(
+                          child: const Icon(
+                            Icons.computer,
+                            color: Colors.orange,
+                          ),
+                          onTap: () {
+                            if (!_orderInfo.checkNullValue()) {
+                              nameCom.text = _orderInfo.computerId!.name!;
+                              codeCom.text = _orderInfo.computerId!.code!;
+                              typeCom.text = _orderInfo.computerId!.type!;
+                              brandCom.text = _orderInfo.computerId!.brand!;
+                            }
+                            AwesomeDialog(
+                                context: context,
+                                animType: AnimType.SCALE,
+                                dialogType: DialogType.NO_HEADER,
+                                keyboardAware: true,
+                                body: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Form(
+                                    key: _submitKey,
+                                    child: Column(
+                                      children: <Widget>[
+                                        Text(
+                                          'Nhập thông tin máy',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline6,
+                                        ),
+                                        const SizedBox(
+                                          height: 20,
+                                        ),
+                                        Material(
+                                          elevation: 0,
+                                          color: Colors.blueGrey.withAlpha(40),
+                                          child: TextFormField(
+                                            controller: nameCom,
+                                            minLines: 1,
+                                            decoration: const InputDecoration(
+                                              border: InputBorder.none,
+                                              labelText: 'Tên máy',
+                                              prefixIcon: Icon(Icons.computer),
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          height: 10,
+                                        ),
+                                        Material(
+                                          elevation: 0,
+                                          color: Colors.blueGrey.withAlpha(40),
+                                          child: TextFormField(
+                                            controller: codeCom,
+                                            keyboardType:
+                                            TextInputType.multiline,
+                                            minLines: 1,
+                                            maxLines: null,
+                                            decoration: const InputDecoration(
+                                              border: InputBorder.none,
+                                              labelText: 'Mã máy',
+                                              prefixIcon:
+                                              Icon(Icons.confirmation_num),
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          height: 10,
+                                        ),
+                                        Material(
+                                          elevation: 0,
+                                          color: Colors.blueGrey.withAlpha(40),
+                                          child: TextFormField(
+                                            keyboardType:
+                                            TextInputType.multiline,
+                                            minLines: 1,
+                                            controller: typeCom,
+                                            maxLines: null,
+                                            decoration: const InputDecoration(
+                                              border: InputBorder.none,
+                                              labelText: 'Loại máy',
+                                              prefixIcon:
+                                              Icon(Icons.devices_other),
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          height: 10,
+                                        ),
+                                        Material(
+                                          elevation: 0,
+                                          color: Colors.blueGrey.withAlpha(40),
+                                          child: TextFormField(
+                                            keyboardType:
+                                            TextInputType.multiline,
+                                            minLines: 1,
+                                            controller: brandCom,
+                                            maxLines: null,
+                                            decoration: const InputDecoration(
+                                              border: InputBorder.none,
+                                              labelText: 'Hãng',
+                                              prefixIcon: Icon(Icons.factory),
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          height: 10,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                btnOkText: "Lưu",
+                                btnOkOnPress: () async {
+                                  if (_submitKey.currentState!.validate() && _orderInfo.status != "Hoàn thành" && _orderInfo.status != "Hủy") {
+                                    await OrderServices().addComputerToOrder(
+                                        context,
+                                        widget.token,
+                                        widget.order.orderId!.id,
+                                        nameCom.text,
+                                        codeCom.text,
+                                        typeCom.text,
+                                        brandCom.text);
+                                  }else{
+                                    AwesomeDialog(
+                                      context: context,
+                                      animType: AnimType.SCALE,
+                                      dialogType: DialogType.WARNING,
+                                      title: 'Đơn đã hoàn thành',
+                                      desc: 'Không thể thay đổi',
+                                      dismissOnTouchOutside: false,
+                                      btnOkOnPress: () { },
+                                    ).show();
+                                  }
+                                }).show();
+                          },
+                        )
+                      ],
+                    ),
+
+                    const Divider(),
+                    const SizedBox(height: 8),
+                    Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text("Lưu ảnh máy",
+                              style: TextStyle(
+                                  color: mTextColorSecondary,
+                                  fontSize: 16,
+                                  fontFamily: 'Regular')),
+                          InkWell(
+                            child: const Icon(
+                              Icons.image,
+                              color: Colors.orange,
+                            ),
+                            onTap: () {
+                              Navigator.push(context, MaterialPageRoute(
+                                  builder: (context) => ImagePickScreen(id: widget.order.orderId!.id,token: widget.token, imgURL: _orderInfo.imgComUrls,)));
+                            },
+                          )
+                        ]),
+                    const Divider(),
+                    const SizedBox(height: 8),
                     const Text("Chi tiết hóa đơn",
                         style: TextStyle(
                             color: mTextColorSecondary,
@@ -602,9 +645,11 @@ class _StaffViewAppointmentDetailsState
                                             fontSize: 18,
                                             fontFamily: 'Regular')),
                                     Text('${_orderInfo.status}',
-                                        style: const TextStyle(
+                                        style: TextStyle(
                                             fontSize: 18,
-                                            fontFamily: 'Regular')),
+                                            fontFamily: 'Regular',
+                                            color: getOrderStatusColor(_orderInfo.status)
+                                        )),
                                   ],
                                 ),
                                 const SizedBox(height: 16),
@@ -634,7 +679,7 @@ class _StaffViewAppointmentDetailsState
                                             color: mTextColorSecondary,
                                             fontSize: 16,
                                             fontFamily: 'Regular')),
-                                    InkWell(
+                                    if(_orderInfo.status != 'Hoàn thành' && _orderInfo.status != 'Hủy') InkWell(
                                       onTap: () {
                                         _showServiceToChoose();
                                       },
@@ -670,7 +715,7 @@ class _StaffViewAppointmentDetailsState
                                             children: [
                                               Container(
                                                 decoration: BoxDecoration(
-                                                  color: Colors.white,
+                                                  color: Colors.white70.withOpacity(0.9),
                                                   borderRadius:
                                                       BorderRadius.circular(
                                                           10), //border corner radius
@@ -740,6 +785,7 @@ class _StaffViewAppointmentDetailsState
                                                                 left: 5,
                                                                 right: 5),
                                                         child: Card(
+                                                          color: Colors.white30.withOpacity(0.9),
                                                           shape:
                                                               RoundedRectangleBorder(
                                                             borderRadius:
