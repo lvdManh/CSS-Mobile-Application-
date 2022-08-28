@@ -34,7 +34,7 @@ class _HistoryOrderState extends State<HistoryOrder> {
         elevation: 0.0,
         backgroundColor: Colors.orangeAccent,
         title: const Text(
-          "Computer Services",
+          "Lịch hẹn đã hoàn thành",
           style: TextStyle(
             fontSize: 23,
           ),

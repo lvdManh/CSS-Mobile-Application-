@@ -3,6 +3,8 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:computer_service_system/models/order_detail_data.dart';
 import 'package:computer_service_system/models/order_info_data.dart';
 import 'package:computer_service_system/models/order_staff_data.dart';
+import 'package:computer_service_system/screens/staff_screens/view_appointment_page.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:computer_service_system/models/order_data.dart';
 
@@ -192,7 +194,6 @@ class OrderServices{
         },
       ).show();
     }
-
   }
   void cancelOrderByStaff(context, token,id) async{
     final response = await http.patch(
@@ -311,6 +312,41 @@ class OrderServices{
     } catch (e){
 
       throw Exception(e);
+    }
+  }
+
+  void sendBusyOrder(context, token,id) async{
+    final response = await http.patch(
+      Uri.parse(
+          'http://computer-services-api.herokuapp.com/schedule/staff-in-work/$id'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'token': 'bearer $token',
+      },
+    );
+    if(response.statusCode ==200){
+      AwesomeDialog(
+        context: context,
+        animType: AnimType.SCALE,
+        dialogType: DialogType.SUCCES,
+        title: 'Thành công',
+        desc: response.body,
+        dismissOnTouchOutside: false,
+        btnOkOnPress: () {
+          Navigator.pushReplacementNamed(context, StaffViewAppointmentPage.routeName);
+        },
+      ).show();
+    }else{
+      AwesomeDialog(
+        context: context,
+        animType: AnimType.SCALE,
+        dialogType: DialogType.INFO,
+        title: 'Không thành công',
+        desc: response.body,
+        dismissOnTouchOutside: false,
+        btnOkOnPress: () {
+        },
+      ).show();
     }
   }
 

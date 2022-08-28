@@ -26,8 +26,10 @@ class _AccountScreenState extends State<AccountScreen> {
     return userService.getUserData(accessToken);
   }
   String parseDate(time){
+
     DateTime dt1 = DateTime.parse(time);
-    return '${dt1.day}/${dt1.month}/${dt1.year}';
+    DateTime dt2 = dt1.add(const Duration(hours: 7));
+    return '${dt2.day}/${dt2.month}/${dt2.year}';
   }
   String parseAddress(street, ward, district, city){
     String txt = '';

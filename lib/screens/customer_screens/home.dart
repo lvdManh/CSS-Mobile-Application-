@@ -29,7 +29,7 @@ class _HomePageState extends State<HomePage> {
           ),
           child: ListView(
             children: [
-              Stack(children: [Image.asset('assets/images/title_logo.jpg')]),
+              Stack(children: [Image.asset('assets/images/title_logo.jpg',)]),
               Container(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 20,

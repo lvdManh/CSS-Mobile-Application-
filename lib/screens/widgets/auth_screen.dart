@@ -22,6 +22,7 @@ class _AuthScreenState extends State<AuthScreen> {
   final _signUpFormKey = GlobalKey<FormState>();
   final _signInFormKey = GlobalKey<FormState>();
   final AuthService authService = AuthService();
+
   String resultText = "";
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();

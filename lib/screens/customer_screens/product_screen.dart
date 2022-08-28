@@ -7,8 +7,6 @@ import 'package:provider/provider.dart';
 
 import '../../models/accessory_data.dart';
 
-
-
 class ProductScreen extends StatefulWidget {
   static const String routeName = '/product-screen';
   const ProductScreen({Key? key}) : super(key: key);
@@ -18,49 +16,18 @@ class ProductScreen extends StatefulWidget {
 }
 
 class _ProductScreenState extends State<ProductScreen> {
-
-  late List<Accessory> futureAccessory =[];
-  late List<String> selectTypes = ['Tất cả'];
-  late String _selectedValue;
-  late List<Accessory> accessoryList = [];
-  Future<List<Accessory>> getFutureAccessory(token) async {
-    futureAccessory = await ProductRequest().fetchAccessory(token);
-    getTypeList();
-    return futureAccessory;
-  }
-  void getTypeList(){
-    for(var e in futureAccessory){
-      if(!selectTypes.contains(e.supplierId?.name)){
-        selectTypes.add(e.supplierId!.name!);
-      }
-    }
-    setState(() {
-      selectTypes;
-    });
-  }
-
-  void showListAccessories(){
-    accessoryList.clear();
-    if(_selectedValue == 'Tất cả'){
-      accessoryList.addAll(futureAccessory);
-    } else {
-      for (var e in futureAccessory) {
-        if (_selectedValue == e.supplierId?.name) {
-          accessoryList.add(e);
-        }
-      }
-    }
-    setState(() {
-      accessoryList;
-    });
-  }
-
+  String sortPrice = 'Nhỏ nhất';
+  String sortTypeCom = 'Tất cả';
+  List<String> deviceType = ['Tất cả', 'PC','Laptop','Mac'];
+  List<String> priceList = ['Lớn nhất', 'Nhỏ nhất'];
+  Widget customSearchBar = const Text('Linh kiện');
+  Icon customIcon = const Icon(Icons.search);
+  String findFilter ='';
   @override
   void initState() {
     super.initState();
-    _selectedValue= selectTypes.first;
+    findFilter = '';
   }
-
   @override
   Widget build(BuildContext context) {
     String token = Provider.of<DataClass>(context).user.accessToken;
@@ -71,124 +38,215 @@ class _ProductScreenState extends State<ProductScreen> {
         child: AppBar(
           elevation: 0.0,
           backgroundColor: Colors.orangeAccent,
-          title: const Text(
-            "Linh kiện",
-            style: TextStyle(
-              fontSize: 23,
-            ),
-          ),
+          title: customSearchBar,
+          actions: [
+            IconButton(
+              onPressed: () {
+                setState(() {
+                  if (customIcon.icon == Icons.search) {
+                    customIcon = const Icon(Icons.cancel);
+                    customSearchBar = ListTile(
+                        leading: const Icon(
+                        Icons.search,
+                        color: Colors.white,
+                        size: 28,
+                    ),
+                      title: TextField(
+                        onEditingComplete: () {
+                          setState(() {
+                            findFilter;
+                          });
+                        },
+                        onChanged: (value) {
+                          setState(() {
+                            findFilter = value;
+                          });
+                        },
+                        decoration: const InputDecoration(
+                          hintText: 'Nhập tên linh kiện',
+                          hintStyle: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontStyle: FontStyle.italic,
+                          ),
+                          border: InputBorder.none,
+                        ),
+                        style: const TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                    );
+                  } else {
+                    customIcon = const Icon(Icons.search);
+                    customSearchBar = const Text('Linh kiện');
+                  }
+                });
+              },
+              icon: customIcon,
+            )
+          ],
           centerTitle: true,
         ),
       ),
-      body: Container(
-        width: double.infinity,
-        decoration: const BoxDecoration(
-            color: mBackgroundColor,
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(30),
-              topRight: Radius.circular(30),
-            )),
-        child: Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: FutureBuilder<List<Accessory>>(
-                future: getFutureAccessory(token),
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData) {
-                    return const Center(child: CircularProgressIndicator());
-                  } else {
-                    return snapshot.data!.isNotEmpty? Align(
-                      alignment: Alignment.topCenter,
-                      child: SingleChildScrollView(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            Row(
-                              children: [
-                                const Text('Lọc:  '),
-                                DropdownButton(
-                                  // Initial Value
-                                  value: _selectedValue,
-                                  // Down Arrow Icon
-                                  icon: const Icon(Icons.keyboard_arrow_down),
-                                  // Array list of items
-                                  items:
-                                  selectTypes.map((String items) {
-                                    return DropdownMenuItem(
-                                      value: items,
-                                      child: Text(items,
-                                          overflow: TextOverflow.ellipsis),
-                                    );
-                                  }).toList(),
-                                  // After selecting the desired option,it will
-                                  // change button value to selected value
-                                  onChanged: (String? newValue) {
-                                    setState(() {
-                                      _selectedValue = newValue!;
-                                      showListAccessories();
-                                    });
-                                  },
-                                ),
-                              ],
+      body: SafeArea(
+        child: Container(
+          width: double.infinity,
+          decoration: const BoxDecoration(
+              color: mBackgroundColor,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(30),
+                topRight: Radius.circular(30),
+              )),
+          child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: FutureBuilder<AccessoryMix>(
+                  future:
+                      ProductRequest().fetchAccessorySort(token, sortPrice,sortTypeCom,findFilter),
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else {
+                      return Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Row(
+                                children: [
+                                  const Text('Giá tiền: '),
+                                  DropdownButton(
+                                    // Initial Value
+                                    value: sortPrice,
+                                    // Down Arrow Icon
+                                    icon:
+                                        const Icon(Icons.keyboard_arrow_down),
+                                    // Array list of items
+                                    items: priceList.map((String items) {
+                                      return DropdownMenuItem(
+                                        value: items,
+                                        child: Text(items,
+                                            overflow: TextOverflow.ellipsis),
+                                      );
+                                    }).toList(),
+                                    // After selecting the desired option,it will
+                                    // change button value to selected value
+                                    onChanged: (String? newValue) {
+                                      setState(() {
+                                        sortPrice = newValue!;
+                                      });
+                                    },
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  const Text('Loại: '),
+                                  DropdownButton(
+                                    // Initial Value
+                                    value: sortTypeCom,
+                                    // Down Arrow Icon
+                                    icon:
+                                    const Icon(Icons.keyboard_arrow_down),
+                                    // Array list of items
+                                    items: deviceType.map((String items) {
+                                      return DropdownMenuItem(
+                                        value: items,
+                                        child: Text(items,
+                                            overflow: TextOverflow.ellipsis),
+                                      );
+                                    }).toList(),
+                                    // After selecting the desired option,it will
+                                    // change button value to selected value
+                                    onChanged: (String? newValue) {
+                                      setState(() {
+                                        sortTypeCom = newValue!;
+                                      });
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 15),
+                          Expanded(
+                            child: GridView.count(
+                              crossAxisSpacing: 8,
+                              mainAxisSpacing: 16,
+                              crossAxisCount: 2,
+                              children: snapshot.data!.accessories!
+                                  .map((Accessories product) {
+                                return buildContent(product, context);
+                              }).toList(),
                             ),
-                            accessoryList.isNotEmpty ? ListView.builder(
-                                scrollDirection: Axis.vertical,
-                                physics: const NeverScrollableScrollPhysics(),
-                                shrinkWrap: true,
-                                itemCount: accessoryList.length,
-                                itemBuilder: (context, index) {
-                                  return Card(
-                                    child: ListTile(
-                                      leading: Text('${accessoryList[index].supplierId?.name}'),
-                                      title: Text(
-                                          '${accessoryList[index].name}'),
-                                      subtitle: Text(
-                                          'Mô tả: ${accessoryList[index].description.toString()}'),
-                                      trailing: Text(
-                                          '${convertMoney(accessoryList[index].price)} đ'),
-                                      onTap: () {
-                                        // Navigator.push(
-                                        //     context,
-                                        //     MaterialPageRoute(
-                                        //         builder: (context) => ServiceDetail(
-                                        //               service: serviceList[index],
-                                        //             )));
-                                      },
-                                    ),
-                                  );
-                                }): ListView.builder(
-                                physics: const NeverScrollableScrollPhysics(),
-                                scrollDirection: Axis.vertical,
-                                shrinkWrap: true,
-                                itemCount: futureAccessory.length,
-                                itemBuilder: (context, index) {
-                                  return Card(
-                                    child: ListTile(
-                                      leading: Text('${futureAccessory[index].supplierId?.name}'),
-                                      title: Text(
-                                          'Dịch vụ: ${futureAccessory[index].name}'),
-                                      subtitle: Text(
-                                          'Mô tả: ${futureAccessory[index].description.toString()}'),
-                                      trailing: Text(
-                                          '${convertMoney(futureAccessory[index].price)} đ'),
-                                      onTap: () {
-                                        // Navigator.push(
-                                        //     context,
-                                        //     MaterialPageRoute(
-                                        //         builder: (context) => ServiceDetail(
-                                        //               service: serviceList[index],
-                                        //             )));
-                                      },
-                                    ),
-                                  );
-                                }),
-                          ],
-                        ),
-                      ),
-                    ): const Center(child: Text('Hiện chưa có nhóm linh kiện này'),);
-                  }
-                })),
+                          )
+                        ],
+                      );
+                    }
+                  })),
+        ),
       ),
     );
   }
+}
+
+Widget buildContent(Accessories product, context) {
+  return Stack(children: [
+    Card(
+      shadowColor: Colors.black,
+      surfaceTintColor: Colors.white60,
+      color: mBackgroundColor.withOpacity(0.8),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+          gradient: LinearGradient(
+            colors: [Colors.white, Colors.tealAccent.shade100],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        margin: const EdgeInsets.all(3),
+        padding: const EdgeInsets.all(5),
+        child: InkWell(
+          onTap: () {},
+          child: Stack(children: [
+            Align(
+              alignment: Alignment.bottomRight,
+              child: Text('đ${convertMoney(product.price)}'),
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: ColorFiltered(
+                    colorFilter: ColorFilter.mode(
+                        Colors.tealAccent.withOpacity(0.9),
+                        BlendMode.dstATop),
+                    child: Image.network(
+                      '${product.imgUrl}',
+                      fit: BoxFit.fitHeight,
+                    ),
+                  ),
+                ),
+                Text('${product.name}',
+                    style: const TextStyle(
+                        color: Color(0xff0a1034),
+                        fontSize: 15,
+                        fontWeight: FontWeight.w400)),
+                Row(
+                  children: [
+                    Text('Bảo hành: ${product.insurance}',
+                        style: const TextStyle(
+                            fontSize: 13, fontWeight: FontWeight.w300)),
+                  ],
+                )
+              ],
+            ),
+          ]),
+        ),
+      ),
+    ),
+  ]);
 }

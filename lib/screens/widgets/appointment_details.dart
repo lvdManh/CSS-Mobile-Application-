@@ -3,6 +3,7 @@ import 'package:computer_service_system/features/booking_services.dart';
 import 'package:computer_service_system/features/order_services.dart';
 import 'package:computer_service_system/models/order_data.dart';
 import 'package:computer_service_system/providers/data_class.dart';
+import 'package:computer_service_system/screens/widgets/computer_info_widget.dart';
 import 'package:computer_service_system/screens/widgets/custom_button.dart';
 import 'package:computer_service_system/screens/widgets/edit_appointment.dart';
 import 'package:flutter/material.dart';
@@ -24,19 +25,17 @@ class _AppointmentDetailState extends State<AppointmentDetail> {
   late Bookings futureBooking;
   late bool isShowDetail = false;
   Future<Bookings> futureBookingByID(token) async {
-
-    if (isShowDetail == false&&futureBooking.status !='Hủy') {
+    if (isShowDetail == false && futureBooking.status != 'Hủy') {
       futureBooking =
           await BookingServices().getOneBookingById(token, widget.bookings.id);
-        if(mounted) {
-          setState(() {
-            futureBooking;
-          });
-        }
+      if (mounted) {
+        setState(() {
+          futureBooking;
+        });
+      }
     }
     return futureBooking;
   }
-
 
   @override
   void initState() {
@@ -291,8 +290,7 @@ class _AppointmentDetailState extends State<AppointmentDetail> {
                                       },
                                       btnCancelText: 'Xác nhận',
                                       btnOkText: 'Không',
-                                      btnOkOnPress: () {
-                                      },
+                                      btnOkOnPress: () {},
                                     ).show();
                                   },
                                 ),
@@ -331,11 +329,12 @@ class _AppointmentDetailState extends State<AppointmentDetail> {
                             ),
                           ),
                         )
-                        else if(futureBooking.status == "Đã tiếp nhận" && isShowDetail==true)
-                          ShowOrder(
-                            token: token,
-                            orderId: futureBooking.orderId!.id!,
-                          )
+                      else if (futureBooking.status == "Đã tiếp nhận" &&
+                          isShowDetail == true)
+                        ShowOrder(
+                          token: token,
+                          orderId: futureBooking.orderId!.id!,
+                        )
                       else
                         Container()
                     ],
@@ -403,8 +402,10 @@ class _ShowOrderState extends State<ShowOrder> {
                               style: TextStyle(
                                   fontSize: 18, fontFamily: 'Regular')),
                           Text('${_order.status}',
-                              style: const TextStyle(
-                                  fontSize: 18, fontFamily: 'Regular')),
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  fontFamily: 'Regular',
+                                  color: getOrderStatusColor(_order.status))),
                         ],
                       ),
                       const SizedBox(height: 10),
@@ -420,22 +421,50 @@ class _ShowOrderState extends State<ShowOrder> {
                         ],
                       ),
                       const SizedBox(height: 10),
-                      if(_order.workSlot?.staffId?.userId?.name != null) Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          const Text("Nhân viên kỹ thuật:",
-                              style: TextStyle(
-                                  fontSize: 18, fontFamily: 'Regular')),
-                          Text('${_order.workSlot?.staffId?.userId?.name}',
-                              style: const TextStyle(
-                                  fontSize: 18, fontFamily: 'Regular')),
-                        ],
-                      ),
+                      if (_order.workSlot?.staffId?.userId?.name != null)
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            const Text("Nhân viên kỹ thuật:",
+                                style: TextStyle(
+                                    fontSize: 18, fontFamily: 'Regular')),
+                            Text('${_order.workSlot?.staffId?.userId?.name}',
+                                style: const TextStyle(
+                                    fontSize: 18, fontFamily: 'Regular')),
+                          ],
+                        ),
                       const SizedBox(height: 10),
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text("Thông tin máy",
+                                style: TextStyle(
+                                    color: mTextColorSecondary,
+                                    fontSize: 16,
+                                    fontFamily: 'Regular')),
+                            InkWell(
+                              child: const Icon(
+                                Icons.computer,
+                                color: Colors.orange,
+                              ),
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            ComputerInfoScreen(
+                                              computer: _order.computerId,
+                                              imgURL: _order.imgComUrls,
+                                            )));
+                              },
+                            )
+                          ]),
+                      const Divider(),
+                      const SizedBox(height: 8),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: const [
-                           Text("Dịch vụ:",
+                          Text("Dịch vụ:",
                               style: TextStyle(
                                   fontSize: 18, fontFamily: 'Regular')),
                         ],
@@ -447,8 +476,9 @@ class _ShowOrderState extends State<ShowOrder> {
                             shrinkWrap: true,
                             itemCount: _order.orderDetailsId!.length,
                             itemBuilder: (context, index) {
-                              return _order.orderDetailsId![index]
-                                          .serviceId!.hasAccessory !=true
+                              return _order.orderDetailsId![index].serviceId!
+                                          .hasAccessory !=
+                                      true
                                   ? Card(
                                       child: ListTile(
                                         leading: Text(
@@ -473,24 +503,54 @@ class _ShowOrderState extends State<ShowOrder> {
                                         ),
                                       ),
                                     )
-                                  : Card(
-                                      child: ListTile(
-                                        leading: Text(
-                                            '-${_order.orderDetailsId![index].discount}%'),
-                                        title: Text(
-                                            '${_order.orderDetailsId![index].accessories!.first.accessoryId!.name}'),
-                                        subtitle: Text(
-                                            'Giá linh kiện: ${convertMoney(snapshot.data!.orderDetailsId![index].accessories!.first.accessoryId!.price)}đ'),
-                                        trailing: Column(
-                                          children: [
-                                            Text(
-                                                'x${_order.orderDetailsId![index].accessories!.first.amountAcc.toString()}'),
-                                            Text(
-                                                '${convertMoney(_order.orderDetailsId![index].priceAfter)}đ'),
-                                          ],
+                                  : Column(
+                                    children: [
+                                      Card(
+                                        child: ListTile(
+                                          leading: Text(
+                                              '-${_order.orderDetailsId![index].discount}%'),
+                                          title: Text(
+                                              '${_order.orderDetailsId![index].serviceId!.name}'),
+                                          subtitle: Text(
+                                              'Giá dịch vụ: ${convertMoney(_order.orderDetailsId![index].serviceId!.price)}đ'),
+                                          trailing: Column(
+                                            children: [
+                                              const SizedBox(
+                                                height: 8,
+                                              ),
+                                              Text(
+                                                  'x${_order.orderDetailsId![index].amountSer.toString()}'),
+                                              const SizedBox(
+                                                height: 8,
+                                              ),
+                                              Text(
+                                                  '${convertMoney(_order.orderDetailsId![index].priceAfter)}đ'),
+                                            ],
+                                          ),
                                         ),
                                       ),
-                                    );
+                                      Container(
+                                        padding: const EdgeInsets.only(left: 10, right: 10),
+                                        child: ListView.builder(
+                                            scrollDirection: Axis.vertical,
+                                            shrinkWrap: true,
+                                            itemCount: _order.orderDetailsId![index].accessories!.length,
+                                            itemBuilder: (context, i) {
+                                              return Card(
+                                                child: ListTile(
+                                                  leading: Image.network(_order.orderDetailsId![index].accessories![i].accessoryId!.imgURL!),
+                                                  title: Text(
+                                                      '${_order.orderDetailsId![index].accessories![i].accessoryId!.name}'),
+                                                  subtitle: Text(
+                                                      'Giá linh kiện: ${convertMoney(snapshot.data!.orderDetailsId![index].accessories![i].accessoryId!.price)}đ'),
+                                                  trailing: Text(
+                                                      'x${_order.orderDetailsId![index].accessories![i].amountAcc.toString()}'),
+                                                ),
+                                              );
+                                            }),
+                                      ),
+                                    ],
+                                  );
                             }),
                       const Divider(),
                       Row(
@@ -504,21 +564,22 @@ class _ShowOrderState extends State<ShowOrder> {
                                   fontSize: 18, fontFamily: 'Regular')),
                         ],
                       ),
-                      if(_order.status=='Quản lí xác nhận') Align(
-                        alignment: Alignment.bottomCenter,
-                        child: SizedBox(
-                          width: 150,
-                          child: CustomButton(
-                            text: 'Chấp nhận dịch vụ',
-                            onTap: () {
-                              setState(() {
-                                  orderServices.acceptServiceByCus(context, widget.token, widget.orderId);
-                              });
-                            },
+                      if (_order.status == 'Quản lí xác nhận')
+                        Align(
+                          alignment: Alignment.bottomCenter,
+                          child: SizedBox(
+                            width: 150,
+                            child: CustomButton(
+                              text: 'Chấp nhận dịch vụ',
+                              onTap: () {
+                                setState(() {
+                                  orderServices.acceptServiceByCus(
+                                      context, widget.token, widget.orderId);
+                                });
+                              },
+                            ),
                           ),
-                        ),
-                      )
-
+                        )
                     ],
                   ),
                   const SizedBox(height: 50),

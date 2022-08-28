@@ -1,3 +1,4 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:computer_service_system/constants/utils.dart';
 import 'package:computer_service_system/features/order_services.dart';
 import 'package:computer_service_system/models/order_staff_data.dart';
@@ -33,7 +34,7 @@ class _StaffViewAppointmentPageState extends State<StaffViewAppointmentPage> {
         elevation: 0.0,
         backgroundColor: Colors.orangeAccent,
         title: const Text(
-          "Computer Services",
+          "Lịch hẹn",
           style: TextStyle(
             fontSize: 23,
           ),
@@ -73,7 +74,30 @@ class _StaffViewAppointmentPageState extends State<StaffViewAppointmentPage> {
                                                           snapshot.data![index].orderId?.bookingId?.cusAddress?.ward,
                                                           snapshot.data![index].orderId?.bookingId?.cusAddress?.district)}'),
                             trailing:
-                            Text('${snapshot.data![index].orderId?.status}', style: TextStyle(color: getOrderStatusColor(snapshot.data![index].orderId?.status)),),
+                            Column(
+                              children: [
+                                const SizedBox(height: 5,),
+                                Text('${snapshot.data![index].orderId?.status}', style: TextStyle(color: getOrderStatusColor(snapshot.data![index].orderId?.status)),),
+                                const SizedBox(height: 5,),
+                                if(snapshot.data![index].orderId!.status == "Đang xử lí")
+                                  InkWell(onTap: (){
+                                    AwesomeDialog(
+                                      context: context,
+                                      animType: AnimType.SCALE,
+                                      dialogType: DialogType.WARNING,
+                                      title: 'Báo bận',
+                                      desc: 'Gửi thông báo bận cho quản lí?',
+                                      btnCancelOnPress: () {
+                                      },
+                                      btnCancelText: 'Hủy',
+                                      btnOkText: 'Xác nhận',
+                                      btnOkOnPress: () {
+                                        OrderServices().sendBusyOrder(context, token, snapshot.data![index].orderId!.id);
+                                      },
+                                    ).show();
+                                },child: const Icon(Icons.event_busy, color: Colors.redAccent,),)
+                              ],
+                            ),
                             onTap: () {
                               Navigator.push(
                                   context,

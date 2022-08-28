@@ -10,8 +10,8 @@ class Order {
   WorkSlot? workSlot;
   List<OrderDetailsId>? orderDetailsId;
   Computer? computerId;
-
-  Order({this.id, this.totalPrice, this.status, this.createdAt, this.updatedAt, this.v, this.bookingId, this.workSlot, this.orderDetailsId, this.computerId});
+  List<String>? imgComUrls;
+  Order({this.id, this.totalPrice, this.status, this.createdAt, this.updatedAt, this.v, this.bookingId, this.workSlot, this.orderDetailsId, this.computerId, this.imgComUrls});
 
   Order.fromJson(Map<String, dynamic> json) {
     if(json["_id"] is String) {
@@ -43,6 +43,9 @@ class Order {
     }
     if(json["computer_id"] is Map) {
       computerId = json["computer_id"] == null ? null : Computer.fromJson(json["computer_id"]);
+    }
+    if(json["imgComUrls"] is List) {
+      imgComUrls = json["imgComUrls"]==null ? null : List<String>.from(json["imgComUrls"]);
     }
   }
 
@@ -168,8 +171,8 @@ class AccessoryId {
   String? id;
   String? name;
   int? price;
-
-  AccessoryId({this.id, this.name, this.price});
+  String? imgURL;
+  AccessoryId({this.id, this.name, this.price, this.imgURL});
 
   AccessoryId.fromJson(Map<String, dynamic> json) {
     if(json["_id"] is String) {
@@ -180,6 +183,9 @@ class AccessoryId {
     }
     if(json["price"] is int) {
       price = json["price"];
+    }
+    if(json["imgURL"] is String) {
+      imgURL = json["imgURL"];
     }
   }
 
