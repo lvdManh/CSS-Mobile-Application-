@@ -6,13 +6,13 @@ import 'package:computer_service_system/models/order_staff_data.dart';
 import 'package:computer_service_system/screens/staff_screens/view_appointment_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
-import 'package:computer_service_system/models/order_data.dart';
 
+import '../models/OrderCus.dart';
 import 'auth_services.dart';
 
 class OrderServices{
   //Lấy ra 1 order bằng booking id của customer
-  Future<Order> getOrderByIdForCus(token,id
+  Future<OrderCus> getOrderByIdForCus(token,id
       ) async{
     try {
       http.Response userRes = await http.get(
@@ -23,7 +23,7 @@ class OrderServices{
         },
       );
       if(userRes.statusCode ==200){
-        final parsed = Order.fromJson(jsonDecode(userRes.body.toString()));
+        final parsed = OrderCus.fromJson(jsonDecode(userRes.body.toString()));
         return  parsed;
       }
       else{
@@ -88,7 +88,8 @@ class OrderServices{
         title: 'Lưu thành công',
         dismissOnTouchOutside: false,
         btnOkOnPress: () {
-        },
+          Navigator.pop(context);
+        }
       ).show();
     }else{
       AwesomeDialog(
@@ -96,7 +97,7 @@ class OrderServices{
         animType: AnimType.SCALE,
         dialogType: DialogType.ERROR,
         title: 'Lưu thất bại',
-        desc: response.statusCode.toString() + response.body,
+        desc: response.body,
         dismissOnTouchOutside: false,
         btnOkOnPress: () {
         },
@@ -350,4 +351,36 @@ class OrderServices{
     }
   }
 
+  Future removeOrderDetail(context, token,id, orderId) async{
+    final response = await http.post(
+      Uri.parse(
+          'http://computer-services-api.herokuapp.com/order/removed-detail-order/$id'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'token': 'bearer $token',
+      },
+    );
+    if(response.statusCode ==200){
+      computeMoney(token, orderId);
+      AwesomeDialog(
+        context: context,
+        animType: AnimType.SCALE,
+        dialogType: DialogType.SUCCES,
+        title: 'Thành công',
+        desc: response.body,
+        btnOkOnPress: () {
+        },
+      ).show();
+    }else{
+      AwesomeDialog(
+        context: context,
+        animType: AnimType.SCALE,
+        dialogType: DialogType.INFO,
+        title: 'Không thành công',
+        desc: response.body,
+        btnOkOnPress: () {
+        },
+      ).show();
+    }
+  }
 }

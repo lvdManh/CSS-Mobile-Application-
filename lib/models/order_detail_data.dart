@@ -20,49 +20,26 @@ class OrderDetails {
 }
 
 class Datas {
-  bool? hasAccessory;
   int? discount;
   String? serviceId;
-  List<AccessoriesQ>? accessories;
+  String? accessoryId;
+  int? amountSer;
+  int? amountAcc;
 
-  Datas({this.hasAccessory, this.discount, this.serviceId, this.accessories});
+  Datas({this.discount, this.serviceId, this.amountAcc, this.accessoryId, this.amountSer});
 
   Datas.fromJson(Map<String, dynamic> json) {
-    if(json["hasAccessory"] is bool) {
-      hasAccessory = json["hasAccessory"];
-    }
     if(json["discount"] is int) {
       discount = json["discount"];
     }
-    if(json["serviceId"] is String) {
-      serviceId = json["serviceId"];
+    if(json["service_id"] is String) {
+      serviceId = json["service_id"];
     }
-    if(json["accessories"] is List) {
-      accessories = json["accessories"]==null ? null : (json["accessories"] as List).map((e)=>AccessoriesQ.fromJson(e)).toList();
-    }
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data["hasAccessory"] = hasAccessory;
-    data["discount"] = discount;
-    data["serviceId"] = serviceId;
-    if(accessories != null) {
-      data["accessories"] = accessories?.map((e)=>e.toJson()).toList();
-    }
-    return data;
-  }
-}
-
-class AccessoriesQ {
-  String? accessoryId;
-  int? amountAcc;
-
-  AccessoriesQ({this.accessoryId, this.amountAcc});
-
-  AccessoriesQ.fromJson(Map<String, dynamic> json) {
     if(json["accessory_id"] is String) {
       accessoryId = json["accessory_id"];
+    }
+    if(json["amount_ser"] is int) {
+      amountSer = json["amount_ser"];
     }
     if(json["amount_acc"] is int) {
       amountAcc = json["amount_acc"];
@@ -71,8 +48,21 @@ class AccessoriesQ {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data["accessory_id"] = accessoryId;
-    data["amount_acc"] = amountAcc;
+    if(discount != null){
+      data["discount"] = discount;
+    }
+    if(serviceId != null) {
+      data["service_id"] = serviceId;
+    }
+    if(accessoryId != null) {
+      data["accessory_id"] = accessoryId;
+    }
+    if(amountSer != null) {
+      data["amount_ser"] = amountSer;
+    }
+    if(amountAcc != null) {
+      data["amount_acc"] = amountAcc;
+    }
     return data;
   }
 }

@@ -10,8 +10,9 @@ class Service {
   String? updatedAt;
   int? v;
   bool? hasAccessory;
+  List<String>? orderDetailId;
 
-  Service({this.id, this.name, this.description, this.type, this.price, this.accessoriesId, this.deleted, this.createdAt, this.updatedAt, this.v, this.hasAccessory});
+  Service({this.id, this.name, this.description, this.type, this.price, this.accessoriesId, this.deleted, this.createdAt, this.updatedAt, this.v, this.hasAccessory,this.orderDetailId});
 
   Service.fromJson(Map<String, dynamic> json) {
     if(json["_id"] is String) {
@@ -31,6 +32,9 @@ class Service {
     }
     if(json["accessories_id"] is List) {
       accessoriesId = json["accessories_id"]==null ? null : List<String>.from(json["accessories_id"]);
+    }
+    if(json["orderdetail_id"] is List) {
+      orderDetailId = json["orderdetail_id"]==null ? null : List<String>.from(json["orderdetail_id"]);
     }
     if(json["deleted"] is bool) {
       deleted = json["deleted"];
@@ -58,6 +62,9 @@ class Service {
     data["price"] = price;
     if(accessoriesId != null) {
       data["accessories_id"] = accessoriesId;
+    }
+    if(orderDetailId != null) {
+      data["orderdetail_id"] = orderDetailId;
     }
     data["deleted"] = deleted;
     data["createdAt"] = createdAt;

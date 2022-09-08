@@ -130,7 +130,7 @@ class _TrackingAppointmentState extends State<TrackingAppointment> {
                                                           bookings: todayBooking,
                                                         )));
                                           },
-                                          child: const Center(child: Text('Bạn có lịch hẹn vào hôm nay!',style: TextStyle(color: Colors.blue, fontSize: 16 , decoration: TextDecoration.underline))),
+                                          child: const Center(child: Text('Bạn có lịch hẹn vào hôm nay!',style: TextStyle(color: Colors.black, fontSize: 16))),
                                         ),
                                       ],
                                     ),

@@ -1,7 +1,6 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:computer_service_system/features/booking_services.dart';
 import 'package:computer_service_system/features/order_services.dart';
-import 'package:computer_service_system/models/order_data.dart';
 import 'package:computer_service_system/providers/data_class.dart';
 import 'package:computer_service_system/screens/widgets/computer_info_widget.dart';
 import 'package:computer_service_system/screens/widgets/custom_button.dart';
@@ -10,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../constants/color_constant.dart';
 import '../../constants/utils.dart';
+import '../../models/OrderCus.dart';
 import '../../models/booking_data.dart';
 import '../../models/booking_object.dart';
 
@@ -359,8 +359,8 @@ class ShowOrder extends StatefulWidget {
 
 class _ShowOrderState extends State<ShowOrder> {
   final OrderServices orderServices = OrderServices();
-  late Order _order;
-  Future<Order> getOrder() async {
+  late OrderCus _order;
+  Future<OrderCus> getOrder() async {
     _order =
         await orderServices.getOrderByIdForCus(widget.token, widget.orderId);
     return _order;
@@ -368,11 +368,12 @@ class _ShowOrderState extends State<ShowOrder> {
 
   @override
   Widget build(BuildContext context) {
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       mainAxisSize: MainAxisSize.min,
       children: [
-        FutureBuilder<Order>(
+        FutureBuilder<OrderCus>(
             future: getOrder(),
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
@@ -434,6 +435,19 @@ class _ShowOrderState extends State<ShowOrder> {
                           ],
                         ),
                       const SizedBox(height: 10),
+                      if (_order.workSlot?.staffId?.userId?.phoneNum != null)
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            const Text("SĐT nhân viên:",
+                                style: TextStyle(
+                                    fontSize: 18, fontFamily: 'Regular')),
+                            Text('${_order.workSlot?.staffId?.userId?.phoneNum}',
+                                style: const TextStyle(
+                                    fontSize: 18, fontFamily: 'Regular')),
+                          ],
+                        ),
+                      const SizedBox(height: 10),
                       Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -464,7 +478,7 @@ class _ShowOrderState extends State<ShowOrder> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: const [
-                          Text("Dịch vụ:",
+                          Text("Hóa đơn:",
                               style: TextStyle(
                                   fontSize: 18, fontFamily: 'Regular')),
                         ],
@@ -476,81 +490,73 @@ class _ShowOrderState extends State<ShowOrder> {
                             shrinkWrap: true,
                             itemCount: _order.orderDetailsId!.length,
                             itemBuilder: (context, index) {
-                              return _order.orderDetailsId![index].serviceId!
-                                          .hasAccessory !=
-                                      true
-                                  ? Card(
-                                      child: ListTile(
-                                        leading: Text(
-                                            '-${_order.orderDetailsId![index].discount}%'),
-                                        title: Text(
-                                            '${_order.orderDetailsId![index].serviceId!.name}'),
-                                        subtitle: Text(
-                                            'Giá dịch vụ: ${convertMoney(_order.orderDetailsId![index].serviceId!.price)}đ'),
-                                        trailing: Column(
-                                          children: [
-                                            const SizedBox(
-                                              height: 8,
-                                            ),
-                                            Text(
-                                                'x${_order.orderDetailsId![index].amountSer.toString()}'),
-                                            const SizedBox(
-                                              height: 8,
-                                            ),
-                                            Text(
-                                                '${convertMoney(_order.orderDetailsId![index].priceAfter)}đ'),
-                                          ],
-                                        ),
-                                      ),
-                                    )
-                                  : Column(
-                                    children: [
-                                      Card(
-                                        child: ListTile(
-                                          leading: Text(
-                                              '-${_order.orderDetailsId![index].discount}%'),
-                                          title: Text(
-                                              '${_order.orderDetailsId![index].serviceId!.name}'),
-                                          subtitle: Text(
-                                              'Giá dịch vụ: ${convertMoney(_order.orderDetailsId![index].serviceId!.price)}đ'),
-                                          trailing: Column(
-                                            children: [
-                                              const SizedBox(
-                                                height: 8,
-                                              ),
-                                              Text(
-                                                  'x${_order.orderDetailsId![index].amountSer.toString()}'),
-                                              const SizedBox(
-                                                height: 8,
-                                              ),
-                                              Text(
-                                                  '${convertMoney(_order.orderDetailsId![index].priceAfter)}đ'),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                      Container(
-                                        padding: const EdgeInsets.only(left: 10, right: 10),
-                                        child: ListView.builder(
-                                            scrollDirection: Axis.vertical,
-                                            shrinkWrap: true,
-                                            itemCount: _order.orderDetailsId![index].accessories!.length,
-                                            itemBuilder: (context, i) {
-                                              return Card(
-                                                child: ListTile(
-                                                  leading: Image.network(_order.orderDetailsId![index].accessories![i].accessoryId!.imgURL!),
-                                                  title: Text(
-                                                      '${_order.orderDetailsId![index].accessories![i].accessoryId!.name}'),
-                                                  subtitle: Text(
-                                                      'Giá linh kiện: ${convertMoney(snapshot.data!.orderDetailsId![index].accessories![i].accessoryId!.price)}đ'),
-                                                  trailing: Text(
-                                                      'x${_order.orderDetailsId![index].accessories![i].amountAcc.toString()}'),
-                                                ),
-                                              );
-                                            }),
-                                      ),
-                                    ],
-                                  );
+                              return _order.orderDetailsId![index].amountAcc==0 ? Padding(
+                                padding:
+                                const EdgeInsets
+                                    .only(
+                                    left: 5,
+                                    right: 5),
+                                child: Card(
+                                  color: Colors.white30.withOpacity(0.9),
+                                  shape:
+                                  RoundedRectangleBorder(
+                                    borderRadius:
+                                    BorderRadius
+                                        .circular(
+                                        10.0),
+                                  ),
+                                  shadowColor:
+                                  Colors.blue,
+                                  child: ListTile(
+                                    title: Text(
+                                        '${_order.orderDetailsId![index].serviceId!.name}'),
+                                    subtitle: Row(
+                                      mainAxisAlignment:
+                                      MainAxisAlignment
+                                          .spaceBetween,
+                                      children: [
+                                        Text(
+                                            'Đơn giá: ${convertMoney(_order.orderDetailsId![index].serviceId!.price)}đ x ${_order.orderDetailsId![index].amountSer}'),
+                                      ],
+                                    ),
+                                    trailing: Text(convertMoney(_order.orderDetailsId![index].priceAfter)),
+                                  ),
+                                ),
+                              ): Padding(
+                                padding:
+                                const EdgeInsets
+                                    .only(
+                                    left: 5,
+                                    right: 5),
+                                child: Card(
+                                  color: Colors.white30.withOpacity(0.9),
+                                  shape:
+                                  RoundedRectangleBorder(
+                                    borderRadius:
+                                    BorderRadius
+                                        .circular(
+                                        10.0),
+                                  ),
+                                  shadowColor:
+                                  Colors.blue,
+                                  child: ListTile(
+                                    title: Text(
+                                        '${_order.orderDetailsId![index].accessoryId!.name}'),
+                                    subtitle: Row(
+                                      mainAxisAlignment:
+                                      MainAxisAlignment
+                                          .spaceBetween,
+                                      children: [
+                                        Text(
+                                            'Đơn giá: ${convertMoney(_order.orderDetailsId![index].accessoryId!.price)}đ x ${_order.orderDetailsId![index].amountAcc}'),
+
+                                      ],
+                                    ),
+                                    trailing: Text(convertMoney(_order.orderDetailsId![index].priceAfter)),
+                                  ),
+                                ),
+                              );
+
                             }),
                       const Divider(),
                       Row(

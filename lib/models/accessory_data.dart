@@ -9,8 +9,8 @@ class AccessoryMix {
     if(json["count"] is int) {
       count = json["count"];
     }
-    if(json["accessories"] is List) {
-      accessories = json["accessories"]==null ? null : (json["accessories"] as List).map((e)=>Accessories.fromJson(e)).toList();
+    if(json["sortedAcc"] is List) {
+      accessories = json["sortedAcc"]==null ? null : (json["sortedAcc"] as List).map((e)=>Accessories.fromJson(e)).toList();
     }
   }
 

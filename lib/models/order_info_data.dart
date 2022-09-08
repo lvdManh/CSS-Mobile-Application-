@@ -70,17 +70,22 @@ class OrderInfo {
   }
 }
 
+
 class OrderDetailsId {
+  int? amountAcc;
   String? id;
   int? amountSer;
   int? discount;
   ServiceId? serviceId;
-  List<Accessories1>? accessories;
+  AccessoryId? accessoryId;
   int? priceAfter;
 
-  OrderDetailsId({this.id, this.amountSer, this.discount, this.serviceId, this.accessories, this.priceAfter});
+  OrderDetailsId({this.amountAcc, this.id, this.amountSer, this.discount, this.serviceId, this.priceAfter, this.accessoryId});
 
   OrderDetailsId.fromJson(Map<String, dynamic> json) {
+    if(json["amount_acc"] is int) {
+      amountAcc = json["amount_acc"];
+    }
     if(json["_id"] is String) {
       id = json["_id"];
     }
@@ -93,8 +98,8 @@ class OrderDetailsId {
     if(json["service_id"] is Map) {
       serviceId = json["service_id"] == null ? null : ServiceId.fromJson(json["service_id"]);
     }
-    if(json["accessories"] is List) {
-      accessories = json["accessories"]==null ? null : (json["accessories"] as List).map((e)=>Accessories1.fromJson(e)).toList();
+    if(json["accessory_id"] is Map) {
+      accessoryId = json["accessory_id"] == null ? null : AccessoryId.fromJson(json["accessory_id"]);
     }
     if(json["price_after"] is int) {
       priceAfter = json["price_after"];
@@ -103,79 +108,17 @@ class OrderDetailsId {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
+    data["amount_acc"] = amountAcc;
     data["_id"] = id;
     data["amount_ser"] = amountSer;
     data["discount"] = discount;
     if(serviceId != null) {
       data["service_id"] = serviceId?.toJson();
     }
-    if(accessories != null) {
-      data["accessories"] = accessories?.map((e)=>e.toJson()).toList();
-    }
-    data["price_after"] = priceAfter;
-    return data;
-  }
-}
-
-class Accessories1 {
-  AccessoryId1? accessoryId;
-  int? amountAcc;
-  String? id;
-
-  Accessories1({this.accessoryId, this.amountAcc, this.id});
-
-  Accessories1.fromJson(Map<String, dynamic> json) {
-    if(json["accessory_id"] is Map) {
-      accessoryId = json["accessory_id"] == null ? null : AccessoryId1.fromJson(json["accessory_id"]);
-    }
-    if(json["amount_acc"] is int) {
-      amountAcc = json["amount_acc"];
-    }
-    if(json["_id"] is String) {
-      id = json["_id"];
-    }
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    if(accessoryId != null) {
+    if(serviceId != null) {
       data["accessory_id"] = accessoryId?.toJson();
     }
-    data["amount_acc"] = amountAcc;
-    data["_id"] = id;
-    return data;
-  }
-}
-
-class AccessoryId1 {
-  String? id;
-  String? name;
-  int? price;
-  String? insurance;
-
-  AccessoryId1({this.id, this.name, this.price, this.insurance});
-
-  AccessoryId1.fromJson(Map<String, dynamic> json) {
-    if(json["_id"] is String) {
-      id = json["_id"];
-    }
-    if(json["name"] is String) {
-      name = json["name"];
-    }
-    if(json["price"] is int) {
-      price = json["price"];
-    }
-    if(json["insurance"] is String) {
-      insurance = json["insurance"];
-    }
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data["_id"] = id;
-    data["name"] = name;
-    data["price"] = price;
-    data["insurance"] = insurance;
+    data["price_after"] = priceAfter;
     return data;
   }
 }
@@ -188,6 +131,34 @@ class ServiceId {
   ServiceId({this.id, this.name, this.price});
 
   ServiceId.fromJson(Map<String, dynamic> json) {
+    if(json["_id"] is String) {
+      id = json["_id"];
+    }
+    if(json["name"] is String) {
+      name = json["name"];
+    }
+    if(json["price"] is int) {
+      price = json["price"];
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data["_id"] = id;
+    data["name"] = name;
+    data["price"] = price;
+    return data;
+  }
+}
+
+class AccessoryId {
+  String? id;
+  String? name;
+  int? price;
+
+  AccessoryId({this.id, this.name, this.price});
+
+  AccessoryId.fromJson(Map<String, dynamic> json) {
     if(json["_id"] is String) {
       id = json["_id"];
     }

@@ -101,7 +101,7 @@ class _ProductScreenState extends State<ProductScreen> {
               padding: const EdgeInsets.all(16.0),
               child: FutureBuilder<AccessoryMix>(
                   future:
-                      ProductRequest().fetchAccessorySort(token, sortPrice,sortTypeCom,findFilter),
+                      ProductRequest().fetchAccessorySort(token, sortPrice,'desc',sortTypeCom,findFilter),
                   builder: (context, snapshot) {
                     if (!snapshot.hasData) {
                       return const Center(child: CircularProgressIndicator());
@@ -237,7 +237,7 @@ Widget buildContent(Accessories product, context) {
                         fontWeight: FontWeight.w400)),
                 Row(
                   children: [
-                    Text('Bảo hành: ${product.insurance}',
+                    Text('B/h: ${product.insurance}',
                         style: const TextStyle(
                             fontSize: 13, fontWeight: FontWeight.w300)),
                   ],
