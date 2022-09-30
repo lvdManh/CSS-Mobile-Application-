@@ -126,6 +126,7 @@ class BookingServices{
   Future editBooking(context,token,id,
       street, ward, district, name, phonenum, services, description
       ) async{
+    String city = "HCM";
     final response = await http.put(
       Uri.parse(
           'https://computer-services-api.herokuapp.com/booking/update/$id'),
@@ -135,6 +136,7 @@ class BookingServices{
       },
       body: jsonEncode({
         'cus_address': {
+          'city': city,
           'district': district,
           'ward': ward,
           'street': street
@@ -174,14 +176,14 @@ class BookingServices{
       ) async{
     final response = await http.patch(
       Uri.parse(
-          'https://computer-services-api.herokuapp.com/booking/cancel-booking'),
+          'https://computer-services-api.herokuapp.com/booking/cancel-booking/$id'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'token': 'bearer $token',
       },
-      body: jsonEncode({
-        'id' : id
-      }),
+      // body: jsonEncode({
+      //   'id' : id
+      // }),
     );
     if(response.statusCode==200){
       AwesomeDialog(

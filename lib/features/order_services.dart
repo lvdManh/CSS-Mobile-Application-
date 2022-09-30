@@ -62,7 +62,6 @@ class OrderServices{
         throw Exception('Lấy dữ liệu thất bại');
       }
     } catch (e){
-
       throw Exception(e);
     }
   }
@@ -126,14 +125,14 @@ class OrderServices{
   void acceptServiceByCus(context, token,id) async{
     final response = await http.patch(
       Uri.parse(
-          'http://computer-services-api.herokuapp.com/order/customer-confirm'),
+          'http://computer-services-api.herokuapp.com/order/customer-confirm/$id'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'token': 'bearer $token',
       },
-      body: jsonEncode({
-        'id' : id,
-      }),
+      // body: jsonEncode({
+      //   'id' : id,
+      // }),
     );
     if(response.statusCode ==200){
       AwesomeDialog(
@@ -163,14 +162,14 @@ class OrderServices{
   void completeOderByStaff(context, token,id) async{
     final response = await http.patch(
       Uri.parse(
-          'http://computer-services-api.herokuapp.com/order/complete-order'),
+          'http://computer-services-api.herokuapp.com/order/complete-order/$id'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'token': 'bearer $token',
       },
-      body: jsonEncode({
-        'id' : id,
-      }),
+      // body: jsonEncode({
+      //   'id' : id,
+      // }),
     );
     if(response.statusCode ==200){
       AwesomeDialog(
@@ -199,14 +198,14 @@ class OrderServices{
   void cancelOrderByStaff(context, token,id) async{
     final response = await http.patch(
       Uri.parse(
-          'http://computer-services-api.herokuapp.com/order/cancel-order'),
+          'http://computer-services-api.herokuapp.com/order/cancel-order/$id'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'token': 'bearer $token',
       },
-      body: jsonEncode({
-        'id' : id,
-      }),
+      // body: jsonEncode({
+      //   'id' : id,
+      // }),
     );
     if(response.statusCode ==200){
       AwesomeDialog(
