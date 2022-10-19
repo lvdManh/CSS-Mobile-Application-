@@ -11,8 +11,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../constants/error_handling.dart';
 import '../constants/utils.dart';
 import '../screens/widgets/auth_screen.dart';
+//import '../screens/widgets/otp_vertify_screen.dart';
 
 class AuthService {
+  
+  
   void signUpUser({
     required BuildContext context,
     required String username,
@@ -38,6 +41,8 @@ class AuthService {
             context,
             'Tạo tài khoản thành công!',
           );
+          // Navigator.of(context).push(MaterialPageRoute(
+          //     builder: (context) => OTPScreen(phone: username, password: password,)));
         },
       );
     } catch (e) {

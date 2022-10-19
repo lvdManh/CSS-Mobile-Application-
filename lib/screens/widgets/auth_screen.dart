@@ -2,6 +2,7 @@ import 'package:computer_service_system/constants/color_constant.dart';
 import 'package:computer_service_system/features/auth_services.dart';
 import 'package:computer_service_system/screens/widgets/custom_button.dart';
 import 'package:computer_service_system/screens/widgets/custom_text_field.dart';
+//import 'package:computer_service_system/screens/widgets/otp_vertify_screen.dart';
 import 'package:flutter/material.dart';
 
 enum Auth {
@@ -22,7 +23,6 @@ class _AuthScreenState extends State<AuthScreen> {
   final _signUpFormKey = GlobalKey<FormState>();
   final _signInFormKey = GlobalKey<FormState>();
   final AuthService authService = AuthService();
-
   String resultText = "";
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -33,6 +33,7 @@ class _AuthScreenState extends State<AuthScreen> {
     phoneController.dispose();
     passwordController.dispose();
   }
+
 
   void signUpUser() {
     authService.signUpUser(
@@ -162,6 +163,8 @@ class _AuthScreenState extends State<AuthScreen> {
                             onTap: () {
                               if (_signUpFormKey.currentState!.validate()) {
                                 signUpUser();
+                                //Navigator.of(context).push(MaterialPageRoute(
+                                    //builder: (context) => OTPScreen(phone: phoneController.text, password: passwordController.text,)));
                               }
                             },
                           )

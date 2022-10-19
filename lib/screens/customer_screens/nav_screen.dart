@@ -42,7 +42,7 @@ class _NavScreenState extends State<NavScreen> {
         children: <Widget>[
           buildNavBarItem(Icons.home, 0),
           buildNavBarItem(Icons.list_alt, 1),
-          buildNavBarItem(Icons.notifications, 2),
+          buildNavBarItem(Icons.devices, 2),
           buildNavBarItem(Icons.person, 3)
         ],
       ),

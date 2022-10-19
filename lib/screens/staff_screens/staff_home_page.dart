@@ -1,5 +1,6 @@
 
 import 'package:computer_service_system/constants/color_constant.dart';
+import 'package:computer_service_system/screens/customer_screens/product_screen.dart';
 import 'package:computer_service_system/screens/staff_screens/staff_regist_work.dart';
 import 'package:computer_service_system/screens/staff_screens/view_appointment_page.dart';
 import 'package:computer_service_system/screens/staff_screens/view_history_order_page.dart';
@@ -80,12 +81,26 @@ class _StaffHomePageState extends State<StaffHomePage> {
             Container(
               width: 80,
               padding: const EdgeInsets.all(15.0),
-              child: CustomButton(text: 'Lịch sử cuộc hẹn',
+              child: CustomButton(text: 'Đơn đã hoàn thành',
                   onTap: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) => const HistoryOrder()),
+                    );
+                  }),
+            ),
+            Container(
+              width: 80,
+              padding: const EdgeInsets.all(15.0),
+              child: CustomButton(
+                  text: 'Linh kiện có sẵn',
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                          const ProductScreen()),
                     );
                   }),
             ),

@@ -2,6 +2,7 @@ import 'package:computer_service_system/constants/color_constant.dart';
 import 'package:computer_service_system/constants/utils.dart';
 import 'package:computer_service_system/features/product_services.dart';
 import 'package:computer_service_system/providers/data_class.dart';
+import 'package:computer_service_system/screens/widgets/accessory_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -210,7 +211,14 @@ Widget buildContent(Accessories product, context) {
         margin: const EdgeInsets.all(3),
         padding: const EdgeInsets.all(5),
         child: InkWell(
-          onTap: () {},
+          onTap: () async {
+            await showDialog(
+                context: context,
+                builder: (BuildContext context) {
+              return AccessoryDetailScreen(accessory: product);
+            },
+            );
+          },
           child: Stack(children: [
             Align(
               alignment: Alignment.bottomRight,
